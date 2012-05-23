@@ -1,0 +1,47 @@
+body {
+  font-family: Calibri;
+  color: #333;
+  background-color: #222;
+  text-align: center;
+  padding: 20px;
+  margin: 0px;
+}
+
+a {
+  color: #6677ff;
+}
+
+div.layout {
+  border-radius: 5px;
+  background-color: #eee;
+  text-align: left;
+}
+
+div.header {
+  width: 100%;
+  background-color: #ddd;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: #555;
+}
+
+h1, h2, h3, p {
+  padding: 0px;
+  margin: 0px 0px 3px 0px;
+}
+
+div.header div.headerContent {
+  padding: 5px 10px 10px 10px;
+}
+
+div.header p {
+  font-size: .9em;
+}
+
+div.header div.links {
+  margin-top: 7px;
+}
+
+div.layout div.content {
+  padding: 10px;
+}

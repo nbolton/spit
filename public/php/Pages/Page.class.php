@@ -5,8 +5,8 @@ namespace Spit\Pages;
 class Page {
 
   protected function showView($name, $master = "master") {
-    
-    $page = $name;
+    $root = "";
+    $content = $name;
     require "/php/Views/" . $master . ".php";
   }
 }
