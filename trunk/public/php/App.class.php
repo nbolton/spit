@@ -2,7 +2,7 @@
 
 namespace Spit;
 
-require "Pages/PageFactory.class.php";
+require "Pages/PageProvider.class.php";
 
 class App {
   
@@ -10,14 +10,12 @@ class App {
   
   public function run() {
   
-    $path = isset($_GET["path"]) ? $_GET["path"] : "/";
-    $parts = preg_split('@/@', $path, NULL, PREG_SPLIT_NO_EMPTY);
-    $first = count($parts) != 0 ? strtolower($parts[0]) : "/";
-    $pageName = $first != "/" ? $first : self::DEFAULT_PAGE;
+    $pathString = isset($_GET["path"]) ? $_GET["path"] : "";
+    $path = preg_split('@/@', $pathString, NULL, PREG_SPLIT_NO_EMPTY);
   
-    $factory = new Pages\PageFactory;
-    $page = $factory->get($pageName);
-    $page->run();
+    $provider = new Pages\PageProvider;
+    $page = $provider->get($path);
+    $page->run($path);
   }
 }
 
