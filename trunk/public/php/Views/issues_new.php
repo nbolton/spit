@@ -1,1 +1,1 @@
-Issues - New
+<h2>Issues - New</h2>
