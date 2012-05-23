@@ -10,7 +10,10 @@ class App {
   
   public function run() {
   
-    $pageName = isset($_GET["page"]) ? $_GET["page"] : self::DEFAULT_PAGE;
+    $path = isset($_GET["path"]) ? $_GET["path"] : "/";
+    $parts = preg_split('@/@', $path, NULL, PREG_SPLIT_NO_EMPTY);
+    $first = count($parts) != 0 ? strtolower($parts[0]) : "/";
+    $pageName = $first != "/" ? $first : self::DEFAULT_PAGE;
   
     $factory = new Pages\PageFactory;
     $page = $factory->get($pageName);
