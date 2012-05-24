@@ -4,8 +4,8 @@ namespace Spit\Controllers;
 
 class Controller {
 
-  private $master = "master";
-
+  public $app;
+  
   protected function showView($name, $data = array()) {
     foreach ($data as $k => $v) {
       $$k = $v;
@@ -13,7 +13,9 @@ class Controller {
     
     $root = "";
     $content = "php/Views/" . $name . ".php";
-    require "/php/Views/" . $this->master . ".php";
+    $settings = $this->app->settings;
+    
+    require "/php/Views/" . $settings->masterView . ".php";
   }
 }
 
