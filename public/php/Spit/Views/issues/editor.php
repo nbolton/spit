@@ -17,7 +17,7 @@
  */
 ?>
 
-<h2><?=$editorTitle?></h2>
+<h2><?=$title?></h2>
 <form method="post">
   <div class="box">
     <div class="column">

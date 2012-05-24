@@ -22,6 +22,7 @@ namespace Spit\Controllers;
 class Controller {
 
   public $app;
+  public $title;
   
   protected function showView($name, $data = array()) {
     foreach ($data as $k => $v) {
@@ -29,6 +30,8 @@ class Controller {
     }
     
     $app = $this->app;
+    $title = $this->title;
+    $fullTitle = $app->settings->site->title . (($title != "") ? " - " . $title : "");
     $content = "php/Spit/Views/" . $name . ".php";
     $master = $app->settings->layout->masterView;
     require "/php/Spit/Views/" . $master . ".php";

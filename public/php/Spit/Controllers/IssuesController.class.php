@@ -24,6 +24,7 @@ class IssuesController extends Controller {
   public function run($path) {
     
     if (count($path) == 1) {
+      $this->title = T_("Issues");
       $this->showView("issues/index");
     }
     else {
@@ -34,8 +35,8 @@ class IssuesController extends Controller {
   }
   
   private function runNew() {
-    $data["editorTitle"] = T_("New Issue");
-    $this->showView("issues/editor", $data);
+    $this->title = T_("New Issue");
+    $this->showView("issues/editor");
   }
 }
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-24 23:02-0000\n"
+"POT-Creation-Date: 2012-05-24 23:21-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -13,17 +13,27 @@ msgstr ""
 "X-Poedit-KeywordsList: T_\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: php/Spit/Controllers/IssuesController.class.php:37
+#: php/Spit/Controllers/IssuesController.class.php:27
+#: php/Spit/Views/master.php:37
+msgid "Issues"
+msgstr "Probleme"
+
+#: php/Spit/Controllers/IssuesController.class.php:38
 msgid "New Issue"
 msgstr "Neue ausgabe"
+
+#: php/Spit/Views/index.php:20
+msgid "Hello World"
+msgstr "Hallo Welt"
+
+#: php/Spit/Views/index.php:21
+#, php-format
+msgid "Welcome to %s."
+msgstr "Willkommen bei %s."
 
 #: php/Spit/Views/master.php:36
 msgid "Home"
 msgstr "Start"
-
-#: php/Spit/Views/master.php:37
-msgid "Issues"
-msgstr "Probleme"
 
 #: php/Spit/Views/master.php:41
 msgid "Language:"
@@ -65,4 +75,8 @@ msgstr "Plattform"
 #: php/Spit/Views/issues/editor.php:90
 msgid "Assignee"
 msgstr "Assignee"
+
+#: php/Spit/Views/issues/index.php:21
+msgid "New"
+msgstr "Neu"
 
