@@ -1,22 +1,22 @@
 <?php
 
-namespace Spit\Pages;
+namespace Spit\Controllers;
 
-require "Page.class.php";
-require "HomePage.class.php";
-require "IssuesPage.class.php";
+require "Controller.class.php";
+require "IndexController.class.php";
+require "IssuesController.class.php";
 
 use Exception;
 
-class PageProvider {
+class ControllerProvider {
 
   public function get($path) {
     if (count($path) == 0) {
-      $c = new HomePage;
+      $c = new IndexController;
     }
     else {
       switch($path[0]) {
-        case "issues": $c = new IssuesPage; break;
+        case "issues": $c = new IssuesController; break;
         default: throw new Exception("page not found for: " . $path[0]);
       }
     }

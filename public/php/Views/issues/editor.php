@@ -1,4 +1,4 @@
-<h2>New Issue</h2>
+<h2><?=$editorTitle?></h2>
 <form method="post">
   <div class="box">
     <p>

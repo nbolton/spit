@@ -1,13 +1,13 @@
 <?php
 
-namespace Spit\Pages;
+namespace Spit\Controllers;
 
-class IssuesPage extends Page {
+class IssuesController extends Controller {
   
   public function run($path) {
     
     if (count($path) == 1) {
-      $this->showView("issues");
+      $this->showView("issues/index");
     }
     else {
       switch (strtolower($path[1])) {
@@ -17,7 +17,8 @@ class IssuesPage extends Page {
   }
   
   private function runNew() {
-    $this->showView("issues_new");
+    $data["editorTitle"] = "New Issue";
+    $this->showView("issues/editor", $data);
   }
 }
 

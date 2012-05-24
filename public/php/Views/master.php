@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="content">
-        <?php require $content . ".php"; ?>
+        <?php require $content; ?>
       </div>
       <div class="footer">
         <div class="footerContent">
