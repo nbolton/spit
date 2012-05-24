@@ -19,7 +19,7 @@
 
 <html>
   <head>
-    <title><?=$app->settings->site->title?></title>
+    <title><?=$fullTitle?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta name="description" content="<?=$app->settings->site->description?>" />
     <link rel="stylesheet" type="text/css" href="<?=$app->theme?>/main.css" />

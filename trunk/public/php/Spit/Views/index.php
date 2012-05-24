@@ -17,5 +17,5 @@
  */
  ?>
 
-<h2>Hello World</h2>
-<p>Welcome to SPIT, a Simple PHP Issue Tracker.</p>
+<h2><?=T_("Hello World")?></h2>
+<p><?=sprintf(T_("Welcome to %s."), "SPIT, a Simple PHP Issue Tracker")?></p>
