@@ -2,7 +2,7 @@
 
 namespace Spit;
 
-require "Pages/PageProvider.class.php";
+require "Controllers/ControllerProvider.class.php";
 
 class App {
   
@@ -13,9 +13,9 @@ class App {
     $pathString = isset($_GET["path"]) ? $_GET["path"] : "";
     $path = preg_split('@/@', $pathString, NULL, PREG_SPLIT_NO_EMPTY);
   
-    $provider = new Pages\PageProvider;
-    $page = $provider->get($path);
-    $page->run($path);
+    $provider = new Controllers\ControllerProvider;
+    $controller = $provider->get($path);
+    $controller->run($path);
   }
 }
 
