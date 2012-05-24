@@ -1,5 +1,6 @@
 body {
-  font-family: Calibri;
+  font-family: arial, sans-serif;
+  font-size: 90%;
   color: #444;
   background-color: #222;
   text-align: center;
@@ -14,6 +15,18 @@ a {
 h1, h2, h3, p {
   padding: 0px;
   margin: 0px 0px 3px 0px;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+h2 {
+  font-size: 1.4em;
+}
+
+h3 {
+  font-size: 1.2em;
 }
 
 div.layout {
@@ -72,25 +85,48 @@ form div.box {
   width: 100%;
 }
 
-form p {
+form div.row {
   clear: left;
   padding-left: 130px;
-  margin: 0;
+  margin-right: 10px;
 }
 
-form p label {
+form div.column {
+  width: 50%;
+  float: left;
+}
+
+form label {
   width: 130px;
   text-align: right;
   font-weight: bold;
   float: left;
   margin-left: -140px;
-  padding: 3px 0px 0px 0px;
+  padding: 4px 0px 0px 0px;
 }
 
-form p input.text {
-  width: 99%;
+form select {
+  margin-left: 0px;
+  width: 60%;
+}
+
+form input.text,
+form textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+form textarea {
+  height: 150px;
+}
+
+form textarea,
+form select {
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 form div.buttons {
   clear: both;
+  margin-left: -3px;
 }
