@@ -32,6 +32,8 @@ class App {
   public function __construct() {
     $this->settings = new Settings;
     $this->locale = new Locale;
+    $this->root = "";
+    $this->theme = $this->root . "/theme/default";
   }
   
   public function run() {

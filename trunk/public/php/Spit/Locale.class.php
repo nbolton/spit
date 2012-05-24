@@ -22,6 +22,13 @@
 
 namespace Spit;
 
+class Language {
+  function __construct($code, $name) {
+    $this->code = $code;
+    $this->name = $name;
+  }
+}
+
 class Locale {
   
   var $lang;
@@ -34,6 +41,11 @@ class Locale {
     
     // right to left text languages
     $this->rtl = array("ar", "he");
+    
+    $this->languages = array(
+      new Language("en", "English"),
+      new Language("de", "Deutsch")
+    );
   }
 
   function fixItefTag($tag) {
@@ -115,6 +127,18 @@ class Locale {
   
   function getCountry() {
     return reset(explode("-", $this->lang));
+  }
+  
+  function getLanguages() {
+    return $this->languages;
+  }
+  
+  function getCurrent() {
+    foreach ($this->getLanguages() as $l) {
+      if ($l->code == $this->lang) {
+        return $l;
+      }
+    }
   }
 }
 

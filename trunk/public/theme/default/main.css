@@ -30,16 +30,23 @@ h3 {
 }
 
 div.layout {
-  border-radius: 5px;
-  background-color: #eee;
   text-align: left;
   min-width: 600px;
+  float: left;
+  width: 100%;
 }
 
 div.layout div.header,
 div.layout div.footer {
+  float: left;
   width: 100%;
+  clear: both;
   background-color: #ddd;
+}
+
+div.layout div.content {
+  background-color: #eee;
+  clear: both;
 }
 
 div.layout div.header {
@@ -54,10 +61,23 @@ div.layout div.header div.headerContent {
 
 div.layout div.header p {
   font-size: .9em;
+  clear: both;
 }
 
-div.layout div.header div.links {
-  margin-top: 7px;
+div.layout div.header div.links,
+div.layout div.header div.language {
+  margin: 7px 0px 7px 0px;
+  float: left;
+  width: 50%;
+}
+
+div.layout div.header div.language {
+  text-align: right;
+  margin-top: 0px;
+}
+
+div.layout div.header div.language button {
+  margin: 0px;
 }
 
 div.layout div.content {
@@ -129,4 +149,23 @@ form select {
 form div.buttons {
   clear: both;
   margin-left: -3px;
+}
+
+button img.arrow {
+  width: 0;
+  height: 0;
+  border: 1px solid transparent;
+  border-width: 4px 4px 0;
+  margin-bottom: 2px;
+  margin-left: 0px;
+  border-top-color: #555;
+}
+
+div.menu {
+  display: none;
+  border: 1px solid #ccc;
+  background-color: #f6f6f6;
+  margin: 7px 0px 10px 0px;
+  padding: 10px;
+  text-align: left;
 }

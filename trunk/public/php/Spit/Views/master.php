@@ -19,20 +19,33 @@
 
 <html>
   <head>
-    <title><?=$settings->site->title?></title>
+    <title><?=$app->settings->site->title?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-    <meta name="description" content="<?=$settings->site->description?>" />
-    <link rel="stylesheet" type="text/css" href="<?=$root?>/theme/default/main.css" />
+    <meta name="description" content="<?=$app->settings->site->description?>" />
+    <link rel="stylesheet" type="text/css" href="<?=$app->theme?>/main.css" />
+    <script type="text/javascript" src="<?=$app->root?>/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="<?=$app->root?>/js/common.js"></script>
   </head>
   <body>
     <div class="layout">
       <div class="header">
         <div class="headerContent">
-          <h1><?=$settings->site->title?></h1>
-          <p><?=$settings->site->description?></p>
+          <h1><?=$app->settings->site->title?></h1>
+          <p><?=$app->settings->site->description?></p>
           <div class="links">
-            <a href="<?=$root?>/">Home</a>,
-            <a href="<?=$root?>/issues/">Issues</a>
+            <a href="<?=$app->root?>/"><?=T_("Home")?></a>,
+            <a href="<?=$app->root?>/issues/"><?=T_("Issues")?></a>
+          </div>
+          <div class="language">
+            <button id="language">
+              <span class="text"><?=T_("Language:")?> <?=$app->locale->getCurrent()->name?></span>
+              <img src="<?=$app->theme?>/image/pixel.gif" class="arrow" />
+            </button>
+            <div class="menu">
+              <?php foreach ($app->locale->getLanguages() as $l): ?>
+              <div class="item"><a href="?lang=<?=$l->code?>"><?=$l->name?></a></div>
+              <?php endforeach ?>
+            </div>
           </div>
         </div>
       </div>
@@ -41,7 +54,13 @@
       </div>
       <div class="footer">
         <div class="footerContent">
-          <p>Powered by <a href="http://spit-foss.org">SPIT</a>: Simple PHP Issue Tracker. Copyright &copy; Nick Bolton 2012.</p>
+          <p>
+          <?php
+            echo sprintf(
+              T_("Powered by %s. Copyright &copy; %s 2012."),
+              "<a href=\"http://spit-foss.org\">SPIT</a>: Simple PHP Issue Tracker", "Nick Bolton");
+          ?>
+          </p>
         </div>
       </div>
     </div>
