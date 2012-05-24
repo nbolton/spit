@@ -36,6 +36,10 @@ class Controller {
     $master = $app->settings->layout->masterView;
     require "/php/Spit/Views/" . $master . ".php";
   }
+  
+  protected function getPostValue($name) {
+    return isset($_POST[$name]) ? $_POST[$name] : "";
+  }
 }
 
 ?>

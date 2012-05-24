@@ -19,3 +19,9 @@
 
 <h2><?=$title?></h2>
 <p><a href="new/"><?=T_("New")?></a></p>
+
+<ul>
+<?php foreach($issues as $issue): ?>
+  <li><?=$issue->title?> - <?=$issue->details?></li>
+<?php endforeach ?>
+</ul>

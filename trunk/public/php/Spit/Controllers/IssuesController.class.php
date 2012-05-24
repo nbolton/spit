@@ -19,24 +19,46 @@
 
 namespace Spit\Controllers;
 
+use Exception;
+
 class IssuesController extends Controller {
   
+  public function __construct() {
+    $this->ds = new \Spit\DataStores\IssueDataStore;
+  }
+  
   public function run($path) {
-    
     if (count($path) == 1) {
-      $this->title = T_("Issues");
-      $this->showView("issues/index");
+      $this->runIndex();
     }
     else {
       switch (strtolower($path[1])) {
         case "new": $this->runNew(); break;
+        default: throw new Exception("unknown path: " . $path[1]);
       }
     }
   }
   
+  public function runIndex() {
+    $this->title = T_("Issues");
+    $data["issues"] = $this->ds->get();
+    $this->showView("issues/index", $data);
+  }
+  
   private function runNew() {
     $this->title = T_("New Issue");
-    $this->showView("issues/editor");
+    
+    $data = array();
+    $data["saved"] = false;
+    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+      $issue = new \Spit\Models\Issue;
+      $issue->title = $this->getPostValue("title");
+      $issue->details = $this->getPostValue("details");
+      $this->ds->create($issue);
+      $data["saved"] = true;
+    }
+    
+    $this->showView("issues/editor", $data);
   }
 }
 
