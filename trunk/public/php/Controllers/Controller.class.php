@@ -15,7 +15,7 @@ class Controller {
     $content = "php/Views/" . $name . ".php";
     $settings = $this->app->settings;
     
-    require "/php/Views/" . $settings->masterView . ".php";
+    require "/php/Views/" . $settings->layout->masterView . ".php";
   }
 }
 
