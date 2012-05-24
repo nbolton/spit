@@ -18,6 +18,10 @@
 ?>
 
 <h2><?=$title?></h2>
+
+<?php if($saved): ?>
+<p><?=T_("Issue saved.")?></p>
+<?php else: ?>
 <form method="post">
   <div class="box">
     <div class="column">
@@ -33,11 +37,11 @@
     </div>
     <div class="row">
       <label for="title"><?=T_("Title")?></label>
-      <input id="title" type="text" class="text" />
+      <input id="title" name="title" type="text" class="text" />
     </div>
     <div class="row">
       <label for="details"><?=T_("Details")?></label>
-      <textarea id="details" type="details"></textarea>
+      <textarea id="details" name="details" type="details"></textarea>
     </div>
     <div class="column">
       <div class="row">
@@ -107,3 +111,4 @@
     <input type="submit" value="Create" >
   </div>
 </form>
+<?php endif ?>

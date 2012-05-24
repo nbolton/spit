@@ -25,6 +25,11 @@ require "Controllers/ControllerProvider.class.php";
 require "Settings.class.php";
 require "Locale.class.php";
 
+require "DataStores/DataStore.class.php";
+require "DataStores/IssueDataStore.class.php";
+
+require "Models/Issue.class.php";
+
 class App {
   
   const DEFAULT_PAGE = "home";
