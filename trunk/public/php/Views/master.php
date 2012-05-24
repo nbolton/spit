@@ -21,6 +21,9 @@
         <?php require $content . ".php"; ?>
       </div>
       <div class="footer">
+        <div class="footerContent">
+          <p>Copyright &copy; Nick Bolton 2012</p>
+        </div>
       </div>
     </div>
   </body>
