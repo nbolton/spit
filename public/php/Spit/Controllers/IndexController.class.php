@@ -17,9 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/gettext/gettext.inc";
-require "php/Spit/App.class.php";
-$app = new Spit\App;
-$app->run();
+namespace Spit\Controllers;
+
+class IndexController extends Controller {
+  
+  public function run() {
+  
+    $this->showView("index");
+  }
+}
 
 ?>

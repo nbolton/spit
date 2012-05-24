@@ -17,9 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/gettext/gettext.inc";
-require "php/Spit/App.class.php";
-$app = new Spit\App;
-$app->run();
+namespace Spit\Controllers;
+
+class Controller {
+
+  public $app;
+  
+  protected function showView($name, $data = array()) {
+    foreach ($data as $k => $v) {
+      $$k = $v;
+    }
+    
+    $root = "";
+    $content = "php/Spit/Views/" . $name . ".php";
+    $settings = $this->app->settings;
+    
+    require "/php/Spit/Views/" . $settings->layout->masterView . ".php";
+  }
+}
 
 ?>

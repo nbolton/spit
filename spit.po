@@ -1,0 +1,51 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-24 21:14-0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: C:\\Projects\\spit\\trunk\\public\\\n"
+"X-Poedit-KeywordsList: T_\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: php/Spit/Controllers/IssuesController.class.php:37
+msgid "New Issue"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:25
+msgid "Tracker"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:35
+msgid "Title"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:39
+msgid "Details"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:44
+msgid "Status"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:60
+msgid "Priority"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:70
+msgid "Version"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:79
+msgid "Platform"
+msgstr ""
+
+#: php/Spit/Views/issues/editor.php:90
+msgid "Assignee"
+msgstr ""
+
