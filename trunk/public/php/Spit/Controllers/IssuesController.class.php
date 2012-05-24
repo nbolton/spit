@@ -17,9 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/gettext/gettext.inc";
-require "php/Spit/App.class.php";
-$app = new Spit\App;
-$app->run();
+namespace Spit\Controllers;
+
+class IssuesController extends Controller {
+  
+  public function run($path) {
+    
+    if (count($path) == 1) {
+      $this->showView("issues/index");
+    }
+    else {
+      switch (strtolower($path[1])) {
+        case "new": $this->runNew(); break;
+      }
+    }
+  }
+  
+  private function runNew() {
+    $data["editorTitle"] = T_("New Issue");
+    $this->showView("issues/editor", $data);
+  }
+}
 
 ?>

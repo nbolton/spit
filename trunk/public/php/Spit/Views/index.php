@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,10 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ ?>
 
-require "php/gettext/gettext.inc";
-require "php/Spit/App.class.php";
-$app = new Spit\App;
-$app->run();
-
-?>
+<h2>Hello World</h2>
+<p>Welcome to SPIT, a Simple PHP Issue Tracker.</p>

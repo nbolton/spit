@@ -1,9 +1,28 @@
+<?php
+/*
+ * SPIT: Simple PHP Issue Tracker
+ * Copyright (C) 2012 Nick Bolton
+ * 
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file COPYING that should have accompanied this file.
+ * 
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+?>
+
 <h2><?=$editorTitle?></h2>
 <form method="post">
   <div class="box">
     <div class="column">
       <div class="row">
-        <label for="tracker">Tracker</label>
+        <label for="tracker"><?=T_("Tracker")?></label>
         <select id="tracker" name="tracker">
           <option value="1" selected="selected">Bug</option>
           <option value="2">Feature</option>
@@ -13,16 +32,16 @@
       </div>
     </div>
     <div class="row">
-      <label for="title">Title</label>
+      <label for="title"><?=T_("Title")?></label>
       <input id="title" type="text" class="text" />
     </div>
     <div class="row">
-      <label for="details">Details</label>
+      <label for="details"><?=T_("Details")?></label>
       <textarea id="details" type="details"></textarea>
     </div>
     <div class="column">
       <div class="row">
-        <label for="status">Status</label>
+        <label for="status"><?=T_("Status")?></label>
         <select id="status" name="status">
           <option value="1" selected="selected">New</option>
           <option value="12">Reviewed</option>
@@ -38,7 +57,7 @@
         </select>
       </div>
       <div class="row">
-        <label for="priority">Priority</label>
+        <label for="priority"><?=T_("Priority")?></label>
         <select id="priority" name="priority">
           <option value="3">Low</option>
           <option value="4" selected="selected">Normal</option>
@@ -48,7 +67,7 @@
         </select>
       </div>
       <div class="row">
-        <label for="version">Version</label>
+        <label for="version"><?=T_("Version")?></label>
         <select id="version" name="version">
           <option value=""></option>
           <option value="39">1.4.9</option>
@@ -57,7 +76,7 @@
     </div>
     <div class="column">
       <div class="row">
-        <label for="platform">Platform</label>
+        <label for="platform"><?=T_("Platform")?></label>
         <select id="platform" name="platform">
           <option value=""></option>
           <option value="Windows">Windows</option>
@@ -68,7 +87,7 @@
         </select>
       </div>
       <div class="row">
-        <label for="assignee">Assignee</label>
+        <label for="assignee"><?=T_("Assignee")?></label>
         <select id="assignee" name="assignee">
           <option value=""></option>
           <option value="40">Brendon Justin</option>

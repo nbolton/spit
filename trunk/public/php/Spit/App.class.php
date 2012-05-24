@@ -17,9 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/gettext/gettext.inc";
-require "php/Spit/App.class.php";
-$app = new Spit\App;
-$app->run();
+namespace Spit;
+
+session_start();
+
+require "Controllers/ControllerProvider.class.php";
+require "Settings.class.php";
+require "Locale.class.php";
+
+class App {
+  
+  const DEFAULT_PAGE = "home";
+  
+  public function __construct() {
+    $this->settings = new Settings;
+    $this->locale = new Locale;
+  }
+  
+  public function run() {
+  
+    $this->locale->run();
+    
+    $pathString = isset($_GET["path"]) ? $_GET["path"] : "";
+    $path = preg_split('@/@', $pathString, NULL, PREG_SPLIT_NO_EMPTY);
+  
+    $provider = new Controllers\ControllerProvider;
+    $controller = $provider->get($path);
+    $controller->app = $this;
+    $controller->run($path);
+  }
+}
 
 ?>
