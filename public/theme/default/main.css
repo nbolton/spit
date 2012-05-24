@@ -11,37 +11,86 @@ a {
   color: #6677ff;
 }
 
-div.layout {
-  border-radius: 5px;
-  background-color: #eee;
-  text-align: left;
-}
-
-div.header {
-  width: 100%;
-  background-color: #ddd;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  color: #555;
-}
-
 h1, h2, h3, p {
   padding: 0px;
   margin: 0px 0px 3px 0px;
 }
 
-div.header div.headerContent {
+div.layout {
+  border-radius: 5px;
+  background-color: #eee;
+  text-align: left;
+  min-width: 600px;
+}
+
+div.layout div.header,
+div.layout div.footer {
+  width: 100%;
+  background-color: #ddd;
+}
+
+div.layout div.header {
+  color: #555;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+div.layout div.header div.headerContent {
   padding: 5px 10px 10px 10px;
 }
 
-div.header p {
+div.layout div.header p {
   font-size: .9em;
 }
 
-div.header div.links {
+div.layout div.header div.links {
   margin-top: 7px;
 }
 
 div.layout div.content {
   padding: 10px;
+}
+
+div.layout div.footer {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  clear: both;
+}
+
+div.layout div.footer div.footerContent {
+  padding: 7px 10px 5px 10px;
+  font-size: .8em;
+  color: #888;
+}
+
+form div.box {
+  border: 1px solid #ccc;
+  background-color: #f6f6f6;
+  margin: 7px 0px 10px 0px;
+  padding: 10px 0px 10px 0px;
+  float: left;
+  width: 100%;
+}
+
+form p {
+  clear: left;
+  padding-left: 130px;
+  margin: 0;
+}
+
+form p label {
+  width: 130px;
+  text-align: right;
+  font-weight: bold;
+  float: left;
+  margin-left: -140px;
+  padding: 3px 0px 0px 0px;
+}
+
+form p input.text {
+  width: 99%;
+}
+
+form div.buttons {
+  clear: both;
 }
