@@ -1,3 +1,3 @@
 RewriteEngine on
-RewriteCond %{REQUEST_URI} !^(/index\.php|/favicon\.ico|/theme/.*)
+RewriteCond %{REQUEST_URI} !^/(index\.php|favicon\.ico|theme/.*|js/.*)
 RewriteRule ^(.*)$ /index.php?path=$1 [QSA,PT]

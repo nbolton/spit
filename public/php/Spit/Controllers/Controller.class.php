@@ -28,11 +28,10 @@ class Controller {
       $$k = $v;
     }
     
-    $root = "";
+    $app = $this->app;
     $content = "php/Spit/Views/" . $name . ".php";
-    $settings = $this->app->settings;
-    
-    require "/php/Spit/Views/" . $settings->layout->masterView . ".php";
+    $master = $app->settings->layout->masterView;
+    require "/php/Spit/Views/" . $master . ".php";
   }
 }
 
