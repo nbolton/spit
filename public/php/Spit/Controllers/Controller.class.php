@@ -21,8 +21,11 @@ namespace Spit\Controllers;
 
 class Controller {
 
+  const DEFAULT_VIEW_DIR = "php/Spit/Views/";
+
   public $app;
   public $title;
+  public $viewDir = self::DEFAULT_VIEW_DIR;
   
   protected function showView($name, $data = array()) {
     foreach ($data as $k => $v) {
@@ -32,9 +35,9 @@ class Controller {
     $app = $this->app;
     $title = $this->title;
     $fullTitle = $app->settings->site->title . (($title != "") ? " - " . $title : "");
-    $content = "php/Spit/Views/" . $name . ".php";
+    $content = $this->viewDir . $name . ".php";
     $master = $app->settings->layout->masterView;
-    require "/php/Spit/Views/" . $master . ".php";
+    require self::DEFAULT_VIEW_DIR . $master . ".php";
   }
   
   protected function getPostValue($name) {
