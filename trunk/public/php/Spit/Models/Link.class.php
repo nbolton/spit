@@ -3,11 +3,10 @@
 namespace Spit;
 
 class Link {
-  public $name;
-  public $link;
-  public function __construct($name, $link) {
+  public function __construct($name, $href, $external = false) {
     $this->name = $name;
-    $this->link = $link;
+    $this->href = $href;
+    $this->external = $external;
   }
 }
 

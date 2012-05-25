@@ -34,7 +34,7 @@
           <p><?=$app->settings->site->description?></p>
           <div class="links">
             <?php foreach ($app->links as $k => $l): ?>
-              <a href="<?=$app->root?><?=$l->link?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
+              <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
             <?php endforeach ?>
           </div>
           <div class="language">
