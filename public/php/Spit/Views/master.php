@@ -23,8 +23,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta name="description" content="<?=$app->settings->site->description?>" />
     <link rel="stylesheet" type="text/css" href="<?=$app->theme?>/main.css" />
+    <?=$app->controller->getViewStyle($view);?>
     <script type="text/javascript" src="<?=$app->root?>js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="<?=$app->root?>js/common.js"></script>
+    <?=$app->controller->getViewScript($view);?>
   </head>
   <body>
     <div class="layout">
