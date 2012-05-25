@@ -77,6 +77,13 @@ class App {
   public function addController($name, $controller) {
     $this->controllers->map($name, $controller);
   }
+  
+  public function getFullLink($link) {
+    if ($link->external) {
+      return $link->href;
+    }
+    return $this->root . $link->href;
+  }
 }
 
 ?>
