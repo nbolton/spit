@@ -27,17 +27,22 @@ use Exception;
 
 class ControllerProvider {
 
+  public function __construct() {
+    $this->controllers = array();
+    $this->map("", new IndexController);
+    $this->map("issues", new IssuesController);
+  }
+  
+  public function map($name, $controller) {
+    $this->controllers[$name] = $controller;
+  }
+
   public function get($path) {
-    if (count($path) == 0) {
-      $c = new IndexController;
+    $name = count($path) != 0 ? $path[0] : "";
+    if (array_key_exists($name, $this->controllers)) {
+      return $this->controllers[$name];
     }
-    else {
-      switch($path[0]) {
-        case "issues": $c = new IssuesController; break;
-        default: throw new Exception("page not found for: " . $path[0]);
-      }
-    }
-    return $c;
+    throw new Exception("controller not found for: " . $name);
   }
 }
 

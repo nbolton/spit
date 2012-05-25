@@ -23,8 +23,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta name="description" content="<?=$app->settings->site->description?>" />
     <link rel="stylesheet" type="text/css" href="<?=$app->theme?>/main.css" />
-    <script type="text/javascript" src="<?=$app->root?>/js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="<?=$app->root?>/js/common.js"></script>
+    <script type="text/javascript" src="<?=$app->root?>js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="<?=$app->root?>js/common.js"></script>
   </head>
   <body>
     <div class="layout">
@@ -33,8 +33,9 @@
           <h1><?=$app->settings->site->title?></h1>
           <p><?=$app->settings->site->description?></p>
           <div class="links">
-            <a href="<?=$app->root?>/"><?=T_("Home")?></a>,
-            <a href="<?=$app->root?>/issues/"><?=T_("Issues")?></a>
+            <?php foreach ($app->links as $k => $l): ?>
+              <a href="<?=$app->root?><?=$l->link?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
+            <?php endforeach ?>
           </div>
           <div class="language">
             <button id="language">

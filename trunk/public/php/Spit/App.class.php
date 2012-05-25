@@ -24,10 +24,12 @@ session_start();
 require "Controllers/ControllerProvider.class.php";
 require "Settings.class.php";
 require "Locale.class.php";
+require "Plugins.class.php";
 
 require "DataStores/DataStore.class.php";
 require "DataStores/IssueDataStore.class.php";
 
+require "Models/Link.class.php";
 require "Models/Issue.class.php";
 
 class App {
@@ -37,21 +39,43 @@ class App {
   public function __construct() {
     $this->settings = new Settings;
     $this->locale = new Locale;
-    $this->root = "";
-    $this->theme = $this->root . "/theme/default";
+    $this->root = self::getRoot();
+    $this->theme = $this->root . "theme/default";
+    $this->plugins = new Plugins($this);
+    $this->controllers = new Controllers\ControllerProvider;
+    
+    $this->links = array(
+      new Link(T_("Home"), ""),
+      new Link(T_("Issues"), "issues/")
+    );
+  }
+  
+  private static function getRoot() {
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $pos = strrpos($scriptName, "/");
+    return substr($scriptName, 0, $pos + 1);
   }
   
   public function run() {
   
+    $this->plugins->load();
+    
     $this->locale->run();
     
     $pathString = isset($_GET["path"]) ? $_GET["path"] : "";
     $path = preg_split('@/@', $pathString, NULL, PREG_SPLIT_NO_EMPTY);
   
-    $provider = new Controllers\ControllerProvider;
-    $controller = $provider->get($path);
+    $controller = $this->controllers->get($path);
     $controller->app = $this;
     $controller->run($path);
+  }
+  
+  public function addLink($link) {
+    array_push($this->links, $link);
+  }
+  
+  public function addController($name, $controller) {
+    $this->controllers->map($name, $controller);
   }
 }
 
