@@ -39,13 +39,17 @@ class IssuesController extends Controller {
     }
   }
   
-  public function runIndex() {
+  private function runIndex() {
     $this->title = T_("Issues");
     $data["issues"] = $this->ds->get();
     $this->showView("issues/index", $data);
   }
   
   private function runNew() {
+    if (isset($_GET["getFieldsFor"])) {
+      exit(json_encode($this->getFieldsFor($_GET["getFieldsFor"])));
+    }
+  
     $this->title = T_("New Issue");
     
     $data = array();
@@ -59,6 +63,24 @@ class IssuesController extends Controller {
     }
     
     $this->showView("issues/editor", $data);
+  }
+  
+  private function getFieldsFor($trackerId) {
+    $status = new \Spit\Models\Fields\Select("status", T_("Status"));
+    $status->add(T_("New"));
+    $status->add(T_("Reviewed"));
+    $status->add(T_("Accepted"));
+    $status->add(T_("PatchesWelcome"));
+    $status->add(T_("GotPatch"));
+    $status->add(T_("InProgress"));
+    $status->add(T_("Fixed"));
+    $status->add(T_("Invalid"));
+    $status->add(T_("Duplicate"));
+    $status->add(T_("CannotReproduce"));
+    
+    return array(
+      $status
+    );
   }
 }
 

@@ -31,6 +31,7 @@ require "DataStores/IssueDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";
+require "Models/Fields/Select.class.php";
 
 class App {
   
@@ -65,9 +66,9 @@ class App {
     $pathString = isset($_GET["path"]) ? $_GET["path"] : "";
     $path = preg_split('@/@', $pathString, NULL, PREG_SPLIT_NO_EMPTY);
   
-    $controller = $this->controllers->get($path);
-    $controller->app = $this;
-    $controller->run($path);
+    $this->controller = $this->controllers->get($path);
+    $this->controller->app = $this;
+    $this->controller->run($path);
   }
   
   public function addLink($link) {

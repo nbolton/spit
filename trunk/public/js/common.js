@@ -12,4 +12,8 @@ $(function() {
     });
     menu.slideDown(100);
   });
+  
+  if ("viewLoad" in self) {
+    viewLoad();
+  }
 });

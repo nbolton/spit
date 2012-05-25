@@ -43,6 +43,14 @@
       <label for="details"><?=T_("Details")?></label>
       <textarea id="details" name="details" type="details"></textarea>
     </div>
+    <div id="variables">
+      <div class="column" id="column1"></div>
+      <div class="column" id="column2"></div>
+      <div class="row" style="display: none">
+        <label></label>
+        <select></select>
+      </div>
+    </div>
     <div class="column">
       <div class="row">
         <label for="status"><?=T_("Status")?></label>
