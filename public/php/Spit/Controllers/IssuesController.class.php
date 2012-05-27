@@ -38,7 +38,7 @@ class IssuesController extends Controller {
   
   private function runIndex() {
     $data["fields"] = $this->getFields();
-    $data["issues"] = $this->ds->get();
+    $data["issues"] = $this->ds->get(0, 15, "updated", "desc");
     $this->showView("issues/index", T_("Issues"), $data);
   }
   
