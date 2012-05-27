@@ -18,7 +18,7 @@
 ?>
 
 <h2><?=$title?></h2>
-<p><a href="new/"><?=T_("New")?></a></p>
+<p><a href="new/"><?=T_("New issue")?></a></p>
 <table>
   <thead>
   <tr>

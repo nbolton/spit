@@ -29,9 +29,14 @@ a {
   color: #6677ff;
 }
 
-h1, h2, h3, p {
+h1, h2, h3 {
   padding: 0px;
   margin: 0px 0px 3px 0px;
+}
+
+p {
+  padding: 0px 0px 6px 0px;
+  margin: 6px 0px 6px 0px;
 }
 
 h1 {
@@ -64,6 +69,11 @@ div.layout div.footer {
   width: 100%;
   clear: both;
   background-color: #ddd;
+}
+
+div.layout div.header p {
+  padding: 0px;
+  margin: 0px 0px 3px 0px;
 }
 
 div.layout div.content {
