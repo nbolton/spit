@@ -38,7 +38,7 @@ class Controller {
     $content = $this->viewDir . $view . ".php";
     $master = $app->settings->layout->masterView;
     
-    if (!file_exists($_SERVER["DOCUMENT_ROOT"] . $content)) {
+    if (!file_exists(sprintf("%s/%s", $_SERVER["DOCUMENT_ROOT"], $content))) {
       throw new Exception("view not found at: " . $content);
     }
     
