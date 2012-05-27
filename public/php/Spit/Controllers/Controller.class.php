@@ -54,7 +54,7 @@ class Controller {
   }
   
   public function getViewStyle($view) {
-    $path = sprintf("%s/%s.css", $this->app->theme, $view);
+    $path = sprintf("%s/style/%s.css", $this->app->theme, $view);
     if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {
       return sprintf("<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />\n", $path);
     }

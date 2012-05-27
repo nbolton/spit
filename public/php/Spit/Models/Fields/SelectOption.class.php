@@ -21,9 +21,10 @@ namespace Spit\Models\Fields;
 
 class SelectOption {
   
-  public function __construct($value, $name) {
+  public function __construct($value, $text, $selected) {
     $this->value = $value;
-    $this->name = $name;
+    $this->text = $text;
+    $this->selected = $selected;
   }
 }
 

@@ -62,7 +62,7 @@ class IssuesController extends Controller {
     $status = new \Spit\Models\Fields\Select("status", T_("Status"));
     $status->add(T_("New"));
     $status->add(T_("Reviewed"));
-    $status->add(T_("Accepted"));
+    $status->add(T_("Accepted"), true);
     $status->add(T_("PatchesWelcome"));
     $status->add(T_("GotPatch"));
     $status->add(T_("InProgress"));
@@ -71,8 +71,38 @@ class IssuesController extends Controller {
     $status->add(T_("Duplicate"));
     $status->add(T_("CannotReproduce"));
     
+    $priority = new \Spit\Models\Fields\Select("priority", T_("Priority"));
+    $priority->add(T_("Low"));
+    $priority->add(T_("Normal"), true);
+    $priority->add(T_("High"));
+    $priority->add(T_("Urgent"));
+    $priority->add(T_("Immediate"));
+    
+    $version = new \Spit\Models\Fields\Select("version", T_("Version"));
+    $version->add("1.4.9");
+    
+    $platform = new \Spit\Models\Fields\Select("platform", T_("Platform"));
+    $platform->add("");
+    $platform->add("Windows");
+    $platform->add("Mac OS X");
+    $platform->add("Linux");
+    $platform->add("Unix");
+    $platform->add("Various");
+    
+    $assignee = new \Spit\Models\Fields\Select("assignee", T_("Assignee"));
+    $assignee->add("");
+    $assignee->add("Brendon Justin");
+    $assignee->add("Chris Schoeneman");
+    $assignee->add("Ed Carrel");
+    $assignee->add("Jason Axelson");
+    $assignee->add("Jean-Sébastien Dominique");
+    $assignee->add("Jodi Jones");
+    $assignee->add("Nick Bolton");
+    $assignee->add("Sorin Sbârnea");
+    $assignee->add("Syed Amer Gilani");
+    
     return array(
-      $status
+      $status, $priority, $version, $platform, $assignee
     );
   }
 }
