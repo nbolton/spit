@@ -34,7 +34,7 @@ h1, h2, h3 {
 }
 
 p {
-  padding: 0px 0px 6px 0px;
+  padding: 0px;
   margin: 6px 0px 6px 0px;
 }
 
@@ -214,6 +214,7 @@ table {
   background-color: #f6f6f6;
   width: 100%;
   font-size: 95%;
+  margin: 12px 0px 0px 0px;
 }
 
 table th,
