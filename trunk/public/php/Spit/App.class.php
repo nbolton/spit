@@ -154,10 +154,6 @@ class App {
     return sprintf("%s/image/%s", $this->getThemeRoot(), $name);
   }
   
-  public function getValue($object, $field) {
-    return $object->$field;
-  }
-  
   public function getSiteTitle() {
     if ($this->project != null) {
       return $this->project->title;
