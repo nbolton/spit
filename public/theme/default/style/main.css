@@ -21,8 +21,7 @@ body {
   color: #444;
   background-color: #222;
   text-align: center;
-  padding: 20px;
-  margin: 0px;
+  margin: 0px 20px 0px 20px;
 }
 
 a {
@@ -61,6 +60,7 @@ div.layout {
   min-width: 600px;
   float: left;
   width: 100%;
+  margin: 20px 0px 20px 0px;
 }
 
 div.layout div.header,
@@ -71,7 +71,8 @@ div.layout div.footer {
   background-color: #ddd;
 }
 
-div.layout div.header p {
+div.layout div.header p,
+div.layout div.footer p {
   padding: 0px;
   margin: 0px 0px 3px 0px;
 }
