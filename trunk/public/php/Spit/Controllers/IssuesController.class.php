@@ -59,7 +59,7 @@ class IssuesController extends Controller {
   }
   
   private function getFieldsFor($trackerId) {
-    sleep(1);
+  
     $fields = array();
   
     $status = new \Spit\Models\Fields\Select("status", T_("Status"));

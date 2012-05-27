@@ -16,10 +16,11 @@
  */
 
 function viewLoad() {
-  loadVariableFields(1);
+  tracker = $("select#tracker");
+  loadVariableFields(tracker.val());
   
-  $("select#tracker").change(function() {
-    loadVariableFields($(this).attr("value"));
+  tracker.change(function() {
+    loadVariableFields($(this).val());
   });
 }
 
