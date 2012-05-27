@@ -32,9 +32,16 @@ abstract class DataStore {
     return $mysqli;
   }
   
-  public function query($queryString) {
+  public function query($format) {
     $sql = $this->getSql();
-    $result = $sql->query($queryString);
+    $args = array_slice(func_get_args(), 1);
+    
+    // escape any strings to prevent sql injection.
+    foreach ($args as $k => $v) {
+      $args[$k] = $sql->escape_string($v);
+    }
+    
+    $result = $sql->query(vsprintf($format, $args));
     if ($result == null) {
       throw new \Exception($sql->error);
     }

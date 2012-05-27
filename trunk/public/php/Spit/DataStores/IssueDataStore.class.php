@@ -21,7 +21,7 @@ namespace Spit\DataStores;
 
 class IssueDataStore extends DataStore {
 
-  public function get() {
+  public function get($start, $limit, $orderField, $orderDir) {
     $result = $this->query(
       "select i.*, t.name as tracker, s.name as status, " .
       "p.name as priority, u.name as assignee " .
@@ -30,8 +30,9 @@ class IssueDataStore extends DataStore {
       "inner join status as s on s.id = i.statusId " .
       "inner join priority as p on p.id = i.priorityId " .
       "left join user as u on u.id = i.assigneeId " .
-      "order by updated desc " .
-      "limit 0, 100"
+      "order by %s %s " .
+      "limit %d, %d",
+      $orderField, $orderDir, $start, $limit
     );
     return $this->fromResult($result);
   }
