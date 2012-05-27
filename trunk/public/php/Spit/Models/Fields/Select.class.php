@@ -32,8 +32,8 @@ class Select extends Field {
     $this->type = "select";
   }
   
-  public function add($name) {
-    array_push($this->options, new SelectOption($this->optionIndex++, $name));
+  public function add($name, $selected = false) {
+    array_push($this->options, new SelectOption($this->optionIndex++, $name, $selected));
   }
 }
 

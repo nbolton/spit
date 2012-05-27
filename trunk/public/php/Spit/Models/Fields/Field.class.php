@@ -20,9 +20,10 @@
 namespace Spit\Models\Fields;
 
 class Field {
-  public function __construct($label, $name) {
-    $this->label = $label;
+
+  public function __construct($name, $label) {
     $this->name = $name;
+    $this->label = $label;
   }
 }
 
