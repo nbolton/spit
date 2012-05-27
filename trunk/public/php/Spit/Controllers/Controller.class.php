@@ -70,6 +70,16 @@ class Controller {
   public function getPathPart($index) {
     return $this->app->path->get($index);
   }
+  
+  public function isPost() {
+    return $_SERVER["REQUEST_METHOD"] == "POST";
+  }
+  
+  public function setFormValues($object) {
+    foreach ($_POST as $k => $v) {
+      $object->$k = $v;
+    }
+  }
 }
 
 ?>
