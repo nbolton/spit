@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,18 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Spit\Controllers;
-
-class AdminController extends Controller {
-
-  public function run() {
-    switch ($this->getPathPart(1)) {
-      case "": $this->showView("admin/index", T_("Admin")); break;
-      case "workflow": $this->showView("admin/workflow", T_("Workflow")); break;
-      default: $this->showError(404); break;
-    }
-  }
-}
-
 ?>
+
+<h2><?=$title?></h2>
