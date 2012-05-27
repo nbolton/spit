@@ -38,6 +38,7 @@ require "Models/Link.class.php";
 require "Models/Issue.class.php";
 require "Models/Project.class.php";
 require "Models/Fields/Select.class.php";
+require "Models/Fields/TableField.class.php";
 
 class App {
   

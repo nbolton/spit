@@ -32,9 +32,18 @@ abstract class DataStore {
     return $mysqli;
   }
   
+  public function query($queryString) {
+    $sql = $this->getSql();
+    $result = $sql->query($queryString);
+    if ($result == null) {
+      throw new \Exception($sql->error);
+    }
+    return $result;
+  }
+  
   protected function fromResult($result) {
     $data = array();
-    if ($result->num_rows == 0)
+    if ($result == null || $result->num_rows == 0)
       return $data;
     
     while ($row = $result->fetch_object()) {
