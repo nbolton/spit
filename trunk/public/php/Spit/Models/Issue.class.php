@@ -23,6 +23,12 @@ class Issue {
   public $id;
   public $title;
   public $details;
+  public $tracker;
+  public $status;
+  public $priority;
+  public $assignee;
+  public $updated;
+  public $votes;
 }
 
 ?>

@@ -180,3 +180,14 @@ div.menu {
   padding: 10px;
   text-align: left;
 }
+
+table {
+  border: 1px solid #ccc;
+  background-color: #f6f6f6;
+  width: 100%;
+}
+
+table td,
+table th {
+  white-space: nowrap;
+}

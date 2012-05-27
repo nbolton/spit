@@ -20,6 +20,7 @@
 namespace Spit\Controllers;
 
 use Exception;
+use \Spit\Models\Fields\Field as Field;
 
 class IssuesController extends Controller {
   
@@ -36,13 +37,14 @@ class IssuesController extends Controller {
   }
   
   private function runIndex() {
+    $data["fields"] = $this->getFields();
     $data["issues"] = $this->ds->get();
     $this->showView("issues/index", T_("Issues"), $data);
   }
   
   private function runNew() {
     if (isset($_GET["getFieldsFor"])) {
-      exit(json_encode($this->getFieldsFor($_GET["getFieldsFor"])));
+      exit(json_encode($this->getEditorFields($_GET["getFieldsFor"])));
     }
     
     $data = array();
@@ -57,7 +59,21 @@ class IssuesController extends Controller {
     $this->showView("issues/editor", T_("New Issue"), $data);
   }
   
-  private function getFieldsFor($trackerId) {
+  private function getFields() {
+    
+    return array(
+      new Field("id", "#"),
+      new Field("tracker", "Tracker"),
+      new Field("status", "Status"),
+      new Field("priority", "Priority"),
+      new Field("title", "Title"),
+      new Field("assignee", "Assignee"),
+      new Field("updated", "Updated"),
+      new Field("votes", "Votes"),
+    );
+  }
+  
+  private function getEditorFields($trackerId) {
   
     $fields = array();
   
