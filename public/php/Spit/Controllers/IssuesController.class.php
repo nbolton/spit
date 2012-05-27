@@ -47,10 +47,9 @@ class IssuesController extends Controller {
     
     $data = array();
     $data["saved"] = false;
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    if ($this->isPost()) {
       $issue = new \Spit\Models\Issue;
-      $issue->title = $this->getPostValue("title");
-      $issue->details = $this->getPostValue("details");
+      $this->setFormValues($issue);
       $this->ds->create($issue);
       $data["saved"] = true;
     }
