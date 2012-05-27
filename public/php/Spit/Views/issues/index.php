@@ -33,7 +33,9 @@
     <tr id="issue-<?=$issue->id?>">
       <td class="checkbox"><input name="id" type="checkbox" value="<?=$issue->id?>"></td>
       <?php foreach($fields as $field): ?>
-      <td class="<?=$field->name?><?=$field->compact ? " compact" : ""?>"><?=$app->getValue($issue, $field->name)?></td>
+      <td class="<?=$field->name?><?=$field->compact ? " compact" : ""?>">
+        <?=$self->getValue($issue, $field->name)?>
+      </td>
       <?php endforeach ?>
     </tr>
     <?php endforeach ?>

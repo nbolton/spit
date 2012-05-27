@@ -34,6 +34,7 @@ class Controller {
     }
     
     $app = $this->app;
+    $self = $this;
     $fullTitle = $app->getSiteTitle() . (($title != "") ? " - " . $title : "");
     $content = $this->viewDir . $view . ".php";
     $master = $app->settings->layout->masterView;
@@ -79,6 +80,10 @@ class Controller {
     foreach ($_POST as $k => $v) {
       $object->$k = $v;
     }
+  }
+  
+  public function getValue($object, $field) {
+    return $object->$field;
   }
 }
 

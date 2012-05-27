@@ -23,9 +23,13 @@ class IssueDataStore extends DataStore {
 
   public function get() {
     $result = $this->query(
-      "select i.*, t.name as tracker " .
+      "select i.*, t.name as tracker, s.name as status, " .
+      "p.name as priority, u.name as assignee " .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
+      "inner join status as s on s.id = i.statusId " .
+      "inner join priority as p on p.id = i.priorityId " .
+      "left join user as u on u.id = i.assigneeId " .
       "order by updated desc " .
       "limit 0, 100"
     );

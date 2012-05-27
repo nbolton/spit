@@ -127,6 +127,17 @@ class IssuesController extends Controller {
     
     return $fields;
   }
+  
+  public function getValue($object, $field) {
+  
+    $value = parent::getValue($object, $field);
+  
+    if ($field == "title") {
+      return sprintf("<a href=\"view/%d/\">%s</a>", $object->id, $value);
+    }
+    
+    return $value;
+  }
 }
 
 ?>
