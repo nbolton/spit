@@ -34,7 +34,7 @@ class Controller {
     }
     
     $app = $this->app;
-    $fullTitle = $app->settings->site->title . (($title != "") ? " - " . $title : "");
+    $fullTitle = $app->getSiteTitle() . (($title != "") ? " - " . $title : "");
     $content = $this->viewDir . $view . ".php";
     $master = $app->settings->layout->masterView;
     
@@ -54,14 +54,14 @@ class Controller {
   }
   
   public function getViewStyle($view) {
-    $path = sprintf("%s/style/%s.css", $this->app->theme, $view);
+    $path = sprintf("%s/style/%s.css", $this->app->getThemeRoot(), $view);
     if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {
       return sprintf("<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />\n", $path);
     }
   }
   
   public function getViewScript($view) {
-    $path = sprintf("%sjs/%s.js", $this->app->root, $view);
+    $path = sprintf("%sjs/%s.js", $this->app->getProjectRoot(), $view);
     if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {
       return sprintf("<script type=\"text/javascript\" src=\"%s\"></script>\n", $path);
     }

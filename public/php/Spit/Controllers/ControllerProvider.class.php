@@ -39,8 +39,7 @@ class ControllerProvider {
     $this->controllers[$name] = $controller;
   }
 
-  public function find($path) {
-    $name = $path->get(0);
+  public function find($name) {
     if (array_key_exists($name, $this->controllers)) {
       return $this->controllers[$name];
     }

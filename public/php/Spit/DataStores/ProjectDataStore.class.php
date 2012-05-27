@@ -17,34 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit;
+namespace Spit\DataStores;
 
-class Path {
+class ProjectDataStore extends DataStore {
 
-  public $offset = 0;
-
-  public function __construct() {
-    $this->pathString = isset($_GET["path"]) ? $_GET["path"] : "";
-    $this->parts = preg_split('@/@', $this->pathString, NULL, PREG_SPLIT_NO_EMPTY);
+  public function get() {
+    $sql = parent::getSql();
+    $result = $sql->query("select * from project");
+    return $this->fromResult($result);
   }
-  
-  public function get($index) {
+
+  public function getByName($name) {
+    $sql = parent::getSql();
+    $result = $sql->query(sprintf(
+      "select * from project where name=\"%s\"",
+      $sql->escape_string($name)));
     
-    $index += $this->offset;
-    
-    if ($index >= count($this->parts)) {
-      return "";
+    if ($result->num_rows == 0) {
+      return null;
     }
     
-    return $this->parts[$index];
+    $row = $result->fetch_object();
+    return $this->fromRow($row);
   }
   
-  public function setOffset($offset) {
-    $this->offset = $offset;
-  }
-  
-  public function toString() {
-    return $this->pathString;
+  protected function newModel() {
+    return new \Spit\Models\Project();
   }
 }
 
