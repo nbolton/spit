@@ -22,7 +22,14 @@ namespace Spit\Controllers;
 class IndexController extends Controller {
   
   public function run() {
-    $this->showView("index");
+    if (isset($this->app->project)) {
+      $this->showView("index");
+    }
+    else {
+      $dataStore = new \Spit\DataStores\ProjectDataStore;
+      $data["projects"] = $dataStore->get();
+      $this->showView("projects", T_("Projects"), $data);
+    }
   }
 }
 

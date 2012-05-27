@@ -21,23 +21,25 @@
   <head>
     <title><?=$fullTitle?></title>
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-    <meta name="description" content="<?=$app->settings->site->description?>" />
-    <link rel="stylesheet" type="text/css" href="<?=$app->theme?>/style/main.css" />
+    <meta name="description" content="<?=$app->getSiteDescription()?>" />
+    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/main.css" />
     <?=$app->controller->getViewStyle($view);?>
-    <script type="text/javascript" src="<?=$app->root?>js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="<?=$app->root?>js/common.js"></script>
+    <script type="text/javascript" src="<?=$app->getProjectRoot()?>js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="<?=$app->getProjectRoot()?>js/common.js"></script>
     <?=$app->controller->getViewScript($view);?>
   </head>
   <body>
     <div class="layout">
       <div class="header">
         <div class="headerContent">
-          <h1><?=$app->settings->site->title?></h1>
-          <p><?=$app->settings->site->description?></p>
+          <h1><?=$app->getSiteTitle()?></h1>
+          <p><?=$app->getSiteDescription()?></p>
           <div class="links">
-            <?php foreach ($app->links as $k => $l): ?>
-              <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
-            <?php endforeach ?>
+          <?php if(isset($app->project)): ?>
+          <?php foreach ($app->links as $k => $l): ?>
+            <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
+          <?php endforeach ?>
+          <?php endif ?>
           </div>
           <div class="language">
             <button id="language">

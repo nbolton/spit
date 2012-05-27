@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,36 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ ?>
 
-namespace Spit;
-
-class Path {
-
-  public $offset = 0;
-
-  public function __construct() {
-    $this->pathString = isset($_GET["path"]) ? $_GET["path"] : "";
-    $this->parts = preg_split('@/@', $this->pathString, NULL, PREG_SPLIT_NO_EMPTY);
-  }
-  
-  public function get($index) {
-    
-    $index += $this->offset;
-    
-    if ($index >= count($this->parts)) {
-      return "";
-    }
-    
-    return $this->parts[$index];
-  }
-  
-  public function setOffset($offset) {
-    $this->offset = $offset;
-  }
-  
-  public function toString() {
-    return $this->pathString;
-  }
-}
-
-?>
+<h2><?=T_("Projects")?></h2>
+<ul>
+<?php foreach($projects as $project): ?>
+  <li><a href="<?=$project->name?>/"><?=$project->title?></a></li>
+<?php endforeach ?>
+</ul>

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * SPIT: Simple PHP Issue Tracker
+ * SPIT: Simple PHP data Tracker
  * Copyright (C) 2012 Nick Bolton
  * 
  * This package is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ namespace Spit\DataStores;
 
 use mysqli;
 
-class DataStore {
+abstract class DataStore {
 
   public function getSql() {
     $s = \Spit\Settings::$instance;
@@ -31,7 +31,33 @@ class DataStore {
     }
     return $mysqli;
   }
-
+  
+  protected function fromResult($result) {
+    $data = array();
+    if ($result->num_rows == 0)
+      return $data;
+    
+    while ($row = $result->fetch_object()) {
+      array_push($data, $this->fromRow($row));
+    }
+    
+    return $data;
+  }
+  
+  protected function fromRow($row) {
+    $data = $this->newModel();
+    foreach ($row as $k => $v) {
+      if (is_string($v)) {
+        $data->$k = mb_convert_encoding($v, "utf-8");
+      }
+      else {
+        $data->$k = $v;
+      }
+    }
+    return $data;
+  }
+  
+  abstract protected function newModel();
 }
 
 ?>

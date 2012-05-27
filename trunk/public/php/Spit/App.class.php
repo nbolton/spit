@@ -21,19 +21,22 @@ namespace Spit;
 
 session_start();
 
-require "Controllers/ControllerProvider.class.php";
-require "Controllers/ErrorController.class.php";
 require "Settings.class.php";
 require "Locale.class.php";
 require "Plugins.class.php";
 require "Security.class.php";
 require "Path.class.php";
 
+require "Controllers/ControllerProvider.class.php";
+require "Controllers/ErrorController.class.php";
+
 require "DataStores/DataStore.class.php";
 require "DataStores/IssueDataStore.class.php";
+require "DataStores/ProjectDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";
+require "Models/Project.class.php";
 require "Models/Fields/Select.class.php";
 
 class App {
@@ -43,8 +46,6 @@ class App {
   public function __construct() {
     $this->settings = new Settings;
     $this->locale = new Locale;
-    $this->root = self::getRoot();
-    $this->theme = $this->root . "theme/default";
     $this->plugins = new Plugins($this);
     $this->controllers = new Controllers\ControllerProvider;
     $this->security = new Security;
@@ -61,26 +62,76 @@ class App {
     }
   }
   
-  private static function getRoot() {
-    $scriptName = $_SERVER['SCRIPT_NAME'];
-    $pos = strrpos($scriptName, "/");
-    return substr($scriptName, 0, $pos + 1);
-  }
-  
   public function run() {
   
     $this->locale->run();
+    
+    $this->project = $this->findProject();
+    if ($this->project == null) {
+      $this->showError(404);
+      return;
+    }
+    
+    if (!$this->isSingleProject()) {
+      $this->setupMultiProject();
+    }
+    
     $this->plugins->load();
     
-    $this->controller = $this->controllers->find($this->path);
+    $this->controller = $this->controllers->find($this->path->get(0));
     if ($this->controller == null) {
-      $this->controller = $this->error;
-      $this->error->show(404);
+      $this->showError(404);
       return;
     }
     
     $this->controller->app = $this;
     $this->controller->run();
+  }
+  
+  private function setupMultiProject() {
+  
+    $this->addLink(new Link(T_("Projects"), $this->getRoot(), true));
+    
+    // offset the path so that pages wanting index 1 get 2,
+    // since the part at 0 is now the project name.
+    $this->path->setOffset(1);
+  }
+  
+  private function findProject() {
+    $dataStore = new DataStores\ProjectDataStore;
+    if ($this->isSingleProject()) {
+      return $dataStore->getByName($this->settings->site->singleProject);
+    }
+    else {
+      return $dataStore->getByName($this->path->get(0));
+    }
+  }
+  
+  public function showError($code) {
+    $this->controller = $this->error;
+    $this->error->show($code);
+  }
+  
+  public function getRoot() {
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $pos = strrpos($scriptName, "/");
+    return substr($scriptName, 0, $pos + 1);
+  }
+  
+  public function getProjectRoot() {
+    $root = $this->getRoot();
+    if ($this->isSingleProject() || !isset($this->project)) {
+      return $root;
+    }
+    return $root . $this->project->name . "/";
+  }
+  
+  public function getThemeRoot() {
+    return $this->getRoot() . "theme/default";
+  }
+  
+  public function isSingleProject() {
+    return isset($this->settings->site->singleProject);
   }
   
   public function addLink($link) {
@@ -95,15 +146,33 @@ class App {
     if ($link->external) {
       return $link->href;
     }
-    return $this->root . $link->href;
+    return $this->getProjectRoot() . $link->href;
   }
   
   public function getImage($name) {
-    return sprintf("%s/image/%s", $this->theme, $name);
+    return sprintf("%s/image/%s", $this->getThemeRoot(), $name);
   }
   
   public function getValue($object, $field) {
     return $object->$field;
+  }
+  
+  public function getSiteTitle() {
+    if ($this->project != null) {
+      return $this->project->title;
+    }
+    else {
+      return $this->settings->site->defaultTitle;
+    }
+  }
+  
+  public function getSiteDescription() {
+    if ($this->project != null) {
+      return $this->project->description;
+    }
+    else {
+      return $this->settings->site->defaultDescription;
+    }
   }
 }
 
