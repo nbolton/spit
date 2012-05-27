@@ -29,6 +29,11 @@ h3 {
   font-size: 1.2em;
 }
 
+ul {
+  margin: 0px;
+  padding: .5em 0px .5em 1.3em;
+}
+
 div.layout {
   text-align: left;
   min-width: 600px;

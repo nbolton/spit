@@ -24,21 +24,23 @@ class Controller {
   const DEFAULT_VIEW_DIR = "php/Spit/Views/";
 
   public $app;
-  public $title;
   public $viewDir = self::DEFAULT_VIEW_DIR;
   
-  protected function showView($view, $data = array()) {
+  protected function showView($view, $title = "", $data = array()) {
     foreach ($data as $k => $v) {
       $$k = $v;
     }
     
     $app = $this->app;
-    $title = $this->title;
     $fullTitle = $app->settings->site->title . (($title != "") ? " - " . $title : "");
     $content = $this->viewDir . $view . ".php";
     $master = $app->settings->layout->masterView;
     
     require self::DEFAULT_VIEW_DIR . $master . ".php";
+  }
+  
+  protected function showError($number) {
+    $this->app->error->show($number);
   }
   
   protected function getPostValue($name) {
@@ -57,6 +59,10 @@ class Controller {
     if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {
       return sprintf("<script type=\"text/javascript\" src=\"%s\"></script>\n", $path);
     }
+  }
+  
+  public function getPathPart($index) {
+    return $this->app->path->get($index);
   }
 }
 

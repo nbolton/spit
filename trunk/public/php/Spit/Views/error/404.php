@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,14 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Spit\Controllers;
-
-class IndexController extends Controller {
-  
-  public function run() {
-    $this->showView("index");
-  }
-}
-
 ?>
+
+<h2><?=$title?></h2>
+<p><?=sprintf(T_("The requested URL /%s was not found on this server."), $app->path->toString())?></p>

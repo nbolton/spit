@@ -22,9 +22,12 @@ namespace Spit;
 session_start();
 
 require "Controllers/ControllerProvider.class.php";
+require "Controllers/ErrorController.class.php";
 require "Settings.class.php";
 require "Locale.class.php";
 require "Plugins.class.php";
+require "Security.class.php";
+require "Path.class.php";
 
 require "DataStores/DataStore.class.php";
 require "DataStores/IssueDataStore.class.php";
@@ -44,11 +47,18 @@ class App {
     $this->theme = $this->root . "theme/default";
     $this->plugins = new Plugins($this);
     $this->controllers = new Controllers\ControllerProvider;
+    $this->security = new Security;
+    $this->error = new Controllers\ErrorController($this);
+    $this->path = new Path;
     
     $this->links = array(
       new Link(T_("Home"), ""),
       new Link(T_("Issues"), "issues/")
     );
+    
+    if ($this->security->userIsType("admin")) {
+      $this->addLink(new Link(T_("Admin"), "admin/"));
+    }
   }
   
   private static function getRoot() {
@@ -59,16 +69,18 @@ class App {
   
   public function run() {
   
+    $this->locale->run();
     $this->plugins->load();
     
-    $this->locale->run();
+    $this->controller = $this->controllers->find($this->path);
+    if ($this->controller == null) {
+      $this->controller = $this->error;
+      $this->error->show(404);
+      return;
+    }
     
-    $pathString = isset($_GET["path"]) ? $_GET["path"] : "";
-    $path = preg_split('@/@', $pathString, NULL, PREG_SPLIT_NO_EMPTY);
-  
-    $this->controller = $this->controllers->get($path);
     $this->controller->app = $this;
-    $this->controller->run($path);
+    $this->controller->run();
   }
   
   public function addLink($link) {

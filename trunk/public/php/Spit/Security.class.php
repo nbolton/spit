@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\Controllers;
+namespace Spit;
 
-class IndexController extends Controller {
+class Security {
   
-  public function run() {
-    $this->showView("index");
+  public function userIsType($type) {
+    return true;
   }
 }
 

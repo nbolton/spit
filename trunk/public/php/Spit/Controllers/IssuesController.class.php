@@ -27,30 +27,23 @@ class IssuesController extends Controller {
     $this->ds = new \Spit\DataStores\IssueDataStore;
   }
   
-  public function run($path) {
-    if (count($path) == 1) {
-      $this->runIndex();
-    }
-    else {
-      switch (strtolower($path[1])) {
-        case "new": $this->runNew(); break;
-        default: throw new Exception("unknown path: " . $path[1]);
-      }
+  public function run() {
+    switch ($this->getPathPart(1)) {
+      case "": $this->runIndex(); break;
+      case "new": $this->runNew(); break;
+      default: $this->showError(404); break;
     }
   }
   
   private function runIndex() {
-    $this->title = T_("Issues");
     $data["issues"] = $this->ds->get();
-    $this->showView("issues/index", $data);
+    $this->showView("issues/index", T_("Issues"), $data);
   }
   
   private function runNew() {
     if (isset($_GET["getFieldsFor"])) {
       exit(json_encode($this->getFieldsFor($_GET["getFieldsFor"])));
     }
-  
-    $this->title = T_("New Issue");
     
     $data = array();
     $data["saved"] = false;
@@ -62,7 +55,7 @@ class IssuesController extends Controller {
       $data["saved"] = true;
     }
     
-    $this->showView("issues/editor", $data);
+    $this->showView("issues/editor", T_("New Issue"), $data);
   }
   
   private function getFieldsFor($trackerId) {
