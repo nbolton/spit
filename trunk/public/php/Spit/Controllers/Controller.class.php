@@ -19,6 +19,8 @@
 
 namespace Spit\Controllers;
 
+use Exception;
+
 class Controller {
 
   const DEFAULT_VIEW_DIR = "php/Spit/Views/";
@@ -35,6 +37,10 @@ class Controller {
     $fullTitle = $app->settings->site->title . (($title != "") ? " - " . $title : "");
     $content = $this->viewDir . $view . ".php";
     $master = $app->settings->layout->masterView;
+    
+    if (!file_exists($_SERVER["DOCUMENT_ROOT"] . $content)) {
+      throw new Exception("view not found at: " . $content);
+    }
     
     require self::DEFAULT_VIEW_DIR . $master . ".php";
   }

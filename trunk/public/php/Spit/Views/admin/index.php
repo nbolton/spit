@@ -19,5 +19,5 @@
 
 <h2><?=$title?></h2>
 <ul>
-  <li><a href="wf/"><?=T_("Workflow")?></a></li>
+  <li><a href="workflow/"><?=T_("Workflow")?></a></li>
 </ul>
