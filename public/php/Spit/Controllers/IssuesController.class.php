@@ -129,7 +129,6 @@ class IssuesController extends Controller {
   }
   
   public function getValue($object, $field) {
-  
     $value = parent::getValue($object, $field);
   
     if ($field == "title") {

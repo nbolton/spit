@@ -41,3 +41,4 @@
     <?php endforeach ?>
   </tbody>
 </table>
+<div id="paging"></div>
