@@ -97,6 +97,14 @@ class App {
     }
     return $this->root . $link->href;
   }
+  
+  public function getImage($name) {
+    return sprintf("%s/image/%s", $this->theme, $name);
+  }
+  
+  public function getValue($object, $field) {
+    return $object->$field;
+  }
 }
 
 ?>
