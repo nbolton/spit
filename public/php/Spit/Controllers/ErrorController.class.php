@@ -19,32 +19,20 @@
 
 namespace Spit\Controllers;
 
-require "Controller.class.php";
-require "IndexController.class.php";
-require "IssuesController.class.php";
-require "AdminController.class.php";
-
-use Exception;
-
-class ControllerProvider {
-
-  public function __construct() {
-    $this->controllers = array();
-    $this->map("", new IndexController);
-    $this->map("issues", new IssuesController);
-    $this->map("admin", new AdminController);
-  }
+class ErrorController extends Controller {
   
-  public function map($name, $controller) {
-    $this->controllers[$name] = $controller;
+  public function __construct($app) {
+    $this->app = $app;
   }
 
-  public function find($path) {
-    $name = $path->get(0);
-    if (array_key_exists($name, $this->controllers)) {
-      return $this->controllers[$name];
+  public function show($code) {
+    $title = "";
+    switch ($code) {
+      case 404: $title = T_("Not Found"); break;
     }
-    return null;
+    
+    header(sprintf("HTTP/1.0 %d %s", $code, $title));
+    $this->showView("error/" . $code, sprintf("%d %s", $code, $title));
   }
 }
 

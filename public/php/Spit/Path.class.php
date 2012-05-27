@@ -17,34 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\Controllers;
+namespace Spit;
 
-require "Controller.class.php";
-require "IndexController.class.php";
-require "IssuesController.class.php";
-require "AdminController.class.php";
-
-use Exception;
-
-class ControllerProvider {
+class Path {
 
   public function __construct() {
-    $this->controllers = array();
-    $this->map("", new IndexController);
-    $this->map("issues", new IssuesController);
-    $this->map("admin", new AdminController);
+    $this->pathString = isset($_GET["path"]) ? $_GET["path"] : "";
+    $this->parts = preg_split('@/@', $this->pathString, NULL, PREG_SPLIT_NO_EMPTY);
   }
   
-  public function map($name, $controller) {
-    $this->controllers[$name] = $controller;
-  }
-
-  public function find($path) {
-    $name = $path->get(0);
-    if (array_key_exists($name, $this->controllers)) {
-      return $this->controllers[$name];
+  public function get($index) {
+    if ($index >= count($this->parts)) {
+      return "";
     }
-    return null;
+    
+    return $this->parts[$index];
+  }
+  
+  public function toString() {
+    return $this->pathString;
   }
 }
 

@@ -19,32 +19,13 @@
 
 namespace Spit\Controllers;
 
-require "Controller.class.php";
-require "IndexController.class.php";
-require "IssuesController.class.php";
-require "AdminController.class.php";
+class AdminController extends Controller {
 
-use Exception;
-
-class ControllerProvider {
-
-  public function __construct() {
-    $this->controllers = array();
-    $this->map("", new IndexController);
-    $this->map("issues", new IssuesController);
-    $this->map("admin", new AdminController);
-  }
-  
-  public function map($name, $controller) {
-    $this->controllers[$name] = $controller;
-  }
-
-  public function find($path) {
-    $name = $path->get(0);
-    if (array_key_exists($name, $this->controllers)) {
-      return $this->controllers[$name];
+  public function run() {
+    switch ($this->getPathPart(1)) {
+      case "": $this->showView("admin/index"); break;
+      default: $this->showError(404); break;
     }
-    return null;
   }
 }
 
