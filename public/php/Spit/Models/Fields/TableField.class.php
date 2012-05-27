@@ -17,31 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\DataStores;
+namespace Spit\Models\Fields;
 
-class IssueDataStore extends DataStore {
+require_once "Field.class.php";
 
-  public function get() {
-    $result = $this->query(
-      "select i.*, t.name as tracker " .
-      "from issue as i " .
-      "inner join tracker as t on t.id = i.trackerId " .
-      "order by updated desc " .
-      "limit 0, 100"
-    );
-    return $this->fromResult($result);
-  }
-  
-  public function create($issue) {
-    $sql = parent::getSql();
-    $sql->query(sprintf(
-      "insert into issue (title, details) values (\"%s\", \"%s\")",
-      $sql->escape_string($issue->title),
-      $sql->escape_string($issue->details)));
-  }
-  
-  protected function newModel() {
-    return new \Spit\Models\Issue();
+class TableField extends Field {
+
+  public function __construct($name, $label, $compact = true) {
+    parent::__construct($name, $label);
+    $this->compact = $compact;
   }
 }
 

@@ -20,7 +20,7 @@
 namespace Spit\Controllers;
 
 use Exception;
-use \Spit\Models\Fields\Field as Field;
+use \Spit\Models\Fields\TableField as TableField;
 
 class IssuesController extends Controller {
   
@@ -62,14 +62,13 @@ class IssuesController extends Controller {
   private function getFields() {
     
     return array(
-      new Field("id", "#"),
-      new Field("tracker", "Tracker"),
-      new Field("status", "Status"),
-      new Field("priority", "Priority"),
-      new Field("title", "Title"),
-      new Field("assignee", "Assignee"),
-      new Field("updated", "Updated"),
-      new Field("votes", "Votes"),
+      new TableField("tracker", "Tracker"),
+      new TableField("status", "Status"),
+      new TableField("priority", "Priority"),
+      new TableField("title", "Title", false),
+      new TableField("assignee", "Assignee"),
+      new TableField("updated", "Updated"),
+      new TableField("votes", "Votes"),
     );
   }
   

@@ -205,7 +205,12 @@ table {
   font-size: 95%;
 }
 
-table td,
-table th {
+table th,
+table td {
+  padding: 2px;
+}
+
+table .compact {
   white-space: nowrap;
+  text-align: center;
 }
