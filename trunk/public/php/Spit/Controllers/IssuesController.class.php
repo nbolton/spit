@@ -59,6 +59,9 @@ class IssuesController extends Controller {
   }
   
   private function getFieldsFor($trackerId) {
+    sleep(1);
+    $fields = array();
+  
     $status = new \Spit\Models\Fields\Select("status", T_("Status"));
     $status->add(T_("New"));
     $status->add(T_("Reviewed"));
@@ -70,6 +73,7 @@ class IssuesController extends Controller {
     $status->add(T_("Invalid"));
     $status->add(T_("Duplicate"));
     $status->add(T_("CannotReproduce"));
+    array_push($fields, $status);
     
     $priority = new \Spit\Models\Fields\Select("priority", T_("Priority"));
     $priority->add(T_("Low"));
@@ -77,17 +81,22 @@ class IssuesController extends Controller {
     $priority->add(T_("High"));
     $priority->add(T_("Urgent"));
     $priority->add(T_("Immediate"));
+    array_push($fields, $priority);
     
     $version = new \Spit\Models\Fields\Select("version", T_("Version"));
     $version->add("1.4.9");
+    array_push($fields, $version);
     
-    $platform = new \Spit\Models\Fields\Select("platform", T_("Platform"));
-    $platform->add("");
-    $platform->add("Windows");
-    $platform->add("Mac OS X");
-    $platform->add("Linux");
-    $platform->add("Unix");
-    $platform->add("Various");
+    if ($trackerId != 4) {
+      $platform = new \Spit\Models\Fields\Select("platform", T_("Platform"));
+      $platform->add("");
+      $platform->add("Windows");
+      $platform->add("Mac OS X");
+      $platform->add("Linux");
+      $platform->add("Unix");
+      $platform->add("Various");
+      array_push($fields, $platform);
+    }
     
     $assignee = new \Spit\Models\Fields\Select("assignee", T_("Assignee"));
     $assignee->add("");
@@ -100,10 +109,9 @@ class IssuesController extends Controller {
     $assignee->add("Nick Bolton");
     $assignee->add("Sorin Sbârnea");
     $assignee->add("Syed Amer Gilani");
+    array_push($fields, $assignee);
     
-    return array(
-      $status, $priority, $version, $platform, $assignee
-    );
+    return $fields;
   }
 }
 
