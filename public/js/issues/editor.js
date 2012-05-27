@@ -1,17 +1,53 @@
-function loadVariableFields() {
+/*
+ * SPIT: Simple PHP Issue Tracker
+ * Copyright (C) 2012 Nick Bolton
+ * 
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file COPYING that should have accompanied this file.
+ * 
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+function viewLoad() {
+  loadVariableFields(1);
   
-  $.getJSON("?getFieldsFor=1",
+  $("select#tracker").change(function() {
+    loadVariableFields($(this).attr("value"));
+  });
+}
+
+function loadVariableFields(index) {
+  
+  log("loading fields for: " + index);
+  
+  columns = $("div#dynamicFields div.column");
+  columns.hide();
+  
+  loading = $("form div.loading");
+  loading.show();
+  
+  $.getJSON("?getFieldsFor=" + index,
   {
     tags: "",
     tagmode: "any",
     format: "json"
   },
   function(data) {
+    columns.empty();
     $.each(data, function(index, field) {
       if (field.type == "select") {
         addSelectRow(field, index, data.length);
       }
     });
+    columns.fadeIn();
+    loading.hide();
   });
 }
 
@@ -32,13 +68,10 @@ function addSelectRow(field, index, length) {
   for (key in field.options) {
     option = field.options[key];
     selected = option.selected ? " selected" : "";
-    select.append("<option value=\"{0}\"{1}>{2}</option>".format(option.value, selected, option.text));
+    select.append("<option value=\"{0}\"{1}>{2}</option>"
+      .format(option.value, selected, option.text));
   }
   
-  column = $("form div#column" + ((index >= Math.floor(length / 2)) ? 1 : 2));
+  column = $("form div#column" + ((index < Math.ceil(length / 2)) ? 1 : 2));
   column.append(row);
-}
-
-function viewLoad() {
-  loadVariableFields();
 }

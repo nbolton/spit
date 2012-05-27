@@ -43,8 +43,13 @@
       <label for="details"><?=T_("Details")?></label>
       <textarea id="details" name="details" type="details"></textarea>
     </div>
-    <div class="column" id="column1"></div>
-    <div class="column" id="column2"></div>
+    <div id="dynamicFields">
+      <div class="loading">
+        <img src="<?=$app->theme?>/image/loading.gif" />
+      </div>
+      <div class="column" id="column1"></div>
+      <div class="column" id="column2"></div>
+    </div>
   </div>
   <div class="buttons">
     <input type="submit" value="Create" >

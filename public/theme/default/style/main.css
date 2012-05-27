@@ -156,6 +156,12 @@ form div.buttons {
   margin-left: -3px;
 }
 
+form div.loading {
+  padding: 30px;
+  width: 100%;
+  text-align: center;
+}
+
 button img.arrow {
   width: 0;
   height: 0;
