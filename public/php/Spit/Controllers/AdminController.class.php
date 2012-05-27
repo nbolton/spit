@@ -24,6 +24,7 @@ class AdminController extends Controller {
   public function run() {
     switch ($this->getPathPart(1)) {
       case "": $this->showView("admin/index"); break;
+      case "workflow": $this->showView("admin/workflow"); break;
       default: $this->showError(404); break;
     }
   }
