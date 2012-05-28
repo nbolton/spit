@@ -34,24 +34,53 @@ abstract class DataStore {
   
   public function query($format) {
     $sql = $this->getSql();
-    $args = array_slice(func_get_args(), 1);
+    $args = $this->getSafeArgs(func_get_args(), $sql);
+    
+    $sql->query(vsprintf($format, $args));
+    
+    $result = $sql->store_result();
+    if ($result == null) {
+      throw new \Exception($sql->error);
+    }
+    
+    return $result;
+  }
+  
+  public function multiQuery($format) {
+    $sql = $this->getSql();
+    $args = $this->getSafeArgs(func_get_args(), $sql);
+    
+    $sql->multi_query(vsprintf($format, $args));
+    
+    $results = array();
+    do {
+      $result = $sql->store_result();
+      if ($result == null) {
+        throw new \Exception($sql->error);
+      }
+      array_push($results, $result);
+    }
+    while ($sql->next_result());
+    
+    return $results;
+  }
+  
+  private function getSafeArgs($funcArgs, $sql) {
+    $args = array_slice($funcArgs, 1);
     
     // escape any strings to prevent sql injection.
     foreach ($args as $k => $v) {
       $args[$k] = $sql->escape_string($v);
     }
     
-    $result = $sql->query(vsprintf($format, $args));
-    if ($result == null) {
-      throw new \Exception($sql->error);
-    }
-    return $result;
+    return $args;
   }
   
   protected function fromResult($result) {
     $data = array();
-    if ($result == null || $result->num_rows == 0)
+    if ($result == null || $result->num_rows == 0) {
       return $data;
+    }
     
     while ($row = $result->fetch_object()) {
       array_push($data, $this->fromRow($row));
@@ -71,6 +100,14 @@ abstract class DataStore {
       }
     }
     return $data;
+  }
+  
+  protected function fromResultScalar($result) {
+    if ($result == null || $result->num_rows == 0) {
+      return null;
+    }
+    $row = $result->fetch_row();
+    return $row[0];
   }
   
   abstract protected function newModel();

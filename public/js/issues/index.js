@@ -16,21 +16,51 @@
  */
 
 function viewLoad() {
-  loadIssues(1);
+  page = getParam("page");
+  if (page == null) {
+    page = 1;
+  }
+  
+  results = getParam("results");
+  if (results == null) {
+    results = 15;
+  }
+  
+  loadIssues(page, results);
+  
+  $("div.paging a.next").click(function() {
+    if (page < pageCount) {
+      loadIssues(++page, results);
+    }
+  });
+  
+  $("div.paging a.back").click(function() {
+    if (page > 1) {
+      loadIssues(--page, results);
+    }
+  });
 }
 
-function loadIssues(page) {
+function loadIssues(page, results) {
   
-  log("loading issues for: " + page);
+  log("loading: page={0}, results={1}".format(page, results));
+  
+  // put page in url so users can copy the link.
+  window.location.replace("#page={0}&results={1}".format(page, results));
   
   table = $("table#issues");
   
   $.getJSON("", {
     format: "json",
-    page: page
+    page: page,
+    results: results
   },
   function(data) {
-  
+    
+    pageCount = data.pageCount;
+    $("div.paging span.page").text(page);
+    $("div.paging span.pageCount").text(pageCount);
+    
     table = $("div#templates table.issues").clone();
     $("table#issues").replaceWith(table);
     table.removeAttr("class");

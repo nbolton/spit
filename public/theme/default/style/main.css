@@ -230,3 +230,7 @@ table .compact {
 div#templates {
   display: none;
 }
+
+div.paging {
+  margin-top: 6px;
+}
