@@ -129,9 +129,12 @@ div.layout div.footer div.footerContent {
   color: #888;
 }
 
-form div.box {
+div.box {
   border: 1px solid #ccc;
   background-color: #f6f6f6;
+}
+
+form div.box {
   margin: 7px 0px 10px 0px;
   padding: 10px 0px 10px 0px;
   float: left;
@@ -210,11 +213,8 @@ div.menu {
 }
 
 table {
-  border: 1px solid #ccc;
-  background-color: #f6f6f6;
   width: 100%;
   font-size: 95%;
-  margin: 12px 0px 0px 0px;
 }
 
 table th,
@@ -233,4 +233,5 @@ div#templates {
 
 div.paging {
   margin-top: 6px;
+  display: none;
 }

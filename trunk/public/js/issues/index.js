@@ -30,25 +30,36 @@ function viewLoad() {
   
   $("div.paging a.next").click(function() {
     if (page < pageCount) {
+      showLoading();
       loadIssues(++page, results);
     }
   });
   
   $("div.paging a.back").click(function() {
     if (page > 1) {
+      showLoading();
       loadIssues(--page, results);
     }
   });
+}
+
+function showLoading() {
+  loading = $("div.loading");
+  loading.css("position", "absolute");
+  table = $("div#issues table");
+  loading.height(table.height());
+  loading.width(table.width());
+  loading.show();
 }
 
 function loadIssues(page, results) {
   
   log("loading: page={0}, results={1}".format(page, results));
   
+  table = $("div#issues table");
+  
   // put page in url so users can copy the link.
   window.location.replace("#page={0}&results={1}".format(page, results));
-  
-  table = $("table#issues");
   
   $.getJSON("", {
     format: "json",
@@ -62,7 +73,8 @@ function loadIssues(page, results) {
     $("div.paging span.pageCount").text(pageCount);
     
     table = $("div#templates table.issues").clone();
-    $("table#issues").replaceWith(table);
+    table.hide();
+    $("div#issues table").replaceWith(table);
     table.removeAttr("class");
     table.attr("id", "issues");
     
@@ -107,5 +119,9 @@ function loadIssues(page, results) {
         td.attr("class", field.name + compact);
       });
     });
+    
+    $("div.loading").hide();
+    $("div.paging").fadeIn();
+    table.fadeIn();
   });
 }
