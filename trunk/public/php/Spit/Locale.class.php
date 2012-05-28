@@ -139,6 +139,7 @@ class Locale {
         return $l;
       }
     }
+    return $this->languages[0];
   }
 }
 
