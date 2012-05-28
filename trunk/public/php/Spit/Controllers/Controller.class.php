@@ -89,6 +89,16 @@ class Controller {
   public function isJsonRequest() {
     return isset($_GET["format"]) && $_GET["format"] == "json";
   }
+  
+  public function getJson($data) {
+    return json_encode(array(
+      "data" => $data,
+      "stats" => array(
+        "queries" => $this->app->queryCount,
+        "loadTime" => $this->app->getLoadTime()
+      )
+    ));
+  }
 }
 
 ?>

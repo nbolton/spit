@@ -45,7 +45,13 @@ class App {
   
   const DEFAULT_PAGE = "home";
   
+  public static $instance;
+  
+  public $queryCount = 0;
+  
   public function __construct() {
+    self::$instance = $this;
+    $this->start = microtime(true);
     $this->settings = new Settings;
     $this->locale = new Locale;
     $this->plugins = new Plugins($this);
@@ -65,7 +71,7 @@ class App {
   }
   
   public function run() {
-  
+    
     $this->locale->run();
     
     $this->project = $this->findProject();
@@ -171,6 +177,11 @@ class App {
     else {
       return $this->settings->site->defaultDescription;
     }
+  }
+  
+  public function getLoadTime() {
+    // microtime result appears to be in seconds... odd.
+    return (microtime(true) - $this->start) * 1000;
   }
 }
 

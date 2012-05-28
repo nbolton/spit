@@ -40,7 +40,7 @@ class IssuesController extends Controller {
   
   private function runIndex() {
     if ($this->isJsonRequest()) {
-      exit(json_encode($this->getTableData($_GET["page"], $_GET["results"])));
+      exit($this->getJson($this->getTableData($_GET["page"], $_GET["results"])));
     }
     
     $this->showView("issues/index", T_("Issues"));
@@ -48,7 +48,7 @@ class IssuesController extends Controller {
   
   private function runNew() {
     if ($this->isJsonRequest()) {
-      exit(json_encode($this->getEditorFields($_GET["tracker"])));
+      exit($this->getJson($this->getEditorFields($_GET["tracker"])));
     }
     
     $data = array();

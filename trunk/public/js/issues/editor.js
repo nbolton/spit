@@ -38,7 +38,11 @@ function loadDynamicFields(tracker) {
     format: "json",
     tracker: tracker
   },
-  function(data) {
+  function(message) {
+    
+    updateLoadStats(message["stats"]);
+    data = message["data"];
+    
     columns.empty();
     $.each(data, function(index, field) {
       if (field.type == "select") {

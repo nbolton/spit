@@ -22,16 +22,14 @@ namespace Spit\DataStores;
 class ProjectDataStore extends DataStore {
 
   public function get() {
-    $sql = parent::getSql();
-    $result = $sql->query("select * from project");
+    $result = $this->query("select * from project");
     return $this->fromResult($result);
   }
 
   public function getByName($name) {
-    $sql = parent::getSql();
-    $result = $sql->query(sprintf(
+    $result = $this->query(
       "select * from project where name=\"%s\"",
-      $sql->escape_string($name)));
+      $name);
     
     if ($result->num_rows == 0) {
       return null;
