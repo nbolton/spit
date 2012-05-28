@@ -19,33 +19,21 @@
 
 namespace Spit\Controllers;
 
-require "Controller.class.php";
-require "IndexController.class.php";
-require "IssuesController.class.php";
-require "AdminController.class.php";
-require "UsersController.class.php";
-
-use Exception;
-
-class ControllerProvider {
-
+class UsersController extends Controller {
+  
   public function __construct() {
-    $this->controllers = array();
-    $this->map("", new IndexController);
-    $this->map("issues", new IssuesController);
-    $this->map("admin", new AdminController);
-    $this->map("users", new UsersController);
+    $this->ds = new \Spit\DataStores\IssueDataStore;
   }
   
-  public function map($name, $controller) {
-    $this->controllers[$name] = $controller;
-  }
-
-  public function find($name) {
-    if (array_key_exists($name, $this->controllers)) {
-      return $this->controllers[$name];
+  public function run() {
+    switch ($this->getPathPart(1)) {
+      case "details": $this->runIndex(); break;
+      default: $this->showError(404); break;
     }
-    return null;
+  }
+  
+  private function runIndex() {
+    $this->showView("users/details", T_("User"));
   }
 }
 
