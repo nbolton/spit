@@ -37,14 +37,18 @@ class IssuesController extends Controller {
   }
   
   private function runIndex() {
-    $data["fields"] = $this->getFields();
+    if ($this->isJsonRequest()) {
+      exit(json_encode($this->getTableData($_GET["page"])));
+    }
+    
+    $data["fields"] = $this->getTableFields();
     $data["issues"] = $this->ds->get(0, 15, "updated", "desc");
     $this->showView("issues/index", T_("Issues"), $data);
   }
   
   private function runNew() {
-    if (isset($_GET["getFieldsFor"])) {
-      exit(json_encode($this->getEditorFields($_GET["getFieldsFor"])));
+    if ($this->isJsonRequest()) {
+      exit(json_encode($this->getEditorFields($_GET["tracker"])));
     }
     
     $data = array();
@@ -59,13 +63,20 @@ class IssuesController extends Controller {
     $this->showView("issues/editor", T_("New Issue"), $data);
   }
   
-  private function getFields() {
+  private function getTableData() {
+    return array(
+      "fields" => $this->getTableFields(),
+      "issues" => $this->ds->get(0, 15, "updated", "desc")
+    );
+  }
+  
+  private function getTableFields() {
     
     return array(
       new TableField("tracker", "Tracker"),
       new TableField("status", "Status"),
       new TableField("priority", "Priority"),
-      new TableField("title", "Title", false),
+      new TableField("title", "Title", false, true),
       new TableField("assignee", "Assignee"),
       new TableField("updated", "Updated"),
       new TableField("votes", "Votes"),
@@ -126,16 +137,6 @@ class IssuesController extends Controller {
     array_push($fields, $assignee);
     
     return $fields;
-  }
-  
-  public function getValue($object, $field) {
-    $value = parent::getValue($object, $field);
-  
-    if ($field == "title") {
-      return sprintf("<a href=\"view/%d/\">%s</a>", $object->id, $value);
-    }
-    
-    return $value;
   }
 }
 

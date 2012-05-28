@@ -16,20 +16,66 @@
  */
 
 function viewLoad() {
-  loadPagingInfo(1);
+  loadIssues(1);
 }
 
-function loadPagingInfo(current) {
+function loadIssues(page) {
   
-  log("loading paging info for: " + current);
+  log("loading issues for: " + page);
   
-  $.getJSON("?getPagingFor=" + current,
-  {
-    tags: "",
-    tagmode: "any",
-    format: "json"
+  table = $("table#issues");
+  
+  $.getJSON("", {
+    format: "json",
+    page: page
   },
   function(data) {
-    log("done");
+  
+    table = $("div#templates table.issues").clone();
+    $("table#issues").replaceWith(table);
+    table.removeAttr("class");
+    table.attr("id", "issues");
+    
+    header = table.find("thead tr");
+    
+    $.each(data.fields, function(index, field) {
+      th = $("<th></th>");
+      header.append(th);
+      
+      a = $("<a></a>");
+      th.append(a);
+      
+      th.attr("style", field.name);
+      a.text(field.label);
+      a.attr("href", "javascript:void(0)");
+    });
+    
+    tbody = table.find("tbody");
+    tbody.find("tr").remove();
+    
+    $.each(data.issues, function(index, issue) {
+      tr = $("div#templates table.issues tbody tr").clone();
+      tbody.append(tr);
+      
+      $.each(data.fields, function(index, field) {
+        td = $("<td></td>");
+        tr.append(td);
+        
+        value = issue[field.name] != null ? issue[field.name] : "";
+        if (field.link) {
+          a = $("<a></a>");
+          td.append(a);
+          
+          a.text(value);
+          a.attr("href", "view/{0}/".format(issue.id));
+        }
+        else {
+          td.text(value);
+        }
+        
+        compact = field.compact ? " compact" : "";
+        td.attr("class", field.name + compact);
+      });
+    });
   });
 }

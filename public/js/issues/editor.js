@@ -24,9 +24,9 @@ function viewLoad() {
   });
 }
 
-function loadVariableFields(index) {
+function loadVariableFields(tracker) {
   
-  log("loading fields for: " + index);
+  log("loading fields for: " + tracker);
   
   columns = $("div#dynamicFields div.column");
   columns.hide();
@@ -34,11 +34,9 @@ function loadVariableFields(index) {
   loading = $("form div.loading");
   loading.show();
   
-  $.getJSON("?getFieldsFor=" + index,
-  {
-    tags: "",
-    tagmode: "any",
-    format: "json"
+  $.getJSON("", {
+    format: "json",
+    tracker: tracker
   },
   function(data) {
     columns.empty();
