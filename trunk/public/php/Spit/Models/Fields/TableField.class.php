@@ -23,9 +23,10 @@ require_once "Field.class.php";
 
 class TableField extends Field {
 
-  public function __construct($name, $label, $compact = true) {
+  public function __construct($name, $label, $compact = true, $link = false) {
     parent::__construct($name, $label);
     $this->compact = $compact;
+    $this->link = $link;
   }
 }
 

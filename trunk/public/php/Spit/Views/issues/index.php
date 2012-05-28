@@ -19,26 +19,20 @@
 
 <h2><?=$title?></h2>
 <p><a href="new/"><?=T_("New issue")?></a></p>
-<table>
-  <thead>
-  <tr>
-    <th class="checkbox"><a href="javascript:void(0)"><img src="<?=$app->getImage("toggle_check.png")?>"></a></th>
-    <?php foreach($fields as $field): ?>
-    <th class="<?=$field->name?>"><a href="javascript:void(0)"><?=$field->label?></a></th>
-    <?php endforeach ?>
-  </tr>
-  </thead>
-  <tbody>
-    <?php foreach($issues as $issue): ?>
-    <tr id="issue-<?=$issue->id?>">
-      <td class="checkbox"><input name="id" type="checkbox" value="<?=$issue->id?>"></td>
-      <?php foreach($fields as $field): ?>
-      <td class="<?=$field->name?><?=$field->compact ? " compact" : ""?>">
-        <?=$self->getValue($issue, $field->name)?>
-      </td>
-      <?php endforeach ?>
-    </tr>
-    <?php endforeach ?>
-  </tbody>
-</table>
-<div id="paging"></div>
+
+<table id="issues"></table>
+
+<div id="templates">
+  <table class="issues">
+    <thead>
+      <tr>
+        <th class="checkbox"><a href="javascript:void(0)"><img src="<?=$app->getImage("toggle_check.png")?>"></a></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="checkbox"><input name="id" type="checkbox"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

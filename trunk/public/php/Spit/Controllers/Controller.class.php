@@ -85,6 +85,10 @@ class Controller {
   public function getValue($object, $field) {
     return $object->$field;
   }
+  
+  public function isJsonRequest() {
+    return isset($_GET["format"]) && $_GET["format"] == "json";
+  }
 }
 
 ?>
