@@ -20,12 +20,19 @@
 <h2><?=$title?></h2>
 <p><a href="new/"><?=T_("New issue")?></a></p>
 
-<table id="issues"></table>
-<div class="paging">
-  <?=T_("Page: ")?>
-  <a class="back" href="javascript:void(0)"><?=T_("&laquo; Back")?></a>
-  (<span class="page"></span>/<span class="pageCount"></span>)
-  <a class="next" href="javascript:void(0)"><?=T_("Next &raquo;")?></a>
+<div id="issues">
+  <div class="box">
+    <div class="loading">
+      <span><img src="<?=$app->getThemeRoot()?>/image/loading.gif" /></span>
+    </div>
+    <table></table>
+  </div>
+  <div class="paging">
+    <?=T_("Page: ")?>
+    <a class="back" href="javascript:void(0)"><?=T_("&laquo; Back")?></a>
+    (<span class="page"></span>/<span class="pageCount"></span>)
+    <a class="next" href="javascript:void(0)"><?=T_("Next &raquo;")?></a>
+  </div>
 </div>
 
 <div id="templates">
