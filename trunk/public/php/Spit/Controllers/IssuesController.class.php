@@ -38,12 +38,10 @@ class IssuesController extends Controller {
   
   private function runIndex() {
     if ($this->isJsonRequest()) {
-      exit(json_encode($this->getTableData($_GET["page"])));
+      exit(json_encode($this->getTableData($_GET["page"], $_GET["results"])));
     }
     
-    $data["fields"] = $this->getTableFields();
-    $data["issues"] = $this->ds->get(0, 15, "updated", "desc");
-    $this->showView("issues/index", T_("Issues"), $data);
+    $this->showView("issues/index", T_("Issues"));
   }
   
   private function runNew() {
@@ -63,10 +61,13 @@ class IssuesController extends Controller {
     $this->showView("issues/editor", T_("New Issue"), $data);
   }
   
-  private function getTableData() {
+  private function getTableData($page, $limit) {
+    $start = ($page - 1) * $limit;
+    $results = $this->ds->get($start, $limit, "updated", "desc");
     return array(
       "fields" => $this->getTableFields(),
-      "issues" => $this->ds->get(0, 15, "updated", "desc")
+      "issues" => $results[0],
+      "pageCount" => ceil($results[1] / $limit),
     );
   }
   

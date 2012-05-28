@@ -22,18 +22,32 @@ namespace Spit\DataStores;
 class IssueDataStore extends DataStore {
 
   public function get($start, $limit, $orderField, $orderDir) {
-    $result = $this->query(
-      "select i.id, i.title, i.updated, t.name as tracker, " .
+    $results = $this->multiQuery(
+      "select SQL_CALC_FOUND_ROWS " .
+      "i.id, i.title, i.updated, t.name as tracker, " .
       "s.name as status, p.name as priority, u.name as assignee " .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
       "inner join status as s on s.id = i.statusId " .
       "inner join priority as p on p.id = i.priorityId " .
       "left join user as u on u.id = i.assigneeId " .
-      "order by %s %s limit %d, %d",
+      "order by %s %s limit %d, %d; " .
+      "select FOUND_ROWS()",
       $orderField, $orderDir, $start, $limit
     );
-    return $this->fromResult($result);
+    
+    $issuesResult = $results[0];
+    $totalResult = $results[1];
+    
+    return array(
+      $this->fromResult($issuesResult),
+      $this->fromResultScalar($totalResult)
+    );
+  }
+  
+  public function total() {
+    $result = $this->query("select count(id) from issue");
+    return $this->fromResultScalar($result);
   }
   
   public function create($issue) {

@@ -50,3 +50,8 @@ String.prototype.format = function() {
 function log(s) {
   if ("console" in self && "log" in console) console.log(s);
 }
+
+function getParam(name) {
+  var match = RegExp("#?" + name + "=([^&]*)").exec(window.location.hash);
+  return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
