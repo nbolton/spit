@@ -98,12 +98,12 @@ class IssuesController extends Controller {
       $column = array();
       
       for ($j = 0; $j < $fieldsPerColumn; $j++) {
-        $fieldIndex++;
         if ($fieldIndex < $totalFields) {
           $field = $fields[$fieldIndex];
           $field->value = $this->getFieldValue($field->name, $issue);
           array_push($column, $field);
         }
+        $fieldIndex++;
       }
       array_push($columns, $column);
     }
