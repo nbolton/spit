@@ -26,30 +26,41 @@ function viewLoad() {
     results = 15;
   }
   
+  showLoading(false, 100);
   loadIssues(page, results);
   
   $("div.paging a.next").click(function() {
     if (page < pageCount) {
-      showLoading();
+      showLoading(true, 200);
       loadIssues(++page, results);
     }
   });
   
   $("div.paging a.back").click(function() {
     if (page > 1) {
-      showLoading();
+      showLoading(true, 200);
       loadIssues(--page, results);
     }
   });
 }
 
-function showLoading() {
-  loading = $("div.loading");
-  loading.css("position", "absolute");
-  table = $("div#issues table");
-  loading.height(table.height());
-  loading.width(table.width());
-  loading.show();
+function showLoading(absolute, timeout) {
+  setTimeout(function() {
+    if (loadComplete) {
+      return;
+    }
+    
+    loading = $("div.loading");
+    
+    if (absolute) {
+      loading.css("position", "absolute");
+      table = $("div#issues table");
+      loading.height(table.height());
+      loading.width(table.width());
+    }
+    
+    loading.show();
+  }, timeout);
 }
 
 function loadIssues(page, results) {
@@ -60,6 +71,8 @@ function loadIssues(page, results) {
   
   // put page in url so users can copy the link.
   window.location.replace("#page={0}&results={1}".format(page, results));
+  
+  loadComplete = false;
   
   $.getJSON("", {
     format: "json",
@@ -120,6 +133,7 @@ function loadIssues(page, results) {
       });
     });
     
+    loadComplete = true;
     $("div.loading").hide();
     $("div.paging").fadeIn();
     table.fadeIn();

@@ -187,6 +187,10 @@ form div.buttons {
   margin-left: -3px;
 }
 
+div.loading {
+  display: none;
+}
+
 form div.loading {
   padding: 30px;
   width: 100%;
