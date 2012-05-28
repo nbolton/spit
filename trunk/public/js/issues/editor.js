@@ -17,14 +17,14 @@
 
 function viewLoad() {
   tracker = $("select#tracker");
-  loadVariableFields(tracker.val());
+  loadDynamicFields(tracker.val());
   
   tracker.change(function() {
-    loadVariableFields($(this).val());
+    loadDynamicFields($(this).val());
   });
 }
 
-function loadVariableFields(tracker) {
+function loadDynamicFields(tracker) {
   
   log("loading fields for: " + tracker);
   
