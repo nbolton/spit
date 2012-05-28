@@ -19,12 +19,14 @@
 
 namespace Spit\DataStores;
 
+use DateTime;
+
 class IssueDataStore extends DataStore {
 
   public function get($start, $limit, $orderField, $orderDir) {
     $results = $this->multiQuery(
       "select SQL_CALC_FOUND_ROWS " .
-      "i.id, i.title, i.updated, t.name as tracker, " .
+      "i.id, i.title, i.votes, i.updated, t.name as tracker, " .
       "s.name as status, p.name as priority, u.name as assignee " .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
@@ -44,10 +46,30 @@ class IssueDataStore extends DataStore {
       $this->fromResultScalar($totalResult)
     );
   }
-  
-  public function total() {
-    $result = $this->query("select count(id) from issue");
-    return $this->fromResultScalar($result);
+
+  public function getById($id, $custom) {
+    $result = $this->query(
+      "select i.id, i.title, i.details, i.votes, i.created, i.updated, " .
+      "t.name as tracker, s.name as status, p.name as priority, " .
+      "ua.name as assignee, uu.name as updater, uc.name as creator, " .
+      "vt.name as target, vf.name as found, cat.name as category " .
+      $custom->getSqlString("custom.") .
+      "from issue as i " .
+      "inner join tracker as t on t.id = i.trackerId " .
+      "inner join status as s on s.id = i.statusId " .
+      "inner join priority as p on p.id = i.priorityId " .
+      "left join category as cat on cat.id = i.categoryId " .
+      "left join user as ua on ua.id = i.assigneeId " .
+      "left join user as uu on uu.id = i.creatorId " .
+      "left join user as uc on uc.id = i.updaterId " .
+      "left join custom on custom.issueId = i.id " .
+      "left join version as vt on vt.id = i.targetId " .
+      "left join version as vf on vf.id = i.foundId " .
+      "where i.id = %d",
+      $id
+    );
+    
+    return $this->fromResultSingle($result);
   }
   
   public function create($issue) {
@@ -56,6 +78,15 @@ class IssueDataStore extends DataStore {
       "insert into issue (title, details) values (\"%s\", \"%s\")",
       $sql->escape_string($issue->title),
       $sql->escape_string($issue->details)));
+  }
+  
+  protected function parseField($k, $v) {
+    if ($k == "created" || $k == "updated") {
+      return $v != "" ? new DateTime($v) : null;
+    }
+    else {
+      return parent::parseField($k, $v);
+    }
   }
   
   protected function newModel() {

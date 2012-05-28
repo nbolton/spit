@@ -122,7 +122,7 @@ function loadIssues(page, results) {
           td.append(a);
           
           a.text(value);
-          a.attr("href", "view/{0}/".format(issue.id));
+          a.attr("href", "details/{0}/".format(issue.id));
         }
         else {
           td.text(value);
