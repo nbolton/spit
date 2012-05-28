@@ -18,7 +18,9 @@
  */
 
 require "php/gettext/gettext.inc";
+require "php/markdown/markdown.php";
 require "php/Spit/App.class.php";
+
 $app = new Spit\App;
 $app->run();
 

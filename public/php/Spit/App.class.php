@@ -26,6 +26,7 @@ require "Locale.class.php";
 require "Plugins.class.php";
 require "Security.class.php";
 require "Path.class.php";
+require "CustomFields.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";

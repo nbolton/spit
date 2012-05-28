@@ -1,5 +1,3 @@
-<?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -17,14 +15,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\Models;
-
-class Issue {
-  public $id;
-  
-  public function getFullTitle() {
-    return sprintf("%s #%d - %s", $this->tracker, $this->id, $this->title);
-  }
+div.box {
+  padding: 7px;
 }
 
-?>
+div.box div.column {
+  float: left;
+  width: 50%;
+}
+
+div.box div.row {
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+div.box div.row,
+div.box div.row div.label,
+div.box div.row div.value {
+  float: left;
+  white-space: nowrap;
+}
+
+div.box div.row div.label {
+  font-weight: bold;
+  width: 30%;
+  padding-right: 20px;
+}
+
+hr {
+  clear: both;
+}

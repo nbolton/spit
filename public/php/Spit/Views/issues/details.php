@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,15 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Spit\Models;
-
-class Issue {
-  public $id;
-  
-  public function getFullTitle() {
-    return sprintf("%s #%d - %s", $this->tracker, $this->id, $this->title);
-  }
-}
-
 ?>
+
+<h3><?=$title?></h3>
+<div class="box">
+  <?php foreach($columns as $column): ?>
+  <div class="column">
+    <?php foreach($column as $field): ?>
+      <div class="row">
+        <div class="label"><?=$field->label?></div>
+        <div class="value"><?=$field->value?></div>
+      </div>
+    <?php endforeach ?>
+  </div>
+  <?php endforeach ?>
+  <hr />
+  <p><?=Markdown($issue->details)?></p>
+</div>

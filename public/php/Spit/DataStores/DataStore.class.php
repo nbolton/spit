@@ -20,6 +20,7 @@
 namespace Spit\DataStores;
 
 use mysqli;
+use Exception;
 
 abstract class DataStore {
 
@@ -36,11 +37,10 @@ abstract class DataStore {
     $sql = $this->getSql();
     $args = $this->getSafeArgs(func_get_args(), $sql);
     
-    $sql->query(vsprintf($format, $args));
+    $result = $sql->query(vsprintf($format, $args));
     
-    $result = $sql->store_result();
     if ($result == null) {
-      throw new \Exception($sql->error);
+      throw new Exception($sql->error);
     }
     
     return $result;
@@ -56,7 +56,7 @@ abstract class DataStore {
     do {
       $result = $sql->store_result();
       if ($result == null) {
-        throw new \Exception($sql->error);
+        throw new Exception($sql->error);
       }
       array_push($results, $result);
     }
@@ -89,15 +89,18 @@ abstract class DataStore {
     return $data;
   }
   
+  protected function fromResultSingle($result) {
+    if ($result == null || $result->num_rows == 0) {
+      return null;
+    }
+    
+    return $this->fromRow($result->fetch_object());
+  }
+  
   protected function fromRow($row) {
     $data = $this->newModel();
     foreach ($row as $k => $v) {
-      if (is_string($v)) {
-        $data->$k = mb_convert_encoding($v, "utf-8");
-      }
-      else {
-        $data->$k = $v;
-      }
+      $data->$k = $this->parseField($k, $v);
     }
     return $data;
   }
@@ -108,6 +111,13 @@ abstract class DataStore {
     }
     $row = $result->fetch_row();
     return $row[0];
+  }
+  
+  protected function parseField($k, $v) {
+    if (is_string($v)) {
+      return mb_convert_encoding($v, "utf-8");
+    }
+    return $v;
   }
   
   abstract protected function newModel();
