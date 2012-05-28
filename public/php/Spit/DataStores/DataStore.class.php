@@ -37,6 +37,7 @@ abstract class DataStore {
     $sql = $this->getSql();
     $args = $this->getSafeArgs(func_get_args(), $sql);
     
+    \Spit\App::$instance->queryCount++;
     $result = $sql->query(vsprintf($format, $args));
     
     if ($result == null) {
@@ -50,6 +51,7 @@ abstract class DataStore {
     $sql = $this->getSql();
     $args = $this->getSafeArgs(func_get_args(), $sql);
     
+    \Spit\App::$instance->queryCount++;
     $sql->multi_query(vsprintf($format, $args));
     
     $results = array();

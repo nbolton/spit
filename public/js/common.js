@@ -35,15 +35,18 @@ $(function() {
   if ("viewLoad" in self) {
     viewLoad();
   }
+  
+  initialLoadTime = parseFloat($("span.loadTime").text());
+  initialQueries = parseInt($("span.queries").text());
+  
+  log("initial load time: {0} ms".format(initialLoadTime));
+  log("initial queries: " + initialQueries);
 });
 
 String.prototype.format = function() {
   var args = arguments;
   return this.replace(/{(\d+)}/g, function(match, number) { 
-    return typeof args[number] != 'undefined'
-      ? args[number]
-      : match
-    ;
+    return typeof args[number] != 'undefined' ? args[number] : match;
   });
 };
 
@@ -54,4 +57,15 @@ function log(s) {
 function getParam(name) {
   var match = RegExp("#?" + name + "=([^&]*)").exec(window.location.hash);
   return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+}
+
+function updateLoadStats(stats) {
+  var loadTime = parseFloat(stats["loadTime"]);
+  var queries = parseFloat(stats["queries"]);
+  
+  log("ajax load time: {0} ms".format(loadTime.toFixed(2)));
+  log("ajax queries: " + queries);
+  
+  $("span.loadTime").text((initialLoadTime + loadTime).toFixed(2));
+  $("span.queries").text(initialQueries + queries);
 }

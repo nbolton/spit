@@ -79,7 +79,10 @@ function loadIssues(page, results) {
     page: page,
     results: results
   },
-  function(data) {
+  function(message) {
+    
+    updateLoadStats(message["stats"]);
+    data = message["data"];
     
     pageCount = data.pageCount;
     $("div.paging span.page").text(page);

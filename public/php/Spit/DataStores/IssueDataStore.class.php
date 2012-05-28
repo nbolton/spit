@@ -73,11 +73,10 @@ class IssueDataStore extends DataStore {
   }
   
   public function create($issue) {
-    $sql = parent::getSql();
-    $sql->query(sprintf(
+    $sql->query(
       "insert into issue (title, details) values (\"%s\", \"%s\")",
-      $sql->escape_string($issue->title),
-      $sql->escape_string($issue->details)));
+      $issue->title,
+      $issue->details);
   }
   
   protected function parseField($k, $v) {
