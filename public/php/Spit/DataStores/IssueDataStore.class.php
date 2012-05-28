@@ -60,8 +60,8 @@ class IssueDataStore extends DataStore {
       "inner join priority as p on p.id = i.priorityId " .
       "left join category as cat on cat.id = i.categoryId " .
       "left join user as ua on ua.id = i.assigneeId " .
-      "left join user as uu on uu.id = i.creatorId " .
-      "left join user as uc on uc.id = i.updaterId " .
+      "left join user as uu on uu.id = i.updaterId " .
+      "left join user as uc on uc.id = i.creatorId " .
       "left join custom on custom.issueId = i.id " .
       "left join version as vt on vt.id = i.targetId " .
       "left join version as vf on vf.id = i.foundId " .
