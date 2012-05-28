@@ -31,14 +31,14 @@ function viewLoad() {
   
   $("div.paging a.next").click(function() {
     if (page < pageCount) {
-      showLoading(true, 200);
+      showLoading(true, 350);
       loadIssues(++page, results);
     }
   });
   
   $("div.paging a.back").click(function() {
     if (page > 1) {
-      showLoading(true, 200);
+      showLoading(true, 350);
       loadIssues(--page, results);
     }
   });
