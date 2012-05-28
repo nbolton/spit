@@ -1,3 +1,4 @@
+<?php
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -14,38 +15,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+?>
 
-div.box {
-  padding: 7px;
-}
-
-div.box div.column {
-  float: left;
-  width: 40%;
-}
-
-div.box div.row {
-  width: 100%;
-  margin-bottom: 7px;
-}
-
-div.box div.row,
-div.box div.row div.label,
-div.box div.row div.value {
-  float: left;
-  white-space: nowrap;
-}
-
-div.box div.row div.value span.empty {
-  color: #ddd;
-}
-
-div.box div.row div.label {
-  font-weight: bold;
-  width: 30%;
-  padding-right: 20px;
-}
-
-hr {
-  clear: both;
-}
+<h2><?=$title?></h2>

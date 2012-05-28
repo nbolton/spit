@@ -114,11 +114,18 @@ class IssuesController extends Controller {
     $v = $issue->$fieldName;
     
     if ($v == null) {
-      return null;
+      return sprintf("<span class=\"empty\">None</span>");
+    }
+    
+    if ($fieldName == "creator" || $fieldName == "updater") {
+      $id = ($fieldName == "creator") ? $issue->creatorId : $issue->updaterId;
+      return sprintf(
+        "<a href=\"%susers/details/%d/\">%s</a>",
+        $this->app->getProjectRoot(), $id, $v);
     }
     
     if ($fieldName == "created" || $fieldName == "updated") {
-      return $v->format('Y-m-d H:i:s');
+      return $v->format("Y-m-d H:i:s");
     }
     
     $customField = $this->customFields->findFieldMapping($fieldName);
@@ -137,7 +144,7 @@ class IssuesController extends Controller {
       new Field("assignee", T_("Assignee: ")),
       new Field("category", T_("Category: ")),
       new Field("target", T_("Target: ")),
-      new Field("found", T_("Found: ")),
+      new Field("found", T_("Found at: ")),
       new Field("votes", T_("Votes: ")),
       new Field("creator", T_("Created by: ")),
       new Field("created", T_("Created on: ")),

@@ -50,6 +50,7 @@ class IssueDataStore extends DataStore {
   public function getById($id, $custom) {
     $result = $this->query(
       "select i.id, i.title, i.details, i.votes, i.created, i.updated, " .
+      "i.creatorId, i.updaterId, " .
       "t.name as tracker, s.name as status, p.name as priority, " .
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
       "vt.name as target, vf.name as found, cat.name as category " .
