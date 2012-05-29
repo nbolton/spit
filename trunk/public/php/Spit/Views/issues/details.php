@@ -61,6 +61,9 @@
     <textarea name="content"></textarea>
     <input class="button" type="button" value="<?=T_("OK")?>" />
   </form>
+  <div class="loading">
+    <img src="<?=$app->getImagePath("loading.gif")?>" />
+  </div>
 </div>
 
 <div id="templates">

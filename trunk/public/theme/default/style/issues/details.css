@@ -62,7 +62,7 @@ div.changes span.remove {
 }
 
 div.comment form {
-  /*display: none;*/
+  display: none;
 }
 
 div.comment form textarea {
