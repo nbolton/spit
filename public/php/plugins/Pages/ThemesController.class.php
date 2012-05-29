@@ -17,22 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "DownloadController.class.php";
-require "ThemesController.class.php";
-require "PluginsController.class.php";
-
-class Pages {
+class ThemesController extends Spit\Controllers\Controller {
   
-  public function __construct($spit) {
-    $spit->addLink(new Spit\Link(T_("Download"), "download/"));
-    $spit->addLink(new Spit\Link(T_("Themes"), "themes/"));
-    $spit->addLink(new Spit\Link(T_("Plugins"), "plugins/"));
-    $spit->addLink(new Spit\Link(T_("Code"), "/code/", true));
-    $spit->addLink(new Spit\Link(T_("Wiki"), "/wiki/", true));
-    
-    $spit->addController("download", new DownloadController($this));
-    $spit->addController("themes", new ThemesController($this));
-    $spit->addController("plugins", new PluginsController($this));
+  public function __construct() {
+    $this->viewDir = "php/plugins/Pages/views/";
+  }
+  
+  public function run() {
+    $this->showView("themes");
   }
 }
 
