@@ -117,7 +117,7 @@ class Controller {
     ));
   }
   
-  public function getDateString($date) {
+  public function formatDate($date) {
     return $date->format($this->app->settings->site->dateTimeFormat);
   }
 }
