@@ -19,24 +19,19 @@
 
 namespace Spit\DataStores;
 
+use DateTime;
+
 class ChangeDataStore extends DataStore {
 
-  public function getForIssue($id) {
-    $results = $this->multiQuery(
-      "select SQL_CALC_FOUND_ROWS id " .
-      "from `change` where id = %d " .
-      "order by id asc; " .
-      "select FOUND_ROWS()",
-      $id
+  public function getForIssue($issueId) {
+    $result = $this->query(
+      "select id, creatorId, revision, type, name, content, created " .
+      "from `change` where issueId = %d " .
+      "order by id asc",
+      $issueId
     );
     
-    $changesResult = $results[0];
-    $totalResult = $results[1];
-    
-    return array(
-      $this->fromResult($changesResult),
-      $this->fromResultScalar($totalResult)
-    );
+    return $this->fromResult($result);
   }
   
   public function create($change) {
