@@ -24,6 +24,7 @@ use Exception;
 class Controller {
 
   const DEFAULT_VIEW_DIR = "php/Spit/Views/";
+  const MASTER_VIEW = "master";
 
   public $app;
   public $viewDir = self::DEFAULT_VIEW_DIR;
@@ -37,7 +38,7 @@ class Controller {
     $self = $this;
     $fullTitle = $app->getSiteTitle() . (($title != "") ? " - " . $title : "");
     $content = $this->viewDir . $view . ".php";
-    $master = $app->settings->layout->masterView;
+    $master = self::MASTER_VIEW;
     
     if (!file_exists(sprintf("%s/%s", $_SERVER["DOCUMENT_ROOT"], $content))) {
       throw new Exception("view not found at: " . $content);
