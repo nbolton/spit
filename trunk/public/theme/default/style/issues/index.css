@@ -17,6 +17,7 @@
 
 div#issues {
   margin-top: 10px;
+  min-height: 400px;
 }
  
 div#issues table {
