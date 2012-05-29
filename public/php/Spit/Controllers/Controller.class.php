@@ -103,8 +103,12 @@ class Controller {
     return $object->$field;
   }
   
-  public function isJsonRequest() {
-    return isset($_GET["format"]) && $_GET["format"] == "json";
+  public function isJsonGet() {
+    return (isset($_GET["format"]) && $_GET["format"] == "json");
+  }
+  
+  public function isJsonPost() {
+    return (isset($_POST["format"]) && $_POST["format"] == "json");
   }
   
   public function getJson($data) {

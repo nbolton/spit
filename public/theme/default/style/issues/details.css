@@ -60,3 +60,15 @@ div.changes span.remove {
   color: #a82400;
   text-decoration: line-through;
 }
+
+div.comment form {
+  /*display: none;*/
+}
+
+div.comment form textarea {
+  height: 100px;
+}
+
+div.comment form input.button {
+  margin-left: -1px;
+}

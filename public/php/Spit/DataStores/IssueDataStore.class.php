@@ -50,7 +50,7 @@ class IssueDataStore extends DataStore {
   public function getById($id, $custom) {
     $result = $this->query(
       "select i.id, i.title, i.details, i.votes, i.created, i.updated, " .
-      "i.creatorId, i.updaterId, i.revision, " .
+      "i.creatorId, i.updaterId, " .
       "t.name as tracker, s.name as status, p.name as priority, " .
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
       "vt.name as target, vf.name as found, cat.name as category " .
@@ -94,7 +94,7 @@ class IssueDataStore extends DataStore {
     $this->query(
       "update issue set " .
       "trackerId = %d, statusId = %d, priorityId = %d, updaterId = %d, " .
-      "title = \"%s\", details = \"%s\", updated = now(), revision = %d " .
+      "title = \"%s\", details = \"%s\", updated = now() " .
       "where id = %d",
       $issue->trackerId,
       $issue->statusId,
@@ -102,7 +102,6 @@ class IssueDataStore extends DataStore {
       $issue->updaterId,
       $issue->title,
       $issue->details,
-      $issue->revision,
       $issue->id);
   }
   

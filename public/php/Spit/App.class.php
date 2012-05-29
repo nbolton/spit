@@ -41,6 +41,8 @@ require "Models/Link.class.php";
 require "Models/Issue.class.php";
 require "Models/Project.class.php";
 require "Models/Change.class.php";
+require "Models/User.class.php";
+
 require "Models/Fields/Select.class.php";
 require "Models/Fields/TableField.class.php";
 
@@ -62,6 +64,11 @@ class App {
     $this->security = new Security;
     $this->error = new Controllers\ErrorController($this);
     $this->path = new Path;
+    
+    // TODO: take values from database.
+    $this->user = new Models\User;
+    $this->user->id = 1;
+    $this->user->name = "Nick Bolton";
     
     $this->links = array(
       new Link(T_("Home"), ""),
