@@ -40,13 +40,16 @@
   <hr />
   <p><?=Markdown($issue->details)?></p>
   
-  <?php foreach($changes as $change): ?>
-  <hr />
-  <p>
-    <b><?=T_("Update:")?></b> <?=$change->getTypeString()?>,
-    <b><?=T_("Field:")?></b> <?=$change->name?>,
-    <b><?=T_("Date:")?></b> <?=$change->getDateString()?>
-  </p>
-  <p><?=$change->getContentHtml()?></p>
-  <?php endforeach ?>
+  <div class="changes">
+    <?php foreach($changes as $change): ?>
+    <hr />
+    <p>
+      <i><?=$change->getDateString()?></i>: <?=$change->creator?>
+      <?=$change->getTypeString()?> <?=$change->name?>.
+    </p>
+    <?php if ($change->content != ""): ?>
+    <p><?=$change->getContentHtml()?></p>
+    <?php endif ?>
+    <?php endforeach ?>
+  </div>
 </div>

@@ -49,3 +49,14 @@ div.box div.row div.label {
 hr {
   clear: both;
 }
+
+div.changes span.add {
+  background-color: #d1e1ad;
+  color: #405a04;
+}
+
+div.changes span.remove {
+  background-color: #e5bdb2;
+  color: #a82400;
+  text-decoration: line-through;
+}

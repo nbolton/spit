@@ -25,9 +25,12 @@ class ChangeDataStore extends DataStore {
 
   public function getForIssue($issueId) {
     $result = $this->query(
-      "select id, creatorId, revision, type, name, content, created " .
-      "from `change` where issueId = %d " .
-      "order by id asc",
+      "select c.id, c.creatorId, c.revision, c.type, c.name, " .
+      "c.content, c.created, u.name as creator " .
+      "from `change` as c " .
+      "inner join user as u on u.id = c.creatorId " .
+      "where c.issueId = %d " .
+      "order by c.id asc",
       $issueId
     );
     
