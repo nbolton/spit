@@ -76,7 +76,7 @@ class Controller {
     return $_SERVER["REQUEST_METHOD"] == "POST";
   }
   
-  public function setFormValues($object) {
+  public function applyFormValues($object) {
     foreach ($_POST as $k => $v) {
       $object->$k = $v;
     }

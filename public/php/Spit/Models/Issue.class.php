@@ -21,9 +21,16 @@ namespace Spit\Models;
 
 class Issue {
   public $id;
+  public $title;
+  public $details;
   
   public function getFullTitle() {
     return sprintf("%s #%d - %s", $this->tracker, $this->id, $this->title);
+  }
+  
+  public function getViewLink() {
+    return sprintf("%sissues/details/%d/",
+      \Spit\App::$instance->getProjectRoot(), $this->id);
   }
 }
 

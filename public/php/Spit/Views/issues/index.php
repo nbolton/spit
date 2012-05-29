@@ -23,7 +23,7 @@
 <div id="issues">
   <div class="box">
     <div class="loading">
-      <span><img src="<?=$app->getThemeRoot()?>/image/loading.gif" /></span>
+      <span><img src="<?=$app->getImagePath("loading.gif")?>" /></span>
     </div>
     <table></table>
   </div>
@@ -39,7 +39,7 @@
   <table class="issues">
     <thead>
       <tr>
-        <th class="checkbox"><a href="javascript:void(0)"><img src="<?=$app->getImage("toggle_check.png")?>"></a></th>
+        <th class="checkbox"><a href="javascript:void(0)"><img src="<?=$app->getImagePath("toggle_check.png")?>"></a></th>
       </tr>
     </thead>
     <tbody>

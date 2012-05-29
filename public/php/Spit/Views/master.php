@@ -44,7 +44,7 @@
           <div class="language">
             <button id="language">
               <span class="text"><?=T_("Language:")?> <?=$app->locale->getCurrent()->name?></span>
-              <img src="<?=$app->getImage("pixel.gif")?>" class="arrow" />
+              <img src="<?=$app->getImagePath("pixel.gif")?>" class="arrow" />
             </button>
             <div class="menu">
               <?php foreach ($app->locale->getLanguages() as $l): ?>

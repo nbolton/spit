@@ -74,10 +74,20 @@ class IssueDataStore extends DataStore {
   }
   
   public function create($issue) {
-    $sql->query(
+    $this->query(
       "insert into issue (title, details) values (\"%s\", \"%s\")",
       $issue->title,
       $issue->details);
+  }
+  
+  public function update($issue) {
+    $this->query(
+      "update issue set " .
+      "title = \"%s\", details = \"%s\" " .
+      "where id = %d",
+      $issue->title,
+      $issue->details,
+      $issue->id);
   }
   
   protected function parseField($k, $v) {
