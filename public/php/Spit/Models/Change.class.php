@@ -26,6 +26,26 @@ class ChangeType {
 
 class Change {
   public $id;
+  
+  public function getContentHtml() {
+    switch($this->type) {
+      case ChangeType::Diff:
+        return str_replace("\n", "<br />\n", $this->content);
+      
+      case ChangeType::Comment:
+        return Markdown($this->content);
+      
+      default: return null;
+    }
+  }
+  
+  public function getTypeString() {
+    switch($this->type) {
+      case ChangeType::Diff: return T_("Diff");
+      case ChangeType::Comment: return T_("Comment");
+      default: return null;
+    }
+  }
 }
 
 ?>

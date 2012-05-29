@@ -23,6 +23,7 @@
   <a href="<?=$app->getProjectRoot()?>issues/edit/<?=$issue->id?>/">
     <img src="<?=$app->getImagePath("edit.png")?>">Edit</img>
   </a>
+  
   <hr />
   <?php endif ?>
   <?php foreach($columns as $column): ?>
@@ -35,6 +36,16 @@
     <?php endforeach ?>
   </div>
   <?php endforeach ?>
+  
   <hr />
   <p><?=Markdown($issue->details)?></p>
+  
+  <?php foreach($changes as $change): ?>
+  <hr />
+  <p>
+    <b><?=T_("Update:")?></b> <?=$change->getTypeString()?>,
+    <b><?=T_("Field:")?></b> <?=$change->name?>
+  </p>
+  <p><?=$change->getContentHtml()?></p>
+  <?php endforeach ?>
 </div>
