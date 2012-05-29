@@ -124,9 +124,13 @@ class IssuesController extends Controller {
       $change->issueId = $issue->id;
       $change->creatorId = 1;
       $change->revision = $issue->revision;
-      $change->type = \Spit\Models\ChangeType::Diff;
+      $change->type = \Spit\Models\ChangeType::Edit;
       $change->name = $k;
-      $change->content = $v;
+      
+      // don't store details diff for now, until we have a better diff.
+      if ($k != "details") {
+        $change->content = $v;
+      }
       
       $cds = new \Spit\DataStores\ChangeDataStore;
       $cds->create($change);
