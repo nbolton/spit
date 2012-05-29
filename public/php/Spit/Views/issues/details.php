@@ -44,7 +44,7 @@
     <?php foreach($changes as $change): ?>
     <hr />
     <p>
-      <i><?=$self->getDateString($change->created)?></i>: <?=$change->creator?>
+      <i><?=$self->formatDate($change->created)?></i>: <?=$change->creator?>
       <?=$self->getChangeType($change)?> <?=$change->name?>.
     </p>
     <?php if ($change->content != ""): ?>

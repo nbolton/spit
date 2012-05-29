@@ -201,7 +201,7 @@ class IssuesController extends Controller {
     }
     
     if ($fieldName == "created" || $fieldName == "updated" && $v != null) {
-      return $v->format($this->app->settings->site->dateTimeFormat);
+      return $this->formatDate($v);
     }
     
     if ($custom) {
