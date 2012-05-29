@@ -44,8 +44,13 @@
     <?php foreach($changes as $change): ?>
     <hr />
     <p>
-      <i><?=$self->formatDate($change->created)?></i>: <?=$change->creator?>
-      <?=$self->getChangeType($change)?> <?=$change->name?>.
+      <?php
+      echo sprintf("<i>%s</i>: %s %s %s.", 
+        $self->formatDate($change->created),
+        $change->creator,
+        $self->getChangeType($change),
+        $change->name);
+      ?>
     </p>
     <?php if ($change->content != ""): ?>
     <p><?=$self->getChangeHtml($change)?></p>
