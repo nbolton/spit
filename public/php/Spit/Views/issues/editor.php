@@ -26,8 +26,8 @@
   <div class="box">
     <div class="column">
       <div class="row">
-        <label for="tracker"><?=T_("Tracker")?></label>
-        <select id="tracker" name="tracker">
+        <label for="trackerId"><?=T_("Tracker")?></label>
+        <select id="trackerId" name="trackerId">
           <option value="1" selected="selected">Bug</option>
           <option value="2">Feature</option>
           <option value="3">Support</option>

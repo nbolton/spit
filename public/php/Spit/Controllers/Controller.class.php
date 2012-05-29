@@ -77,9 +77,25 @@ class Controller {
   }
   
   public function applyFormValues($object) {
+    $diffs = new \stdClass;
     foreach ($_POST as $k => $v) {
+      if (isset($object->$k)) {
+        $diff = $this->diff((string)$v, (string)$object->$k);
+        if ($diff != null) {
+          $diffs->$k = $diff;
+        }
+      }
       $object->$k = $v;
     }
+    return $diffs;
+  }
+  
+  public function diff($old, $new) {
+    if ($old == $new) {
+      return null;
+    }
+    // TODO: improve for large bodies of text.
+    return sprintf("-%s\n+%s", $new, $old);
   }
   
   public function getValue($object, $field) {

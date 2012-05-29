@@ -50,7 +50,7 @@ class IssueDataStore extends DataStore {
   public function getById($id, $custom) {
     $result = $this->query(
       "select i.id, i.title, i.details, i.votes, i.created, i.updated, " .
-      "i.creatorId, i.updaterId, " .
+      "i.creatorId, i.updaterId, i.revision, " .
       "t.name as tracker, s.name as status, p.name as priority, " .
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
       "vt.name as target, vf.name as found, cat.name as category " .
@@ -75,18 +75,34 @@ class IssueDataStore extends DataStore {
   
   public function create($issue) {
     $this->query(
-      "insert into issue (title, details) values (\"%s\", \"%s\")",
+      "insert into issue " .
+      "(projectId, trackerId, statusId, priorityId, " .
+      "creatorId, title, details, created) " .
+      "values (%d, %d, %d, %d, %d, \"%s\", \"%s\", now())",
+      $issue->projectId,
+      $issue->trackerId,
+      $issue->statusId,
+      $issue->priorityId,
+      $issue->creatorId,
       $issue->title,
       $issue->details);
+    
+    return parent::$sql->insert_id;
   }
   
   public function update($issue) {
     $this->query(
       "update issue set " .
-      "title = \"%s\", details = \"%s\" " .
+      "trackerId = %d, statusId = %d, priorityId = %d, updaterId = %d, " .
+      "title = \"%s\", details = \"%s\", updated = now(), revision = %d " .
       "where id = %d",
+      $issue->trackerId,
+      $issue->statusId,
+      $issue->priorityId,
+      $issue->updaterId,
       $issue->title,
       $issue->details,
+      $issue->revision,
       $issue->id);
   }
   
