@@ -17,14 +17,22 @@
 
 function viewLoad() {
   form = $("div.comment form");
+  link = $("div.comment a.edit");
   
-  $("div.comment a.edit").click(function() {
+  link.click(function() {
+    $(this).hide();
     form.fadeIn();
+    scrollDown();
   });
   
   form.find("input.button").click(function() {
     content = form.find("textarea").val();
     log("sending comment: " + content);
+    
+    form.hide();
+    loading = $("div.comment div.loading");
+    loading.fadeIn();
+    scrollDown();
     
     $.post("", {
       format: "json",
@@ -41,7 +49,10 @@ function viewLoad() {
       
       $("div.changes").append(change);
       
-      form.fadeOut();
+      form.find("textarea").val("");
+      loading.hide();
+      link.show();
+      scrollDown();
     },
     "json")
     .error(log("error"));

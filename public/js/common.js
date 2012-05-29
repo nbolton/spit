@@ -69,3 +69,7 @@ function updateLoadStats(stats) {
   $("span.loadTime").text((initialLoadTime + loadTime).toFixed(2));
   $("span.queries").text(initialQueries + queries);
 }
+
+function scrollDown() {
+  $('html, body').animate({scrollTop: $(document).height()}, 500);
+}
