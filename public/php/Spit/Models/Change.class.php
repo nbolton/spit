@@ -20,7 +20,7 @@
 namespace Spit\Models;
 
 class ChangeType {
-  const Diff = 0;
+  const Edit = 0;
   const Comment = 1;
 }
 
@@ -29,7 +29,7 @@ class Change {
   
   public function getContentHtml() {
     switch($this->type) {
-      case ChangeType::Diff:
+      case ChangeType::Edit:
         return str_replace("\n", "<br />\n", $this->content);
       
       case ChangeType::Comment:
@@ -41,10 +41,15 @@ class Change {
   
   public function getTypeString() {
     switch($this->type) {
-      case ChangeType::Diff: return T_("Diff");
+      case ChangeType::Edit: return T_("Edit");
       case ChangeType::Comment: return T_("Comment");
       default: return null;
     }
+  }
+  
+  public function getDateString() {
+    return $this->created->format(
+      \Spit\Settings::$instance->site->dateTimeFormat);
   }
 }
 

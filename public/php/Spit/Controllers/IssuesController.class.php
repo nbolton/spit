@@ -197,7 +197,7 @@ class IssuesController extends Controller {
     }
     
     if ($fieldName == "created" || $fieldName == "updated" && $v != null) {
-      return $v->format("Y-m-d H:i:s");
+      return $v->format($this->app->settings->site->dateTimeFormat);
     }
     
     if ($custom) {

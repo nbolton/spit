@@ -44,7 +44,8 @@
   <hr />
   <p>
     <b><?=T_("Update:")?></b> <?=$change->getTypeString()?>,
-    <b><?=T_("Field:")?></b> <?=$change->name?>
+    <b><?=T_("Field:")?></b> <?=$change->name?>,
+    <b><?=T_("Date:")?></b> <?=$change->getDateString()?>
   </p>
   <p><?=$change->getContentHtml()?></p>
   <?php endforeach ?>
