@@ -317,6 +317,38 @@ class IssuesController extends Controller {
   public function userCanEdit() {
     return true;
   }
+  
+  public function getChangeHtml($change) {
+    switch($change->type) {
+      case \Spit\Models\ChangeType::Edit:
+        return $this->getChangeEditHtml($change);
+      
+      case \Spit\Models\ChangeType::Comment:
+        return Markdown($change->content);
+      
+      default: return null;
+    }
+  }
+  
+  public function getChangeEditHtml($change) {
+    $lines = explode("\n", $change->content);
+    $html = "";
+    foreach ($lines as $line) {
+      $class = substr($line, 0, 1) == "+" ? "add" : "remove";
+      $noMarker = substr($line, 1);
+      $html .= sprintf(
+        "<span class=\"%s\">%s</span><br />\n", $class, $noMarker);
+    }
+    return $html;
+  }
+  
+  public function getChangeType($change) {
+    switch($change->type) {
+      case \Spit\Models\ChangeType::Edit: return T_("edited");
+      case \Spit\Models\ChangeType::Comment: return T_("wrote a comment");
+      default: return null;
+    }
+  }
 }
 
 ?>

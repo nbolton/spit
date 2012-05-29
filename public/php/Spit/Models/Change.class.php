@@ -27,43 +27,6 @@ class ChangeType {
 class Change {
   public $id;
   public $content;
-  
-  public function getContentHtml() {
-    switch($this->type) {
-      case ChangeType::Edit:
-        return $this->getEditHtml();
-      
-      case ChangeType::Comment:
-        return Markdown($this->content);
-      
-      default: return null;
-    }
-  }
-  
-  public function getEditHtml() {
-    $lines = explode("\n", $this->content);
-    $html = "";
-    foreach ($lines as $line) {
-      $class = substr($line, 0, 1) == "+" ? "add" : "remove";
-      $noMarker = substr($line, 1);
-      $html .= sprintf(
-        "<span class=\"%s\">%s</span><br />\n", $class, $noMarker);
-    }
-    return $html;
-  }
-  
-  public function getTypeString() {
-    switch($this->type) {
-      case ChangeType::Edit: return T_("edited");
-      case ChangeType::Comment: return T_("wrote a comment");
-      default: return null;
-    }
-  }
-  
-  public function getDateString() {
-    return $this->created->format(
-      \Spit\Settings::$instance->site->dateTimeFormat);
-  }
 }
 
 ?>
