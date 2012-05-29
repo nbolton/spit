@@ -67,7 +67,6 @@ class IssuesController extends Controller {
         break;
     }
     
-    $data["saved"] = false;
     $data["mode"] = $mode;
     $data["issue"] = $issue;
     
@@ -87,7 +86,8 @@ class IssuesController extends Controller {
           break;
       }
       
-      $data["saved"] = true;
+      header(sprintf("Location: %sissues/details/%d/", $this->app->getProjectRoot(), $issue->id));
+      exit;
     }
     
     $title = ($mode == EditorMode::Create) ? T_("New Issue") : T_("Edit Issue");

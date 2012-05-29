@@ -19,9 +19,6 @@
 
 <h2><?=$title?></h2>
 
-<?php if($saved): ?>
-<p><?=sprintf(T_("Issue saved: %s"), sprintf("<a href=\"%s\">#%d</a>", $issue->getViewLink(), $issue->id))?></p>
-<?php else: ?>
 <form method="post">
   <div class="box">
     <div class="column">
@@ -61,4 +58,3 @@
     <select></select>
   </div>
 </div>
-<?php endif ?>
