@@ -21,7 +21,7 @@
 <div class="box">
   <?php if($self->userCanEdit()): ?>
   <a href="<?=$app->getProjectRoot()?>issues/edit/<?=$issue->id?>/">
-    <img src="<?=$app->getImagePath("edit.png")?>">Edit</img>
+    <img src="<?=$app->getImagePath("edit.png")?>"/>Edit
   </a>
   
   <hr />
@@ -42,19 +42,31 @@
   
   <div class="changes">
     <?php foreach($changes as $change): ?>
-    <hr />
-    <p>
-      <?php
-      echo sprintf("<i>%s</i>: %s %s %s.", 
-        $self->formatDate($change->created),
-        $change->creator,
-        $self->getChangeType($change),
-        $change->name);
-      ?>
-    </p>
-    <?php if ($change->content != ""): ?>
-    <p><?=$self->getChangeHtml($change)?></p>
-    <?php endif ?>
+    <div class="change">
+      <hr />
+      <span class="info"><?=$self->getChangeInfo($change)?></span>
+      <?php if ($change->content != ""): ?>
+      <span class="content"><?=$self->getChangeContent($change)?></span>
+      <?php endif ?>
+    </div>
     <?php endforeach ?>
+  </div>
+</div>
+
+<div class="comment">
+  <p><a class="edit" href="javascript:void(0)">
+    <img src="<?=$app->getImagePath("edit.png")?>"/>Write comment</a>
+  </p>
+  <form>
+    <textarea name="content"></textarea>
+    <input class="button" type="button" value="<?=T_("OK")?>" />
+  </form>
+</div>
+
+<div id="templates">
+  <div class="change">
+    <hr />
+    <span class="info"></span>
+    <span class="content"></span>
   </div>
 </div>

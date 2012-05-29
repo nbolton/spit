@@ -25,7 +25,7 @@ class ChangeDataStore extends DataStore {
 
   public function getForIssue($issueId) {
     $result = $this->query(
-      "select c.id, c.creatorId, c.revision, c.type, c.name, " .
+      "select c.id, c.creatorId, c.type, c.name, " .
       "c.content, c.created, u.name as creator " .
       "from `change` as c " .
       "inner join user as u on u.id = c.creatorId " .
@@ -40,11 +40,10 @@ class ChangeDataStore extends DataStore {
   public function create($change) {
     $this->query(
       "insert into `change` " .
-      "(issueId, creatorId, revision, type, name, content, created) " .
-      "values (%d, %d, %d, %d, \"%s\", \"%s\", now())",
+      "(issueId, creatorId, type, name, content, created) " .
+      "values (%d, %d, %d, \"%s\", \"%s\", now())",
       $change->issueId,
       $change->creatorId,
-      $change->revision,
       $change->type,
       $change->name,
       $change->content);

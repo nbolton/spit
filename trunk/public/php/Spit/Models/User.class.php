@@ -19,14 +19,8 @@
 
 namespace Spit\Models;
 
-class ChangeType {
-  const Edit = 0;
-  const Comment = 1;
-}
-
-class Change {
+class User {
   public $id;
-  public $content;
   public $name;
 }
 

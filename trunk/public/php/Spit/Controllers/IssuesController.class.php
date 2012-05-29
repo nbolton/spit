@@ -20,9 +20,12 @@
 namespace Spit\Controllers;
 
 use Exception;
+use DateTime;
+
 use \Spit\Models\Fields\Field as Field;
 use \Spit\Models\Fields\TableField as TableField;
 use \Spit\EditorMode as EditorMode;
+use \Spit\Models\ChangeType as ChangeType;
 
 class IssuesController extends Controller {
   
@@ -41,7 +44,7 @@ class IssuesController extends Controller {
   }
   
   private function runIndex() {
-    if ($this->isJsonRequest()) {
+    if ($this->isJsonGet()) {
       exit($this->getJson($this->getTableData($_GET["page"], $_GET["results"])));
     }
     
@@ -49,7 +52,7 @@ class IssuesController extends Controller {
   }
   
   private function runEditor($mode) {
-    if ($this->isJsonRequest()) {
+    if ($this->isJsonGet()) {
       exit($this->getJson($this->getEditorFields($_GET["tracker"])));
     }
     
@@ -71,15 +74,11 @@ class IssuesController extends Controller {
     if ($this->isPost()) {
       $diff = $this->applyFormValues($issue);
       
-      // TODO: take some of these from form.
-      $issue->projectId = $this->app->project->id;
-      $issue->trackerId = 1;
-      $issue->statusId = 1;
-      $issue->priorityId = 1;
       
       switch ($mode) {
         case EditorMode::Create:
-          $issue->creatorId = 1;
+          $issue->projectId = $this->app->project->id;
+          $issue->creatorId = $this->app->user->id;
           $issue->id = $this->ds->create($issue);
           break;
         
@@ -96,6 +95,10 @@ class IssuesController extends Controller {
   }
   
   private function runDetails() {
+    if ($this->isJsonPost()) {
+      exit($this->getJson($this->commentPost()));
+    }
+    
     $this->customFields = new \Spit\CustomFields;
     
     $id = $this->getPathPart(2);
@@ -108,22 +111,40 @@ class IssuesController extends Controller {
     $data["columns"] = $this->getDetailColumns($issue, 2);
     $data["issue"] = $issue;
     
-    $changeDataStore = new \Spit\DataStores\ChangeDataStore;
-    $data["changes"] = $changeDataStore->getForIssue($id);
+    $cds = new \Spit\DataStores\ChangeDataStore;
+    $data["changes"] = $cds->getForIssue($id);
     
     $this->showView("issues/details", $issue->getFullTitle(), $data);
   }
   
+  private function commentPost() {
+    $change = new \Spit\Models\Change;
+    $change->issueId = $this->getPathPart(2);
+    $change->creatorId = $this->app->user->id;
+    $change->type = \Spit\Models\ChangeType::Comment;
+    $this->applyFormValues($change);
+    
+    $cds = new \Spit\DataStores\ChangeDataStore;
+    $cds->create($change);
+    
+    // values needed for "get info" functions.
+    $change->created = new DateTime();
+    $change->creator = $this->app->user->name;
+    
+    return array(
+      "info" => $this->getChangeInfo($change),
+      "html" => $this->getChangeContent($change)
+    );
+  }
+  
   private function update($issue, $diff) {
-    $issue->updaterId = 1;
-    $issue->revision++;
+    $issue->updaterId = $this->app->user->id;
     $this->ds->update($issue);
     
     foreach ($diff as $k => $v) {
       $change = new \Spit\Models\Change;
       $change->issueId = $issue->id;
-      $change->creatorId = 1;
-      $change->revision = $issue->revision;
+      $change->creatorId = $this->app->user->id;
       $change->type = \Spit\Models\ChangeType::Edit;
       $change->name = $k;
       
@@ -318,10 +339,10 @@ class IssuesController extends Controller {
     return true;
   }
   
-  public function getChangeHtml($change) {
+  public function getChangeContent($change) {
     switch($change->type) {
       case \Spit\Models\ChangeType::Edit:
-        return $this->getChangeEditHtml($change);
+        return $this->getChangeEditContent($change);
       
       case \Spit\Models\ChangeType::Comment:
         return Markdown($change->content);
@@ -330,7 +351,7 @@ class IssuesController extends Controller {
     }
   }
   
-  public function getChangeEditHtml($change) {
+  public function getChangeEditContent($change) {
     $lines = explode("\n", $change->content);
     $html = "";
     foreach ($lines as $line) {
@@ -339,15 +360,20 @@ class IssuesController extends Controller {
       $html .= sprintf(
         "<span class=\"%s\">%s</span><br />\n", $class, $noMarker);
     }
-    return $html;
+    return sprintf("<p>%s</p>", $html);
   }
   
-  public function getChangeType($change) {
+  public function getChangeInfo($change) {
+    $date = sprintf("<i>%s</i>", $this->formatDate($change->created));
     switch($change->type) {
-      case \Spit\Models\ChangeType::Edit: return T_("edited");
-      case \Spit\Models\ChangeType::Comment: return T_("wrote a comment");
-      default: return null;
+      case ChangeType::Edit:
+        return sprintf(T_("%s: %s edited %s."), $date, $change->creator, $change->name);
+      
+      case ChangeType::Comment:
+        return sprintf(T_("%s: %s wrote a comment."), $date, $change->creator);
     }
+    
+    return null;
   }
 }
 
