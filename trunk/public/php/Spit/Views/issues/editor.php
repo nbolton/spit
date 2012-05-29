@@ -20,7 +20,7 @@
 <h2><?=$title?></h2>
 
 <?php if($saved): ?>
-<p><?=T_("Issue saved.")?></p>
+<p><?=sprintf(T_("Issue saved: %s"), sprintf("<a href=\"%s\">#%d</a>", $issue->getViewLink(), $issue->id))?></p>
 <?php else: ?>
 <form method="post">
   <div class="box">
@@ -37,11 +37,11 @@
     </div>
     <div class="row">
       <label for="title"><?=T_("Title")?></label>
-      <input id="title" name="title" type="text" class="text" />
+      <input id="title" name="title" type="text" class="text" value="<?=$issue->title?>" />
     </div>
     <div class="row">
       <label for="details"><?=T_("Details")?></label>
-      <textarea id="details" name="details" type="details"></textarea>
+      <textarea id="details" name="details" type="details"><?=$issue->details?></textarea>
     </div>
     <div id="dynamicFields">
       <div class="loading">
@@ -52,7 +52,7 @@
     </div>
   </div>
   <div class="buttons">
-    <input type="submit" value="Create" >
+    <input type="submit" value="<?=($mode == \Spit\EditorMode::Create) ? T_("Create") : T_("Update")?>" >
   </div>
 </form>
 <div id="templates">

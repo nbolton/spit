@@ -27,6 +27,7 @@ require "Plugins.class.php";
 require "Security.class.php";
 require "Path.class.php";
 require "CustomFields.class.php";
+require "EditorMode.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";
@@ -34,10 +35,12 @@ require "Controllers/ErrorController.class.php";
 require "DataStores/DataStore.class.php";
 require "DataStores/IssueDataStore.class.php";
 require "DataStores/ProjectDataStore.class.php";
+require "DataStores/ChangeDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";
 require "Models/Project.class.php";
+require "Models/Change.class.php";
 require "Models/Fields/Select.class.php";
 require "Models/Fields/TableField.class.php";
 
@@ -157,7 +160,7 @@ class App {
     return $this->getProjectRoot() . $link->href;
   }
   
-  public function getImage($name) {
+  public function getImagePath($name) {
     return sprintf("%s/image/%s", $this->getThemeRoot(), $name);
   }
   

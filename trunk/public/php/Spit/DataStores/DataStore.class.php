@@ -24,55 +24,61 @@ use Exception;
 
 abstract class DataStore {
 
-  public function getSql() {
-    $s = \Spit\Settings::$instance;
-    $mysqli = new mysqli($s->db->host, $s->db->user, $s->db->password, $s->db->database);
-    if ($mysqli->connect_errno) {
-      throw new Exception("failed to connect to mysql: " . $mysqli->connect_error);
+  protected static $sql;
+  
+  public function __construct() {
+    if (self::$sql == null) {
+      self::$sql = self::connect();
     }
-    return $mysqli;
+  }
+  
+  private static function connect() {
+    $s = \Spit\Settings::$instance;
+    $sql = new mysqli($s->db->host, $s->db->user, $s->db->password, $s->db->database);
+    if ($sql->connect_errno) {
+      throw new Exception("failed to connect to mysql: " . $sql->connect_error);
+    }
+    return $sql;
   }
   
   public function query($format) {
-    $sql = $this->getSql();
-    $args = $this->getSafeArgs(func_get_args(), $sql);
+    $args = $this->getSafeArgs(func_get_args());
     
     \Spit\App::$instance->queryCount++;
-    $result = $sql->query(vsprintf($format, $args));
+    $result = self::$sql->query(vsprintf($format, $args));
     
     if ($result == null) {
-      throw new Exception($sql->error);
+      throw new Exception(self::$sql->error);
     }
     
     return $result;
   }
   
   public function multiQuery($format) {
-    $sql = $this->getSql();
-    $args = $this->getSafeArgs(func_get_args(), $sql);
+    $args = $this->getSafeArgs(func_get_args());
     
     \Spit\App::$instance->queryCount++;
-    $sql->multi_query(vsprintf($format, $args));
+    self::$sql->multi_query(vsprintf($format, $args));
     
     $results = array();
     do {
-      $result = $sql->store_result();
+      $result = self::$sql->store_result();
       if ($result == null) {
-        throw new Exception($sql->error);
+        throw new Exception(self::$sql->error);
       }
       array_push($results, $result);
     }
-    while ($sql->next_result());
+    while (self::$sql->next_result());
     
     return $results;
   }
   
-  private function getSafeArgs($funcArgs, $sql) {
+  private function getSafeArgs($funcArgs) {
     $args = array_slice($funcArgs, 1);
     
     // escape any strings to prevent sql injection.
     foreach ($args as $k => $v) {
-      $args[$k] = $sql->escape_string($v);
+      $args[$k] = self::$sql->escape_string($v);
     }
     
     return $args;

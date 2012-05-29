@@ -22,6 +22,7 @@ namespace Spit\Controllers;
 use Exception;
 use \Spit\Models\Fields\Field as Field;
 use \Spit\Models\Fields\TableField as TableField;
+use \Spit\EditorMode as EditorMode;
 
 class IssuesController extends Controller {
   
@@ -32,7 +33,8 @@ class IssuesController extends Controller {
   public function run() {
     switch ($this->getPathPart(1)) {
       case "": $this->runIndex(); break;
-      case "new": $this->runNew(); break;
+      case "new": $this->runEditor(EditorMode::Create); break;
+      case "edit": $this->runEditor(EditorMode::Update); break;
       case "details": $this->runDetails(); break;
       default: $this->showError(404); break;
     }
@@ -46,27 +48,51 @@ class IssuesController extends Controller {
     $this->showView("issues/index", T_("Issues"));
   }
   
-  private function runNew() {
+  private function runEditor($mode) {
     if ($this->isJsonRequest()) {
       exit($this->getJson($this->getEditorFields($_GET["tracker"])));
     }
     
-    $data = array();
+    switch ($mode) {
+      case EditorMode::Create:
+        $issue = new \Spit\Models\Issue;
+        break;
+        
+      case EditorMode::Update:
+        $id = $this->getPathPart(2);
+        $issue = $this->ds->getById($id, new \Spit\CustomFields);
+        break;
+    }
+    
     $data["saved"] = false;
+    $data["mode"] = $mode;
+    $data["issue"] = $issue;
+    
     if ($this->isPost()) {
-      $issue = new \Spit\Models\Issue;
-      $this->setFormValues($issue);
-      $this->ds->create($issue);
+      $this->applyFormValues($issue);
+      
+      switch ($mode) {
+        case EditorMode::Create:
+          $this->ds->create($issue);
+          break;
+          
+        case EditorMode::Update:
+          $this->ds->update($issue);
+          break;
+      }
+      
       $data["saved"] = true;
     }
     
-    $this->showView("issues/editor", T_("New Issue"), $data);
+    $title = ($mode == EditorMode::Create) ? T_("New Issue") : T_("Edit Issue");
+    $this->showView("issues/editor", $title, $data);
   }
   
   private function runDetails() {
     $this->customFields = new \Spit\CustomFields;
     
-    $issue = $this->ds->getById($this->getPathPart(2), $this->customFields);
+    $id = $this->getPathPart(2);
+    $issue = $this->ds->getById($id, $this->customFields);
     if ($issue == null) {
       $this->showError(404);
       return;
@@ -74,6 +100,10 @@ class IssuesController extends Controller {
     
     $data["columns"] = $this->getDetailColumns($issue, 2);
     $data["issue"] = $issue;
+    
+    $changeDataStore = new \Spit\DataStores\ChangeDataStore;
+    $data["changes"] = $changeDataStore->getForIssue($id);
+    
     $this->showView("issues/details", $issue->getFullTitle(), $data);
   }
   
@@ -226,6 +256,10 @@ class IssuesController extends Controller {
     array_push($fields, $assignee);
     
     return $fields;
+  }
+  
+  public function userCanEdit() {
+    return true;
   }
 }
 

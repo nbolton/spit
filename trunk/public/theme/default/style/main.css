@@ -56,6 +56,10 @@ ul, ol {
   padding: .5em 0px .5em .5em;
 }
 
+a img {
+  margin-bottom: -3px;
+}
+
 div.layout {
   text-align: left;
   min-width: 600px;
@@ -179,7 +183,7 @@ form textarea {
 }
 
 form textarea {
-  height: 150px;
+  height: 250px;
 }
 
 form textarea,

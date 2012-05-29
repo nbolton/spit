@@ -31,12 +31,7 @@ class ProjectDataStore extends DataStore {
       "select * from project where name=\"%s\"",
       $name);
     
-    if ($result->num_rows == 0) {
-      return null;
-    }
-    
-    $row = $result->fetch_object();
-    return $this->fromRow($row);
+    return $this->fromResultSingle($result);
   }
   
   protected function newModel() {
