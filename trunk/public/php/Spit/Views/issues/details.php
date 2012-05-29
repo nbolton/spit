@@ -44,11 +44,11 @@
     <?php foreach($changes as $change): ?>
     <hr />
     <p>
-      <i><?=$change->getDateString()?></i>: <?=$change->creator?>
-      <?=$change->getTypeString()?> <?=$change->name?>.
+      <i><?=$self->getDateString($change->created)?></i>: <?=$change->creator?>
+      <?=$self->getChangeType($change)?> <?=$change->name?>.
     </p>
     <?php if ($change->content != ""): ?>
-    <p><?=$change->getContentHtml()?></p>
+    <p><?=$self->getChangeHtml($change)?></p>
     <?php endif ?>
     <?php endforeach ?>
   </div>

@@ -116,6 +116,10 @@ class Controller {
       )
     ));
   }
+  
+  public function getDateString($date) {
+    return $date->format($this->app->settings->site->dateTimeFormat);
+  }
 }
 
 ?>
