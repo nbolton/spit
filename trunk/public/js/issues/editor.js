@@ -16,7 +16,7 @@
  */
 
 function viewLoad() {
-  tracker = $("select#tracker");
+  tracker = $("select#trackerId");
   loadDynamicFields(tracker.val());
   
   tracker.change(function() {

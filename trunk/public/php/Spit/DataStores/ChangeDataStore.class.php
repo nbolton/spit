@@ -40,14 +40,18 @@ class ChangeDataStore extends DataStore {
   }
   
   public function create($change) {
-    $sql->query(
+    $this->query(
       "insert into `change` " .
-      "(issueId, creatorId, type, content, created) " .
-      "values (%d, %d, %d, \"%s\", now())",
+      "(issueId, creatorId, revision, type, name, content, created) " .
+      "values (%d, %d, %d, %d, \"%s\", \"%s\", now())",
       $change->issueId,
       $change->creatorId,
+      $change->revision,
       $change->type,
+      $change->name,
       $change->content);
+    
+    return parent::$sql->insert_id;
   }
   
   protected function parseField($k, $v) {

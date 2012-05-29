@@ -69,15 +69,22 @@ class IssuesController extends Controller {
     $data["issue"] = $issue;
     
     if ($this->isPost()) {
-      $this->applyFormValues($issue);
+      $diff = $this->applyFormValues($issue);
+      
+      // TODO: take some of these from form.
+      $issue->projectId = $this->app->project->id;
+      $issue->trackerId = 1;
+      $issue->statusId = 1;
+      $issue->priorityId = 1;
       
       switch ($mode) {
         case EditorMode::Create:
-          $this->ds->create($issue);
+          $issue->creatorId = 1;
+          $issue->id = $this->ds->create($issue);
           break;
-          
+        
         case EditorMode::Update:
-          $this->ds->update($issue);
+          $this->update($issue, $diff);
           break;
       }
       
@@ -107,12 +114,35 @@ class IssuesController extends Controller {
     $this->showView("issues/details", $issue->getFullTitle(), $data);
   }
   
+  private function update($issue, $diff) {
+    $issue->updaterId = 1;
+    $issue->revision++;
+    $this->ds->update($issue);
+    
+    foreach ($diff as $k => $v) {
+      $change = new \Spit\Models\Change;
+      $change->issueId = $issue->id;
+      $change->creatorId = 1;
+      $change->revision = $issue->revision;
+      $change->type = \Spit\Models\ChangeType::Diff;
+      $change->name = $k;
+      $change->content = $v;
+      
+      $cds = new \Spit\DataStores\ChangeDataStore;
+      $cds->create($change);
+    }
+  }
+  
   private function getTableData($page, $limit) {
     $start = ($page - 1) * $limit;
     $results = $this->ds->get($start, $limit, "updated", "desc");
+    
+    $issues = $results[0];
+    $this->replaceWithPublicValues($issues);
+    
     return array(
       "fields" => $this->getTableFields(),
-      "issues" => $results[0],
+      "issues" => $issues,
       "pageCount" => ceil($results[1] / $limit),
     );
   }
@@ -130,7 +160,11 @@ class IssuesController extends Controller {
       for ($j = 0; $j < $fieldsPerColumn; $j++) {
         if ($fieldIndex < $totalFields) {
           $field = $fields[$fieldIndex];
-          $field->value = $this->getFieldValue($field->name, $issue);
+          
+          // store value in Field object, a bit weird, but makes
+          // the ajax response smaller.
+          $field->value = $this->getPublicValue($field->name, $issue);
+          
           array_push($column, $field);
         }
         $fieldIndex++;
@@ -140,10 +174,18 @@ class IssuesController extends Controller {
     return $columns;
   }
   
-  private function getFieldValue($fieldName, $issue) {
+  private function replaceWithPublicValues($issues) {
+    foreach ($issues as $issue) {
+      foreach ($issue as $field => $value) {
+        $issue->$field = $this->getPublicValue($field, $issue, false, false);
+      }
+    }
+  }
+  
+  private function getPublicValue($fieldName, $issue, $empty = true, $custom = true) {
     $v = $issue->$fieldName;
     
-    if ($v == null) {
+    if ($empty && $v == null) {
       return sprintf("<span class=\"empty\">None</span>");
     }
     
@@ -154,13 +196,15 @@ class IssuesController extends Controller {
         $this->app->getProjectRoot(), $id, $v);
     }
     
-    if ($fieldName == "created" || $fieldName == "updated") {
+    if ($fieldName == "created" || $fieldName == "updated" && $v != null) {
       return $v->format("Y-m-d H:i:s");
     }
     
-    $customField = $this->customFields->findFieldMapping($fieldName);
-    if ($customField != null) {
-      $v = $this->customFields->mapValue($customField, $v);
+    if ($custom) {
+      $customField = $this->customFields->findFieldMapping($fieldName);
+      if ($customField != null) {
+        $v = $this->customFields->mapValue($customField, $v);
+      }
     }
     
     return $v;
@@ -206,7 +250,7 @@ class IssuesController extends Controller {
   
     $fields = array();
   
-    $status = new \Spit\Models\Fields\Select("status", T_("Status"));
+    $status = new \Spit\Models\Fields\Select("statusId", T_("Status"));
     $status->add(T_("New"));
     $status->add(T_("Reviewed"));
     $status->add(T_("Accepted"), true);
@@ -219,7 +263,7 @@ class IssuesController extends Controller {
     $status->add(T_("CannotReproduce"));
     array_push($fields, $status);
     
-    $priority = new \Spit\Models\Fields\Select("priority", T_("Priority"));
+    $priority = new \Spit\Models\Fields\Select("priorityId", T_("Priority"));
     $priority->add(T_("Low"));
     $priority->add(T_("Normal"), true);
     $priority->add(T_("High"));
@@ -227,12 +271,20 @@ class IssuesController extends Controller {
     $priority->add(T_("Immediate"));
     array_push($fields, $priority);
     
-    $version = new \Spit\Models\Fields\Select("version", T_("Version"));
-    $version->add("1.4.9");
-    array_push($fields, $version);
+    $target = new \Spit\Models\Fields\Select("targetId", T_("Target"));
+    $target->add("");
+    $target->add("1.4.8");
+    $target->add("1.4.9");
+    array_push($fields, $target);
+    
+    $found = new \Spit\Models\Fields\Select("foundId", T_("Found"));
+    $found->add("");
+    $found->add("1.4.8");
+    $found->add("1.4.9");
+    array_push($fields, $found);
     
     if ($trackerId != 4) {
-      $platform = new \Spit\Models\Fields\Select("platform", T_("Platform"));
+      $platform = new \Spit\Models\Fields\Select("platformId", T_("Platform"));
       $platform->add("");
       $platform->add("Windows");
       $platform->add("Mac OS X");
@@ -242,7 +294,7 @@ class IssuesController extends Controller {
       array_push($fields, $platform);
     }
     
-    $assignee = new \Spit\Models\Fields\Select("assignee", T_("Assignee"));
+    $assignee = new \Spit\Models\Fields\Select("assigneeId", T_("Assignee"));
     $assignee->add("");
     $assignee->add("Brendon Justin");
     $assignee->add("Chris Schoeneman");

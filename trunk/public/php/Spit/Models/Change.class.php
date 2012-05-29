@@ -19,6 +19,11 @@
 
 namespace Spit\Models;
 
+class ChangeType {
+  const Diff = 0;
+  const Comment = 1;
+}
+
 class Change {
   public $id;
 }
