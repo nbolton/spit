@@ -63,6 +63,9 @@ class AdminController extends Controller {
       $issue->redmineId = $rmi->id;
       $issue->projectId = 1;
       $issue->creatorId = 1;
+      $issue->trackerId = $rmi->tracker_id;
+      $issue->statusId = $rmi->status_id;
+      $issue->priorityId = $rmi->priority_id;
       $issue->title = $rmi->subject;
       $issue->details = $rmi->description;
       array_push($issues, $issue);
