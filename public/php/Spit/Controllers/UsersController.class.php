@@ -33,7 +33,10 @@ class UsersController extends Controller {
   }
   
   private function runIndex() {
-    $this->showView("users/details", T_("User"));
+    $dataStore = new \Spit\DataStores\UserDataStore;
+    $user = $dataStore->getById($this->getPathPart(2));
+    $data["user"] = $user;
+    $this->showView("users/details", $user->name, $data);
   }
 }
 

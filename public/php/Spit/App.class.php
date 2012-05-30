@@ -36,6 +36,11 @@ require "DataStores/DataStore.class.php";
 require "DataStores/IssueDataStore.class.php";
 require "DataStores/ProjectDataStore.class.php";
 require "DataStores/ChangeDataStore.class.php";
+require "DataStores/StatusDataStore.class.php";
+require "DataStores/TrackerDataStore.class.php";
+require "DataStores/PriorityDataStore.class.php";
+require "DataStores/VersionDataStore.class.php";
+require "DataStores/UserDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";

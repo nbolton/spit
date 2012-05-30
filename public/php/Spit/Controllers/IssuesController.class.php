@@ -52,10 +52,6 @@ class IssuesController extends Controller {
   }
   
   private function runEditor($mode) {
-    if ($this->isJsonGet()) {
-      exit($this->getJson($this->getEditorFields($_GET["tracker"])));
-    }
-    
     switch ($mode) {
       case EditorMode::Create:
         $issue = new \Spit\Models\Issue;
@@ -67,12 +63,16 @@ class IssuesController extends Controller {
         break;
     }
     
+    if ($this->isJsonGet()) {
+      exit($this->getJson($this->getEditorFields($_GET["tracker"], $issue)));
+    }
+    
     $data["mode"] = $mode;
     $data["issue"] = $issue;
+    $data["trackerSelect"] = $this->getTrackerSelect($issue->trackerId);
     
     if ($this->isPost()) {
       $diff = $this->applyFormValues($issue);
-      
       
       switch ($mode) {
         case EditorMode::Create:
@@ -202,23 +202,30 @@ class IssuesController extends Controller {
   private function replaceWithPublicValues($issues) {
     foreach ($issues as $issue) {
       foreach ($issue as $field => $value) {
-        $issue->$field = $this->getPublicValue($field, $issue, false, false);
+        $issue->$field = $this->getPublicValue($field, $issue, false, false, false);
       }
     }
   }
   
-  private function getPublicValue($fieldName, $issue, $empty = true, $custom = true) {
+  // hmm... something seems not quite right about this.
+  private function getPublicValue($fieldName, $issue, $empty = true, $custom = true, $users = true) {
     $v = $issue->$fieldName;
     
     if ($empty && $v == null) {
       return sprintf("<span class=\"empty\">None</span>");
     }
     
-    if ($fieldName == "creator" || $fieldName == "updater") {
-      $id = ($fieldName == "creator") ? $issue->creatorId : $issue->updaterId;
-      return sprintf(
-        "<a href=\"%susers/details/%d/\">%s</a>",
-        $this->app->getProjectRoot(), $id, $v);
+    if ($users && in_array($fieldName, array("creator", "updater", "assignee"))) {
+      switch ($fieldName) {
+        case "creator": $id = $issue->creatorId; break;
+        case "updater": $id = $issue->updaterId; break;
+        case "assignee": $id = $issue->assigneeId; break;
+      }
+      if ($v != null) {
+        return sprintf(
+          "<a href=\"%susers/details/%d/\">%s</a>",
+          $this->app->getProjectRoot(), $id, $v);
+      }
     }
     
     if ($fieldName == "created" || $fieldName == "updated" && $v != null) {
@@ -243,7 +250,7 @@ class IssuesController extends Controller {
       new Field("assignee", T_("Assignee: ")),
       new Field("category", T_("Category: ")),
       new Field("target", T_("Target: ")),
-      new Field("found", T_("Found at: ")),
+      new Field("found", T_("Found: ")),
       new Field("votes", T_("Votes: ")),
       new Field("creator", T_("Created by: ")),
       new Field("created", T_("Created on: ")),
@@ -271,66 +278,62 @@ class IssuesController extends Controller {
     );
   }
   
-  private function getEditorFields($trackerId) {
+  private function getTrackerSelect($trackerId) {
+    $select = new \Spit\Models\Fields\Select("trackerId", T_("Tracker"));
+    $dataStore = new \Spit\DataStores\TrackerDataStore;
+    $this->fillSelectField($select, $dataStore->get(), $trackerId);
+    return $select;
+  }
+  
+  private function fillSelectField($select, $data, $selected) {
+    foreach ($data as $item) {
+      $select->add($item->id, T_($item->name), $selected == $item->id);
+    }
+  }
+  
+  private function getEditorFields($trackerId, $issue) {
   
     $fields = array();
+    
+    $statusDataStore = new \Spit\DataStores\StatusDataStore;
+    $priorityDataStore = new \Spit\DataStores\PriorityDataStore;
+    $versionDataStore = new \Spit\DataStores\VersionDataStore;
+    $userDataStore = new \Spit\DataStores\UserDataStore;
   
     $status = new \Spit\Models\Fields\Select("statusId", T_("Status"));
-    $status->add(T_("New"));
-    $status->add(T_("Reviewed"));
-    $status->add(T_("Accepted"), true);
-    $status->add(T_("PatchesWelcome"));
-    $status->add(T_("GotPatch"));
-    $status->add(T_("InProgress"));
-    $status->add(T_("Fixed"));
-    $status->add(T_("Invalid"));
-    $status->add(T_("Duplicate"));
-    $status->add(T_("CannotReproduce"));
+    $this->fillSelectField($status, $statusDataStore->get(), $issue->statusId);
     array_push($fields, $status);
     
     $priority = new \Spit\Models\Fields\Select("priorityId", T_("Priority"));
-    $priority->add(T_("Low"));
-    $priority->add(T_("Normal"), true);
-    $priority->add(T_("High"));
-    $priority->add(T_("Urgent"));
-    $priority->add(T_("Immediate"));
+    $this->fillSelectField($priority, $priorityDataStore->get(), $issue->priorityId);
     array_push($fields, $priority);
     
-    $target = new \Spit\Models\Fields\Select("targetId", T_("Target"));
-    $target->add("");
-    $target->add("1.4.8");
-    $target->add("1.4.9");
-    array_push($fields, $target);
-    
     $found = new \Spit\Models\Fields\Select("foundId", T_("Found"));
-    $found->add("");
-    $found->add("1.4.8");
-    $found->add("1.4.9");
+    $found->add(null, "");
+    $this->fillSelectField($found, $versionDataStore->get(), $issue->foundId);
     array_push($fields, $found);
     
-    if ($trackerId != 4) {
-      $platform = new \Spit\Models\Fields\Select("platformId", T_("Platform"));
-      $platform->add("");
-      $platform->add("Windows");
-      $platform->add("Mac OS X");
-      $platform->add("Linux");
-      $platform->add("Unix");
-      $platform->add("Various");
-      array_push($fields, $platform);
-    }
+    $target = new \Spit\Models\Fields\Select("targetId", T_("Target"));
+    $target->add(null, "");
+    $this->fillSelectField($target, $versionDataStore->get(), $issue->targetId);
+    array_push($fields, $target);
     
     $assignee = new \Spit\Models\Fields\Select("assigneeId", T_("Assignee"));
-    $assignee->add("");
-    $assignee->add("Brendon Justin");
-    $assignee->add("Chris Schoeneman");
-    $assignee->add("Ed Carrel");
-    $assignee->add("Jason Axelson");
-    $assignee->add("Jean-Sébastien Dominique");
-    $assignee->add("Jodi Jones");
-    $assignee->add("Nick Bolton");
-    $assignee->add("Sorin Sbârnea");
-    $assignee->add("Syed Amer Gilani");
+    $assignee->add(null, "");
+    $this->fillSelectField($assignee, $userDataStore->get(), $issue->assigneeId);
     array_push($fields, $assignee);
+    
+    // TODO: load custom fields make all fields optional.
+    if ($trackerId != 4) {
+      $platform = new \Spit\Models\Fields\Select("platformId", T_("Platform"));
+      $platform->add(null, "");
+      $platform->add(1, "Windows");
+      $platform->add(1, "Mac OS X");
+      $platform->add(1, "Linux");
+      $platform->add(1, "Unix");
+      $platform->add(1, "Various");
+      array_push($fields, $platform);
+    }
     
     return $fields;
   }
