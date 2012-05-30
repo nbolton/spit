@@ -71,6 +71,7 @@
       </div>
       <div class="content">
         <?php require $content; ?>
+        <div class="clear"></div>
       </div>
       <div class="footer">
         <div class="footerContent">
