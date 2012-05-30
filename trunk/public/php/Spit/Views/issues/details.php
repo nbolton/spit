@@ -36,9 +36,9 @@
     <?php endforeach ?>
   </div>
   <?php endforeach ?>
-  
   <hr />
-  <p><?=Markdown($issue->details)?></p>
+  
+  <?=Markdown($issue->details)?>
   
   <div class="changes">
     <?php foreach($changes as $change): ?>
