@@ -23,6 +23,8 @@ use DateTime;
 
 class IssueDataStore extends DataStore {
 
+  const BULK_INSERT_MAX = 500;
+  
   public function get($start, $limit, $orderField, $orderDir) {
     $results = $this->multiQuery(
       "select SQL_CALC_FOUND_ROWS " .
@@ -74,7 +76,7 @@ class IssueDataStore extends DataStore {
     return $this->fromResultSingle($result);
   }
   
-  public function create($issue) {
+  public function insert($issue) {
     $this->query(
       "insert into issue " .
       "(projectId, trackerId, statusId, priorityId, targetId, foundId, " .
@@ -91,7 +93,40 @@ class IssueDataStore extends DataStore {
       $issue->title,
       $issue->details);
     
-    return parent::$sql->insert_id;
+    return $this->sql->insert_id;
+  }
+  
+  public function insertMany($issues) {
+    $base = 
+      "insert into issue " .
+      "(projectId, trackerId, statusId, priorityId, targetId, foundId, " .
+      "assigneeId, creatorId, title, details, created) values ";
+    
+    for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
+      
+      $issuesSlice = array_slice($issues, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      
+      $values = "";
+      $issueCount = count($issuesSlice);
+      for ($i = 0; $i < $issueCount; $i++) {
+        $issue = $issuesSlice[$i];
+        $values .= sprintf(
+          "(%d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", now())%s",
+          $issue->projectId,
+          $issue->trackerId,
+          $issue->statusId,
+          $issue->priorityId,
+          $issue->targetId,
+          $issue->foundId,
+          $issue->assigneeId,
+          $issue->creatorId,
+          $this->escape($issue->title),
+          $this->escape($issue->details),
+          $i < $issueCount - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $values);
+    }
   }
   
   public function update($issue) {
@@ -111,6 +146,10 @@ class IssueDataStore extends DataStore {
       $issue->title,
       $issue->details,
       $issue->id);
+  }
+  
+  public function truncate() {
+    $this->query("truncate table issue");
   }
   
   protected function parseField($k, $v) {

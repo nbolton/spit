@@ -18,7 +18,7 @@
 ?>
 
 <h2><?=$title?></h2>
-<form>
+<form method="post">
   <div class="box">
     <div class="title" style="padding-top: 0px">
       <h3><?=T_("Source")?></h3>
@@ -27,7 +27,7 @@
     <div class="column">
       <div class="row">
         <label><?=T_("Application")?></label>
-        <select>
+        <select name="app">
           <option value="redmine">Redmine</option>
         </select>
       </div>
@@ -40,19 +40,31 @@
     <div class="column">
       <div class="row">
         <label><?=T_("Host")?></label>
-        <input name="dbHost">
+        <input type="textbox" class="text" name="db[host]" value="localhost" />
       </div>
       <div class="row">
         <label><?=T_("Name")?></label>
-        <input name="dbName">
+        <input type="textbox" class="text" name="db[name]" value="redmine" />
       </div>
       <div class="row">
         <label><?=T_("User")?></label>
-        <input name="dbUser">
+        <input type="textbox" class="text" name="db[user]"value="root"  />
       </div>
       <div class="row">
         <label><?=T_("Password")?></label>
-        <input name="dbPassword">
+        <input type="textbox" class="text" name="db[password]" />
+      </div>
+    </div>
+    
+    <div class="title">
+      <h3><?=T_("Options")?></h3>
+      <hr />
+    </div>
+    <div class="column">
+      <div class="row">
+        <label class="checkbox">
+          <input name="clear" type="checkbox" class="checkbox" /> <?=T_("Clear SPIT database?")?>
+        </label>
       </div>
     </div>
   </div>

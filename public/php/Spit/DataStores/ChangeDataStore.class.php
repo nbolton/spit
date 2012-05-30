@@ -37,7 +37,7 @@ class ChangeDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
-  public function create($change) {
+  public function insert($change) {
     $this->query(
       "insert into `change` " .
       "(issueId, creatorId, type, name, content, created) " .

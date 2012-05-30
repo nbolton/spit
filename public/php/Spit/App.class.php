@@ -41,6 +41,7 @@ require "DataStores/TrackerDataStore.class.php";
 require "DataStores/PriorityDataStore.class.php";
 require "DataStores/VersionDataStore.class.php";
 require "DataStores/UserDataStore.class.php";
+require "DataStores/RedmineDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";

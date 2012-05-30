@@ -182,8 +182,20 @@ form div.row label {
   padding: 4px 0px 0px 0px;
 }
 
+form div.row label.checkbox {
+  float: none;
+  margin: 0px;
+  padding: 0px;
+  font-weight: normal;
+}
+
+form div.row input.checkbox  {
+  float: left;
+  margin: 1px 5px 0px 0px;
+}
+
 form div.column select,
-form div.column input{
+form div.column input.text {
   margin-left: 0px;
   width: 60%;
 }
