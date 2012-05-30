@@ -63,7 +63,7 @@
     <div class="column">
       <div class="row">
         <label class="checkbox">
-          <input name="clear" type="checkbox" class="checkbox" /> <?=T_("Clear SPIT database?")?>
+          <input name="clear" type="checkbox" class="checkbox" checked="yes" /> <?=T_("Clear SPIT database?")?>
         </label>
       </div>
     </div>
