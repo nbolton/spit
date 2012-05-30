@@ -25,6 +25,10 @@ class Issue {
   public $details;
   public $trackerId;
   public $assigneeId;
+  public $statusId;
+  public $priorityId;
+  public $foundId;
+  public $targetId;
   
   public function getFullTitle() {
     return sprintf("%s #%d - %s", $this->tracker, $this->id, $this->title);
