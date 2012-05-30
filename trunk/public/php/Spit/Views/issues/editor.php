@@ -51,6 +51,7 @@
     <input type="submit" value="<?=($mode == \Spit\EditorMode::Create) ? T_("Create") : T_("Update")?>" >
   </div>
 </form>
+
 <div id="templates">
   <div class="row" id="rowWithSelect">
     <label></label>

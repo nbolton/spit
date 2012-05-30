@@ -77,14 +77,24 @@ class Controller {
     return $_SERVER["REQUEST_METHOD"] == "POST";
   }
   
-  public function applyFormValues($object) {
+  public function applyFormValues($object, $index = null, $diff = true) {
     $diffs = new \stdClass;
-    foreach ($_POST as $k => $v) {
-      $old = isset($object->$k) ? (string)$object->$k : "";
-      $new = (string)$v;
-      $diff = $this->diff($old, $new);
-      if ($diff != null) {
-        $diffs->$k = $diff;
+    
+    if ($index == null) {
+      $values = $_POST;
+    }
+    else {
+      $values = $_POST[$index];
+    }
+    
+    foreach ($values as $k => $v) {
+      if ($diff) {
+        $old = isset($object->$k) ? (string)$object->$k : "";
+        $new = (string)$v;
+        $diff = $this->diff($old, $new);
+        if ($diff != null) {
+          $diffs->$k = $diff;
+        }
       }
       $object->$k = $v;
     }

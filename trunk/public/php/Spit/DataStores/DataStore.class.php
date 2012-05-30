@@ -24,15 +24,22 @@ use Exception;
 
 abstract class DataStore {
 
-  protected static $sql;
+  protected static $globalSql;
+  protected $sql;
   
-  public function __construct() {
-    if (self::$sql == null) {
-      self::$sql = self::connect();
+  public function __construct($sql = null) {
+    if ($sql != null) {
+      $this->sql = $sql;
+    }
+    else {
+      if (self::$globalSql == null) {
+        self::$globalSql = $this->connect();
+      }
+      $this->sql = self::$globalSql;
     }
   }
   
-  private static function connect() {
+  protected function connect() {
     $s = \Spit\Settings::$instance;
     $sql = new mysqli($s->db->host, $s->db->user, $s->db->password, $s->db->database);
     if ($sql->connect_errno) {
@@ -45,10 +52,13 @@ abstract class DataStore {
     $args = $this->getSafeArgs(func_get_args());
     
     \Spit\App::$instance->queryCount++;
-    $result = self::$sql->query(vsprintf($format, $args));
+    
+    $query = vsprintf($format, $args);
+    //$query = count($args) != 0 ? vsprintf($format, $args) : $format;
+    $result = $this->sql->query($query);
     
     if ($result == null) {
-      throw new Exception(self::$sql->error);
+      throw new Exception($this->sql->error);
     }
     
     return $result;
@@ -58,17 +68,19 @@ abstract class DataStore {
     $args = $this->getSafeArgs(func_get_args());
     
     \Spit\App::$instance->queryCount++;
-    self::$sql->multi_query(vsprintf($format, $args));
+    
+    $query = count($args) != 0 ? vsprintf($format, $args) : $format;
+    $this->sql->multi_query($query);
     
     $results = array();
     do {
-      $result = self::$sql->store_result();
+      $result = $this->sql->store_result();
       if ($result == null) {
-        throw new Exception(self::$sql->error);
+        throw new Exception($this->sql->error);
       }
       array_push($results, $result);
     }
-    while (self::$sql->next_result());
+    while ($this->sql->next_result());
     
     return $results;
   }
@@ -76,12 +88,17 @@ abstract class DataStore {
   private function getSafeArgs($funcArgs) {
     $args = array_slice($funcArgs, 1);
     
-    // escape any strings to prevent sql injection.
     foreach ($args as $k => $v) {
-      $args[$k] = self::$sql->escape_string($v);
+      $args[$k] = is_string($v)? $this->escape($v) : $v;
     }
     
     return $args;
+  }
+  
+  protected function escape($v) {
+    // escape any strings to prevent sql injection, and
+    // also escape % for sprintf.
+    return $this->sql->escape_string(str_replace("%", "%%", $v));
   }
   
   protected function fromResult($result) {

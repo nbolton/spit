@@ -78,7 +78,7 @@ class IssuesController extends Controller {
         case EditorMode::Create:
           $issue->projectId = $this->app->project->id;
           $issue->creatorId = $this->app->user->id;
-          $issue->id = $this->ds->create($issue);
+          $issue->id = $this->ds->insert($issue);
           break;
         
         case EditorMode::Update:
@@ -125,7 +125,7 @@ class IssuesController extends Controller {
     $this->applyFormValues($change);
     
     $cds = new \Spit\DataStores\ChangeDataStore;
-    $cds->create($change);
+    $cds->insert($change);
     
     // values needed for "get info" functions.
     $change->created = new DateTime();
@@ -154,7 +154,7 @@ class IssuesController extends Controller {
       }
       
       $cds = new \Spit\DataStores\ChangeDataStore;
-      $cds->create($change);
+      $cds->insert($change);
     }
   }
   

@@ -31,7 +31,44 @@ class AdminController extends Controller {
   }
   
   public function runImport() {
+    if ($this->isPost()) {
+      if ($_POST["app"] == "redmine") {
+        $this->importFromRedmine();
+      }
+    }
+    
     $this->showView("admin/import", T_("Import"));
+  }
+  
+  public function importFromRedmine() {
+    $db = new \stdClass();
+    $this->applyFormValues($db, "db", false);
+    
+    $form = new \stdClass();
+    $this->applyFormValues($form, null, false);
+    
+    $redmine = new \Spit\DataStores\RedmineDataStore(
+      $db->host, $db->user, $db->password, $db->name);
+    
+    $issueDataStore = new \Spit\DataStores\IssueDataStore;
+    if (isset($form->clear) && $form->clear == "on") {
+      $issueDataStore->truncate();
+    }
+    
+    $rmiList = $redmine->getIssues();
+    $issues = array();
+    
+    foreach ($rmiList as $rmi) {
+      $issue = new \Spit\Models\Issue;
+      $issue->redmineId = $rmi->id;
+      $issue->projectId = 1;
+      $issue->creatorId = 1;
+      $issue->title = $rmi->subject;
+      $issue->details = $rmi->description;
+      array_push($issues, $issue);
+    }
+    
+    $issueDataStore->insertMany($issues);
   }
 }
 
