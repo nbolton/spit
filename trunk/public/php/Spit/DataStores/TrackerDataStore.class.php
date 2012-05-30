@@ -17,22 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\Models\Fields;
+namespace Spit\DataStores;
 
-require_once "Field.class.php";
-require_once "SelectOption.class.php";
+class TrackerDataStore extends DataStore {
 
-class Select extends Field {
-  
-  public $options = array();
-  
-  public function __construct($label, $name) {
-    parent::__construct($label, $name);
-    $this->type = "select";
-  }
-  
-  public function add($id, $name, $selected = false) {
-    array_push($this->options, new SelectOption($id, $name, $selected));
+  public function get() {
+    $result = $this->query("select * from tracker");
+    return $this->fromResult($result);
   }
 }
 

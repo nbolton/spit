@@ -25,10 +25,9 @@
       <div class="row">
         <label for="trackerId"><?=T_("Tracker")?></label>
         <select id="trackerId" name="trackerId">
-          <option value="1" selected="selected">Bug</option>
-          <option value="2">Feature</option>
-          <option value="3">Support</option>
-          <option value="4">Task</option>
+          <?php foreach($trackerSelect->options as $o): ?>
+          <option value="<?=$o->value?>"<?=$o->getSelectedAttr()?>><?=$o->text?></option>
+          <?php endforeach ?>
         </select>
       </div>
     </div>

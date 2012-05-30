@@ -71,8 +71,9 @@ function addSelectRow(field, index, length) {
   for (key in field.options) {
     option = field.options[key];
     selected = option.selected ? " selected" : "";
+    value = option.value != null ? option.value : "";
     select.append("<option value=\"{0}\"{1}>{2}</option>"
-      .format(option.value, selected, option.text));
+      .format(value, selected, option.text));
   }
   
   column = $("form div#column" + ((index < Math.ceil(length / 2)) ? 1 : 2));

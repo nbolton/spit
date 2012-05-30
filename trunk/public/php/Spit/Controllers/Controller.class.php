@@ -80,11 +80,11 @@ class Controller {
   public function applyFormValues($object) {
     $diffs = new \stdClass;
     foreach ($_POST as $k => $v) {
-      if (isset($object->$k)) {
-        $diff = $this->diff((string)$v, (string)$object->$k);
-        if ($diff != null) {
-          $diffs->$k = $diff;
-        }
+      $old = isset($object->$k) ? (string)$object->$k : "";
+      $new = (string)$v;
+      $diff = $this->diff($old, $new);
+      if ($diff != null) {
+        $diffs->$k = $diff;
       }
       $object->$k = $v;
     }
@@ -95,8 +95,10 @@ class Controller {
     if ($old == $new) {
       return null;
     }
-    // TODO: improve for large bodies of text.
-    return sprintf("-%s\n+%s", $new, $old);
+    $diff = array();
+    if ($old != "") array_push($diff, "-" . $old);
+    if ($new != "") array_push($diff, "+" . $new);
+    return implode("\n", $diff);
   }
   
   public function getValue($object, $field) {

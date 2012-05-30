@@ -26,6 +26,10 @@ class SelectOption {
     $this->text = $text;
     $this->selected = $selected;
   }
+  
+  public function getSelectedAttr() {
+    return $this->selected ? " selected=\"selected\"" : "";
+  }
 }
 
 ?>

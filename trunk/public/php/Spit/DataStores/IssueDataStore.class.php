@@ -26,7 +26,7 @@ class IssueDataStore extends DataStore {
   public function get($start, $limit, $orderField, $orderDir) {
     $results = $this->multiQuery(
       "select SQL_CALC_FOUND_ROWS " .
-      "i.id, i.title, i.votes, i.updated, t.name as tracker, " .
+      "i.id, i.assigneeId, i.title, i.votes, i.updated, t.name as tracker, " .
       "s.name as status, p.name as priority, u.name as assignee " .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
@@ -49,8 +49,9 @@ class IssueDataStore extends DataStore {
 
   public function getById($id, $custom) {
     $result = $this->query(
-      "select i.id, i.title, i.details, i.votes, i.created, i.updated, " .
-      "i.creatorId, i.updaterId, " .
+      "select i.id, i.trackerId, i.statusId, i.priorityId, " .
+      "i.targetId, i.foundId, i.assigneeId, i.creatorId, i.updaterId, " .
+      "i.title, i.details, i.votes, i.created, i.updated, " .
       "t.name as tracker, s.name as status, p.name as priority, " .
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
       "vt.name as target, vf.name as found, cat.name as category " .
@@ -76,13 +77,16 @@ class IssueDataStore extends DataStore {
   public function create($issue) {
     $this->query(
       "insert into issue " .
-      "(projectId, trackerId, statusId, priorityId, " .
-      "creatorId, title, details, created) " .
-      "values (%d, %d, %d, %d, %d, \"%s\", \"%s\", now())",
+      "(projectId, trackerId, statusId, priorityId, targetId, foundId, " .
+      "assigneeId, creatorId, title, details, created) " .
+      "values (%d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", now())",
       $issue->projectId,
       $issue->trackerId,
       $issue->statusId,
       $issue->priorityId,
+      $issue->targetId,
+      $issue->foundId,
+      $issue->assigneeId,
       $issue->creatorId,
       $issue->title,
       $issue->details);
@@ -93,12 +97,16 @@ class IssueDataStore extends DataStore {
   public function update($issue) {
     $this->query(
       "update issue set " .
-      "trackerId = %d, statusId = %d, priorityId = %d, updaterId = %d, " .
+      "trackerId = %d, statusId = %d, priorityId = %d, targetId = %d, " .
+      "foundId = %d, assigneeId = %d, updaterId = %d, " .
       "title = \"%s\", details = \"%s\", updated = now() " .
       "where id = %d",
       $issue->trackerId,
       $issue->statusId,
       $issue->priorityId,
+      $issue->targetId,
+      $issue->foundId,
+      $issue->assigneeId,
       $issue->updaterId,
       $issue->title,
       $issue->details,

@@ -18,3 +18,4 @@
 ?>
 
 <h2><?=$title?></h2>
+<img src="http://gravatar.com/avatar/<?=md5($user->email)?>?d=identicon" />

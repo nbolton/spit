@@ -128,7 +128,9 @@ abstract class DataStore {
     return $v;
   }
   
-  abstract protected function newModel();
+  protected function newModel() {
+    return new \stdClass;
+  }
 }
 
 ?>
