@@ -25,8 +25,13 @@ class AdminController extends Controller {
     switch ($this->getPathPart(1)) {
       case "": $this->showView("admin/index", T_("Admin")); break;
       case "workflow": $this->showView("admin/workflow", T_("Workflow")); break;
+      case "import": $this->runImport(); break;
       default: $this->showError(404); break;
     }
+  }
+  
+  public function runImport() {
+    $this->showView("admin/import", T_("Import"));
   }
 }
 
