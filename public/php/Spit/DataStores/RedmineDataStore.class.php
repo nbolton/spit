@@ -45,6 +45,11 @@ class RedmineDataStore extends DataStore {
     );
     return $this->fromResult($result);
   }
+  
+  public function getUsers() {
+    $result = $this->query("select * from users");
+    return $this->fromResult($result);
+  }
 }
 
 ?>
