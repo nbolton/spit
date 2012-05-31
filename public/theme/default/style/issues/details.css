@@ -61,6 +61,10 @@ div.changes span.remove {
   text-decoration: line-through;
 }
 
+div.change span.info {
+  color: #aaa;
+}
+
 div.comment form {
   display: none;
 }

@@ -51,27 +51,53 @@ class AdminController extends Controller {
       $db->host, $db->user, $db->password, $db->name);
     
     $issueDataStore = new \Spit\DataStores\IssueDataStore;
+    $changeDataStore = new \Spit\DataStores\ChangeDataStore;
+    
     if (isset($form->clear) && $form->clear == "on") {
       $issueDataStore->truncate();
+      $changeDataStore->truncate();
     }
     
-    $rmiList = $redmine->getIssues();
     $issues = array();
-    
-    foreach ($rmiList as $rmi) {
+    foreach ($redmine->getIssues() as $rmi) {
       $issue = new \Spit\Models\Issue;
       $issue->redmineId = $rmi->id;
       $issue->projectId = 1;
-      $issue->creatorId = 1;
       $issue->trackerId = $rmi->tracker_id;
       $issue->statusId = $rmi->status_id;
       $issue->priorityId = $rmi->priority_id;
+      $issue->creatorId = $rmi->author_id;
+      $issue->assigneeId = $rmi->assigned_to_id;
+      $issue->updaterId = null;
       $issue->title = $rmi->subject;
       $issue->details = $rmi->description;
+      $issue->updated = $rmi->updated_on;
+      $issue->created = $rmi->created_on;
       array_push($issues, $issue);
     }
-    
     $issueDataStore->insertMany($issues);
+    
+    $changes = array();
+    foreach ($redmine->getJournalDetails() as $rmjd) {
+      if ($rmjd->notes != "") {
+        $type = \Spit\Models\ChangeType::Comment;
+        $content = $rmjd->notes;
+      }
+      else {
+        $type = \Spit\Models\ChangeType::Edit;
+        $content = $this->diff($rmjd->old_value, $rmjd->value);
+      }
+      
+      $change = new \Spit\Models\Change;
+      $change->issueId = $rmjd->journalized_id;
+      $change->creatorId = $rmjd->user_id;
+      $change->type = $type;
+      $change->name = $rmjd->prop_key;
+      $change->content = $content;
+      $change->created = $rmjd->created_on;
+      array_push($changes, $change);
+    }
+    $changeDataStore->insertMany($changes);
   }
 }
 

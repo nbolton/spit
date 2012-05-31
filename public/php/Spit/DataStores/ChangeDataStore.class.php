@@ -23,12 +23,14 @@ use DateTime;
 
 class ChangeDataStore extends DataStore {
 
+  const BULK_INSERT_MAX = 500;
+  
   public function getForIssue($issueId) {
     $result = $this->query(
       "select c.id, c.creatorId, c.type, c.name, " .
       "c.content, c.created, u.name as creator " .
       "from `change` as c " .
-      "inner join user as u on u.id = c.creatorId " .
+      "left join user as u on u.id = c.creatorId " .
       "where c.issueId = %d " .
       "order by c.id asc",
       $issueId
@@ -48,7 +50,39 @@ class ChangeDataStore extends DataStore {
       $change->name,
       $change->content);
     
-    return parent::$sql->insert_id;
+    return $this->sql->insert_id;
+  }
+  
+  public function insertMany($issues) {
+    $base = 
+      "insert into `change` " .
+      "(issueId, creatorId, type, name, content, created) values ";
+    
+    for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
+      
+      $slice = array_slice($issues, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
+      $values = "";
+      
+      for ($i = 0; $i < $count; $i++) {
+        $change = $slice[$i];
+        $values .= sprintf(
+          "(%d, %d, %d, \"%s\", \"%s\", \"%s\")%s",
+          $change->issueId,
+          $change->creatorId,
+          $change->type,
+          $change->name,
+          $this->escape($change->content),
+          $change->created,
+          $i < $count - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $values);
+    }
+  }
+  
+  public function truncate() {
+    $this->query("truncate table `change`");
   }
   
   protected function parseField($k, $v) {
