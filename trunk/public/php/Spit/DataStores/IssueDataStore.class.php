@@ -100,18 +100,18 @@ class IssueDataStore extends DataStore {
     $base = 
       "insert into issue " .
       "(projectId, trackerId, statusId, priorityId, targetId, foundId, " .
-      "assigneeId, creatorId, title, details, created) values ";
+      "assigneeId, creatorId, updaterId, title, details, created, updated) values ";
     
     for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
       
-      $issuesSlice = array_slice($issues, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
-      
+      $slice = array_slice($issues, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
       $values = "";
-      $issueCount = count($issuesSlice);
-      for ($i = 0; $i < $issueCount; $i++) {
-        $issue = $issuesSlice[$i];
+      
+      for ($i = 0; $i < $count; $i++) {
+        $issue = $slice[$i];
         $values .= sprintf(
-          "(%d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", now())%s",
+          "(%d, %d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", \"%s\", \"%s\")%s",
           $issue->projectId,
           $issue->trackerId,
           $issue->statusId,
@@ -120,9 +120,12 @@ class IssueDataStore extends DataStore {
           $issue->foundId,
           $issue->assigneeId,
           $issue->creatorId,
+          $issue->updaterId,
           $this->escape($issue->title),
           $this->escape($issue->details),
-          $i < $issueCount - 1 ? ", " : "");
+          $issue->created,
+          $issue->updated,
+          $i < $count - 1 ? ", " : "");
       }
       
       $this->query($base . $values);
