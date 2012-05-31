@@ -17,18 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\Models;
+namespace Spit;
 
-class Issue {
-  public $id;
-  public $title;
-  public $details;
-  public $trackerId;
-  public $assigneeId;
-  public $statusId;
-  public $priorityId;
-  public $foundId;
-  public $targetId;
+class TitleMode {
+  const Prefix = 0;
+  const Affix = 1;
+  const None = 1;
 }
 
 ?>
