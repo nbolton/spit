@@ -61,7 +61,7 @@ class AdminController extends Controller {
     $issues = array();
     foreach ($redmine->getIssues() as $rmi) {
       $issue = new \Spit\Models\Issue;
-      $issue->redmineId = $rmi->id;
+      $issue->importId = $rmi->id;
       $issue->projectId = 1;
       $issue->trackerId = $rmi->tracker_id;
       $issue->statusId = $rmi->status_id;
@@ -75,7 +75,6 @@ class AdminController extends Controller {
       $issue->created = $rmi->created_on;
       array_push($issues, $issue);
     }
-    $issueDataStore->insertMany($issues);
     
     $changes = array();
     foreach ($redmine->getJournalDetails() as $rmjd) {
@@ -97,7 +96,24 @@ class AdminController extends Controller {
       $change->created = $rmjd->created_on;
       array_push($changes, $change);
     }
+    
+    $issueDataStore->insertMany($issues);
+    $this->resolveIssueIds($changes);
     $changeDataStore->insertMany($changes);
+  }
+  
+  private function resolveIssueIds($changes) {
+    $issueDataStore = new \Spit\DataStores\IssueDataStore;
+    $ids = $issueDataStore->getImportIds();
+    
+    $map = array();
+    foreach ($ids as $idPair) {
+      $map[$idPair->importId] = $idPair->id;
+    }
+    
+    foreach ($changes as $change) {
+      $change->issueId = $map[$change->issueId];
+    }
   }
 }
 
