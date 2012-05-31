@@ -114,7 +114,11 @@ class IssuesController extends Controller {
     $cds = new \Spit\DataStores\ChangeDataStore;
     $data["changes"] = $cds->getForIssue($id);
     
-    $this->showView("issues/details", $issue->getFullTitle(), $data);
+    $this->showView("issues/details", $this->getIssueTitle($issue), $data, \Spit\TitleMode::Affix);
+  }
+  
+  private function getIssueTitle($issue) {
+    return sprintf("%s #%d - %s", $issue->tracker, $issue->id, $issue->title);
   }
   
   private function commentPost() {

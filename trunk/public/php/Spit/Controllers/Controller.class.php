@@ -20,6 +20,7 @@
 namespace Spit\Controllers;
 
 use Exception;
+use \Spit\TitleMode as TitleMode;
 
 class Controller {
 
@@ -29,14 +30,24 @@ class Controller {
   public $app;
   public $viewDir = self::DEFAULT_VIEW_DIR;
   
-  protected function showView($view, $title = "", $data = array()) {
+  protected function showView($view, $title = "", $data = array(), $titleMode = TitleMode::Prefix) {
     foreach ($data as $k => $v) {
       $$k = $v;
     }
     
     $app = $this->app;
     $self = $this;
-    $fullTitle = $app->getSiteTitle() . (($title != "") ? " - " . $title : "");
+    
+    if ($titleMode == TitleMode::Prefix) {
+      $fullTitle = $app->getSiteTitle() . (($title != "") ? " - " . $title : "");
+    }
+    elseif ($titleMode == TitleMode::Affix) {
+      $fullTitle = (($title != "") ? $title . " - " : "") . $app->getSiteTitle();
+    }
+    else {
+      $fullTitle = $title;
+    }
+    
     $content = $this->viewDir . $view . ".php";
     $master = self::MASTER_VIEW;
     
