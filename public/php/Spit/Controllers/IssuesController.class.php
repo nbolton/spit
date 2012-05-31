@@ -52,6 +52,8 @@ class IssuesController extends Controller {
   }
   
   private function runEditor($mode) {
+    $this->useMarkdown = true;
+  
     switch ($mode) {
       case EditorMode::Create:
         $issue = new \Spit\Models\Issue;
@@ -324,7 +326,7 @@ class IssuesController extends Controller {
     
     $assignee = new \Spit\Models\Fields\Select("assigneeId", T_("Assignee"));
     $assignee->add(null, "");
-    $this->fillSelectField($assignee, $userDataStore->get(), $issue->assigneeId);
+    $this->fillSelectField($assignee, $userDataStore->getMembers(), $issue->assigneeId);
     array_push($fields, $assignee);
     
     // TODO: load custom fields make all fields optional.

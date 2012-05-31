@@ -37,7 +37,8 @@
     </div>
     <div class="row">
       <label for="details"><?=T_("Details")?></label>
-      <textarea id="details" name="details" type="details"><?=$issue->details?></textarea>
+      <div id="wmd-button-bar" class="wmd-button-bar"></div>
+      <textarea id="wmd-input" name="details" type="details" class="wmd-input"><?=$issue->details?></textarea>
     </div>
     <div id="dynamicFields">
       <div class="loading">
@@ -51,6 +52,10 @@
     <input type="submit" value="<?=($mode == \Spit\EditorMode::Create) ? T_("Create") : T_("Update")?>" >
   </div>
 </form>
+
+<div class="preview">
+  <div id="wmd-preview" class="box"></div>
+</div>
 
 <div id="templates">
   <div class="row" id="rowWithSelect">

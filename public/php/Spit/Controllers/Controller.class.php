@@ -29,6 +29,7 @@ class Controller {
 
   public $app;
   public $viewDir = self::DEFAULT_VIEW_DIR;
+  public $useMarkdown = false;
   
   protected function showView($view, $title = "", $data = array(), $titleMode = TitleMode::Prefix) {
     foreach ($data as $k => $v) {
