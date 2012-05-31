@@ -48,6 +48,11 @@ class IssueDataStore extends DataStore {
       $this->fromResultScalar($totalResult)
     );
   }
+  
+  public function getImportIds() {
+    $result = $this->query("select id, importId from issue");
+    return $this->fromResult($result);
+  }
 
   public function getById($id, $custom) {
     $result = $this->query(
@@ -79,8 +84,8 @@ class IssueDataStore extends DataStore {
   public function insert($issue) {
     $this->query(
       "insert into issue " .
-      "(projectId, trackerId, statusId, priorityId, targetId, foundId, " .
-      "assigneeId, creatorId, title, details, created) " .
+      "(projectId, trackerId, statusId, priorityId, targetId, " .
+      "foundId, assigneeId, creatorId, title, details, created) " .
       "values (%d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", now())",
       $issue->projectId,
       $issue->trackerId,
@@ -99,8 +104,9 @@ class IssueDataStore extends DataStore {
   public function insertMany($issues) {
     $base = 
       "insert into issue " .
-      "(projectId, trackerId, statusId, priorityId, targetId, foundId, " .
-      "assigneeId, creatorId, updaterId, title, details, created, updated) values ";
+      "(projectId, trackerId, statusId, priorityId, targetId, " .
+      "foundId, assigneeId, creatorId, updaterId, importId, " .
+      "title, details, created, updated) values ";
     
     for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
       
@@ -111,7 +117,7 @@ class IssueDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
         $values .= sprintf(
-          "(%d, %d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", \"%s\", \"%s\")%s",
+          "(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", \"%s\", \"%s\")%s",
           $issue->projectId,
           $issue->trackerId,
           $issue->statusId,
@@ -121,6 +127,7 @@ class IssueDataStore extends DataStore {
           $issue->assigneeId,
           $issue->creatorId,
           $issue->updaterId,
+          $issue->importId,
           $this->escape($issue->title),
           $this->escape($issue->details),
           $issue->created,
