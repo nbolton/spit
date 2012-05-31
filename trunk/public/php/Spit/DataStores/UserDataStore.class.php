@@ -21,6 +21,8 @@ namespace Spit\DataStores;
 
 class UserDataStore extends DataStore {
 
+  const BULK_INSERT_MAX = 500;
+
   public function get() {
     $result = $this->query("select * from user");
     return $this->fromResult($result);
@@ -29,6 +31,40 @@ class UserDataStore extends DataStore {
   public function getById($id) {
     $result = $this->query("select * from user where id = %d", $id);
     return $this->fromResultSingle($result);
+  }
+  
+  public function getImportIds() {
+    $result = $this->query("select id, importId from user");
+    return $this->fromResult($result);
+  }
+  
+  public function insertMany($users) {
+    $base = 
+      "insert into user " .
+      "(importId, email, name) values ";
+    
+    for ($j = 0; $j < count($users) / self::BULK_INSERT_MAX; $j++) {
+      
+      $slice = array_slice($users, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
+      $values = "";
+      
+      for ($i = 0; $i < $count; $i++) {
+        $issue = $slice[$i];
+        $values .= sprintf(
+          "(%d, \"%s\", \"%s\")%s",
+          $issue->importId,
+          $this->escape($issue->email),
+          $this->escape($issue->name),
+          $i < $count - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $values);
+    }
+  }
+  
+  public function truncate() {
+    $this->query("truncate table user");
   }
 }
 

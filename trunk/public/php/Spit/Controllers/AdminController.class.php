@@ -52,22 +52,33 @@ class AdminController extends Controller {
     
     $issueDataStore = new \Spit\DataStores\IssueDataStore;
     $changeDataStore = new \Spit\DataStores\ChangeDataStore;
+    $userDataStore = new \Spit\DataStores\UserDataStore;
     
     if (isset($form->clear) && $form->clear == "on") {
       $issueDataStore->truncate();
       $changeDataStore->truncate();
+      $userDataStore->truncate();
+    }
+    
+    $users = array();
+    foreach ($redmine->getUsers() as $rmu) {
+      $user = new \Spit\Models\User;
+      $user->importId = (int)$rmu->id;
+      $user->email = $rmu->mail;
+      $user->name = trim($rmu->firstname . " " . $rmu->lastname);
+      array_push($users, $user);
     }
     
     $issues = array();
     foreach ($redmine->getIssues() as $rmi) {
       $issue = new \Spit\Models\Issue;
-      $issue->importId = $rmi->id;
+      $issue->importId = (int)$rmi->id;
       $issue->projectId = 1;
-      $issue->trackerId = $rmi->tracker_id;
-      $issue->statusId = $rmi->status_id;
-      $issue->priorityId = $rmi->priority_id;
-      $issue->creatorId = $rmi->author_id;
-      $issue->assigneeId = $rmi->assigned_to_id;
+      $issue->trackerId = (int)$rmi->tracker_id;
+      $issue->statusId = (int)$rmi->status_id;
+      $issue->priorityId = (int)$rmi->priority_id;
+      $issue->creatorId = (int)$rmi->author_id;
+      $issue->assigneeId = (int)$rmi->assigned_to_id;
       $issue->updaterId = null;
       $issue->title = $rmi->subject;
       $issue->details = $rmi->description;
@@ -88,8 +99,8 @@ class AdminController extends Controller {
       }
       
       $change = new \Spit\Models\Change;
-      $change->issueId = $rmjd->journalized_id;
-      $change->creatorId = $rmjd->user_id;
+      $change->issueId = (int)$rmjd->journalized_id;
+      $change->creatorId = (int)$rmjd->user_id;
       $change->type = $type;
       $change->name = $rmjd->prop_key;
       $change->content = $content;
@@ -97,12 +108,29 @@ class AdminController extends Controller {
       array_push($changes, $change);
     }
     
+    $userDataStore->insertMany($users);
+    $this->resolveIssueUserIds($issues);
     $issueDataStore->insertMany($issues);
-    $this->resolveIssueIds($changes);
+    $this->resolveChangeIssueIds($changes);
     $changeDataStore->insertMany($changes);
   }
   
-  private function resolveIssueIds($changes) {
+  private function resolveIssueUserIds($issues) {
+    $userDataStore = new \Spit\DataStores\UserDataStore;
+    $ids = $userDataStore->getImportIds();
+    
+    $map = array();
+    foreach ($ids as $idPair) {
+      $map[$idPair->importId] = $idPair->id;
+    }
+    
+    foreach ($issues as $issue) {
+      $issue->creatorId = array_key_exists($issue->creatorId, $map) ? $map[$issue->creatorId] : null;
+      $issue->assigneeId = array_key_exists($issue->assigneeId, $map) ? $map[$issue->assigneeId] : null;
+    }
+  }
+  
+  private function resolveChangeIssueIds($changes) {
     $issueDataStore = new \Spit\DataStores\IssueDataStore;
     $ids = $issueDataStore->getImportIds();
     
@@ -112,7 +140,7 @@ class AdminController extends Controller {
     }
     
     foreach ($changes as $change) {
-      $change->issueId = $map[$change->issueId];
+      $change->issueId = array_key_exists($change->issueId, $map) ? $map[$change->issueId] : null;
     }
   }
 }
