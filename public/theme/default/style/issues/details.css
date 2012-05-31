@@ -46,6 +46,10 @@ div.box div.row div.label {
   padding-right: 20px;
 }
 
+div.box span.details pre {
+  overflow: hidden;
+}
+
 hr {
   clear: both;
 }
