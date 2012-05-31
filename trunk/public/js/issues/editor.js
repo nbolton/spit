@@ -22,6 +22,10 @@ function viewLoad() {
   tracker.change(function() {
     loadDynamicFields($(this).val());
   });
+  
+  var converter = Markdown.getSanitizingConverter();
+  var editor = new Markdown.Editor(converter);
+  editor.run();
 }
 
 function loadDynamicFields(tracker) {

@@ -24,8 +24,19 @@
     <meta name="description" content="<?=$app->getSiteDescription()?>" />
     <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/main.css" />
     <?=$app->controller->getViewStyle($view);?>
-    <script type="text/javascript" src="<?=$app->getProjectRoot()?>js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="<?=$app->getProjectRoot()?>js/common.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>js/common.js"></script>
+    <?php if ($self->useMarkdown): ?>
+    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/pagedown.css" />
+    <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Converter.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Sanitizer.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Editor.js"></script>
+    <style type="text/css">
+    .wmd-button > span {
+      background-image: url(<?=$app->getImagePath("wmd-buttons.png")?>);
+    }
+    </style>
+    <?php endif ?>
     <?=$app->controller->getViewScript($view);?>
     <?php if(isset($app->settings->site->googleAnalytics)): ?>
     <script type="text/javascript">

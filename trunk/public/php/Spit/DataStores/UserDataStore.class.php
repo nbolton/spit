@@ -23,8 +23,8 @@ class UserDataStore extends DataStore {
 
   const BULK_INSERT_MAX = 500;
 
-  public function get() {
-    $result = $this->query("select * from user");
+  public function getMembers() {
+    $result = $this->query("select * from user where member = 1");
     return $this->fromResult($result);
   }
   
