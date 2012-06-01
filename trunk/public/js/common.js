@@ -38,7 +38,7 @@ $(function() {
   initialQueries = parseInt($("span.queries").text());
   
   log("initial load time: {0} ms".format(initialLoadTime));
-  log("initial queries: " + initialQueries);
+  log("initial db queries: " + initialQueries);
 });
 
 String.prototype.format = function() {
@@ -62,7 +62,7 @@ function updateLoadStats(stats) {
   var queries = parseFloat(stats["queries"]);
   
   log("ajax load time: {0} ms".format(loadTime.toFixed(2)));
-  log("ajax queries: " + queries);
+  log("ajax db queries: " + queries);
   
   $("span.loadTime").text((initialLoadTime + loadTime).toFixed(2));
   $("span.queries").text(initialQueries + queries);
