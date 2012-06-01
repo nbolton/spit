@@ -18,5 +18,7 @@
 ?>
 
 <h2><?=T_("Download")?></h2>
-<p>SPIT will be available to download soon!</p>
 
+<ul>
+  <li><a href="/files/spit-1.0.0-alpha.zip">spit-1.0.0-alpha.zip</a></li>
+</ul>
