@@ -30,6 +30,7 @@ require "CustomFields.class.php";
 require "EditorMode.class.php";
 require "TitleMode.class.php";
 require "UserType.class.php";
+require "HttpCode.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";

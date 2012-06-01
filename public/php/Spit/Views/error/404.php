@@ -18,4 +18,4 @@
 ?>
 
 <h2><?=$title?></h2>
-<p><?=sprintf(T_("The requested URL /%s was not found on this server."), $app->path->toString())?></p>
+<p><?=sprintf(T_("The requested URL /%s was not found on this site."), $app->path->toString())?></p>

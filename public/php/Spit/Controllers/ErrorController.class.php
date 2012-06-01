@@ -28,7 +28,8 @@ class ErrorController extends Controller {
   public function show($code) {
     $title = "";
     switch ($code) {
-      case 404: $title = T_("Not Found"); break;
+      case \Spit\HttpCode::NotFound: $title = T_("Not Found"); break;
+      case \Spit\HttpCode::Forbidden: $title = T_("Forbidden"); break;
     }
     
     header(sprintf("HTTP/1.0 %d %s", $code, $title));

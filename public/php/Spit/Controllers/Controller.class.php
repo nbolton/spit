@@ -67,6 +67,10 @@ class Controller {
     return isset($_POST[$name]) ? $_POST[$name] : "";
   }
   
+  protected function auth($userType) {
+    return $this->app->security->auth($userType);
+  }
+  
   public function getViewStyle($view) {
     $path = sprintf("%s/style/%s.css", $this->app->getThemeRoot(), $view);
     if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {

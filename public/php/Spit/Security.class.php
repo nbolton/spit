@@ -40,6 +40,22 @@ class Security {
     }
   }
   
+  public function auth($userType) {
+    // authorize and authenticate.
+    
+    if (!$this->isLoggedIn()) {
+      $this->redirectToLogin();
+      return false;
+    }
+    
+    if (!$this->userIsType($userType)) {
+      $this->app->showError(\Spit\HttpCode::Forbidden);
+      return false;
+    }
+    
+    return true;
+  }
+  
   public function startLogin() {  
     $this->openId->identity = "https://www.google.com/accounts/o8/id";
     $this->openId->required = array(
@@ -66,17 +82,38 @@ class Security {
         }
       }
       else {
-        $user = \Spit\Models\User;
+        $user = new \Spit\Models\User;
         $user->email = $email;
         $user->name = $name;
-        $user->id = $this->userDataStore->create($user);
+        $user->id = $this->userDataStore->insert($user);
       }
       
       $_SESSION[self::SESSION_KEY] = $user->id;
-      header("Location: " . $this->app->getProjectRoot());
+      $this->redirectFromLogin();
       return true;
     }
     return false;
+  }
+  
+  public function logout() {
+    // php bug #19586 can stop this from working on some machines.
+    unset($_SESSION[self::SESSION_KEY]);
+    $this->redirectFromLogout();
+  }
+  
+  private function redirectFromLogin() {
+    $from = isset($_GET["from"]) ? $_GET["from"] : "";
+    header(sprintf("Location: %s%s",
+      $this->app->getProjectRoot(), $from));
+  }
+  
+  private function redirectFromLogout() {
+    header("Location: " . $this->app->getProjectRoot());
+  }
+  
+  public function redirectToLogin() {
+    header(sprintf("Location: %slogin/?from=%s",
+      $this->app->getProjectRoot(), $this->app->path->pathString));
   }
   
   public function userIsType($checkFlag) {

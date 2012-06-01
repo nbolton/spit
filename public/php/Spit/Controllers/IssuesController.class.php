@@ -55,14 +55,22 @@ class IssuesController extends Controller {
     $this->useMarkdown = true;
   
     switch ($mode) {
-      case EditorMode::Create:
+      case EditorMode::Create: {
         $issue = new \Spit\Models\Issue;
+        if (!$this->auth(\Spit\UserType::Newbie)) {
+          return;
+        }
         break;
+      }
         
-      case EditorMode::Update:
+      case EditorMode::Update: {
         $id = $this->getPathPart(2);
-        $issue = $this->ds->getById($id, new \Spit\CustomFields);
+        $issue = $this->ds->getById($id, new \Spit\CustomFields);        
+        if (!$this->userCanEdit($issue)) {
+          return;
+        }
         break;
+      }
     }
     
     if ($this->isJsonGet()) {
@@ -94,6 +102,22 @@ class IssuesController extends Controller {
     
     $title = ($mode == EditorMode::Create) ? T_("New Issue") : T_("Edit Issue");
     $this->showView("issues/editor", $title, $data);
+  }
+  
+  public function userCanEdit($issue, $auth = true) {
+    
+    // allow the original author to edit their issue.
+    $user = $this->app->security->isLoggedIn() ? $this->app->security->user : null;
+    if ($user != null && $issue->creatorId == $user->id) {
+      return true;
+    }
+    
+    // only allow managers to edit issues raised by others.
+    if ($auth && $this->auth(\Spit\UserType::Manager)) {
+      return true;
+    }
+    
+    return false;
   }
   
   private function runDetails() {
@@ -342,10 +366,6 @@ class IssuesController extends Controller {
     }
     
     return $fields;
-  }
-  
-  public function userCanEdit() {
-    return true;
   }
   
   public function getChangeContent($change) {
