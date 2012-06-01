@@ -21,18 +21,24 @@ namespace Spit;
 
 class Plugins {
 
+  const PLUGIN_DIR = "php/plugins";
+
   public function __construct($app) {
     $this->app = $app;
     $this->plugins = array();
   }
 
   public function load() {
-    $handler = opendir("php/plugins/");
+    if (!is_dir(self::PLUGIN_DIR)) {
+      return;
+    }
+    
+    $handler = opendir(self::PLUGIN_DIR);
     while ($file = readdir($handler)) {
       if ($file == ".." || $file == ".")
         continue;
       
-      require sprintf("php/plugins/%s/%s.class.php", $file, $file);
+      require sprintf("%s/%s/%s.class.php", self::PLUGIN_DIR, $file, $file);
       $plugin = new $file($this->app);
       $plugin->name = $file;
       array_push($this->plugins, $plugin);

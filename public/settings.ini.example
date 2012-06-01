@@ -1,0 +1,19 @@
+[db]
+host = "localhost"
+user = "root"
+password = ""
+database = "spit"
+
+[site]
+defaultTitle = "SPIT"
+defaultDescription = "Simple PHP Issue Tracker"
+singleProject = "spit"
+dateTimeFormat = "j M Y H:i"
+
+[custom]
+fields = "platformId=Platform:, googleId=Google ID:, redmineId=Redmine ID:"
+mappings = "platformId=platforms"
+platforms = "1=Windows, 2=Mac OS X, 3=Linux, 4=Unix, 5=Various"
+
+[debug]
+sendAjaxError = true
