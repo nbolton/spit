@@ -19,7 +19,7 @@
 
 <h3><?=$title?></h3>
 <div class="box">
-  <?php if($self->userCanEdit($issue, false)): ?>
+  <?php if($self->userCanEdit($issue, true)): ?>
   <a href="<?=$app->getProjectRoot()?>issues/edit/<?=$issue->id?>/">
     <img src="<?=$app->getImagePath("edit.png")?>"/>Edit
   </a>

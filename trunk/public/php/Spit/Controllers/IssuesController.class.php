@@ -104,7 +104,7 @@ class IssuesController extends Controller {
     $this->showView("issues/editor", $title, $data);
   }
   
-  public function userCanEdit($issue, $login = true) {
+  public function userCanEdit($issue, $passive = false) {
     
     // allow the original author to edit their issue.
     $user = $this->app->security->isLoggedIn() ? $this->app->security->user : null;
@@ -113,7 +113,7 @@ class IssuesController extends Controller {
     }
     
     // only allow managers to edit issues raised by others.
-    if ($this->auth(\Spit\UserType::Manager, $login)) {
+    if ($this->auth(\Spit\UserType::Manager, $passive)) {
       return true;
     }
     

@@ -40,18 +40,20 @@ class Security {
     }
   }
   
-  public function auth($userType, $login = true) {
+  public function auth($userType, $passive = false) {
     // authorize and authenticate.
     
     if (!$this->isLoggedIn()) {
-      if ($login) {
+      if (!$passive) {
         $this->redirectToLogin();
       }
       return false;
     }
     
     if (!$this->userIsType($userType)) {
-      $this->app->showError(\Spit\HttpCode::Forbidden);
+      if (!$passive) {
+        $this->app->showError(\Spit\HttpCode::Forbidden);
+      }
       return false;
     }
     
