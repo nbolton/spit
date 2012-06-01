@@ -40,11 +40,13 @@ class Security {
     }
   }
   
-  public function auth($userType) {
+  public function auth($userType, $login = true) {
     // authorize and authenticate.
     
     if (!$this->isLoggedIn()) {
-      $this->redirectToLogin();
+      if ($login) {
+        $this->redirectToLogin();
+      }
       return false;
     }
     
