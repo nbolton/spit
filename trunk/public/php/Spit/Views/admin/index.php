@@ -19,6 +19,5 @@
 
 <h2><?=$title?></h2>
 <ul>
-  <li><a href="workflow/"><?=T_("Workflow")?></a></li>
   <li><a href="import/"><?=T_("Import")?></a></li>
 </ul>
