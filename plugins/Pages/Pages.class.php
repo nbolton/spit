@@ -17,32 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit;
+require "DownloadController.class.php";
+require "ThemesController.class.php";
+require "PluginsController.class.php";
 
-class Plugins {
-
-  const PLUGIN_DIR = "php/plugins";
-
-  public function __construct($app) {
-    $this->app = $app;
-    $this->plugins = array();
-  }
-
-  public function load() {
-    if (!is_dir(self::PLUGIN_DIR)) {
-      return;
-    }
+class Pages {
+  
+  public function __construct($spit) {
+    $spit->addLink(new Spit\Link(T_("Download"), "download/"));
+    $spit->addLink(new Spit\Link(T_("Themes"), "themes/"));
+    $spit->addLink(new Spit\Link(T_("Plugins"), "plugins/"));
+    $spit->addLink(new Spit\Link(T_("Code"), "/code/", true));
+    $spit->addLink(new Spit\Link(T_("Wiki"), "/wiki/", true));
     
-    $handler = opendir(self::PLUGIN_DIR);
-    while ($file = readdir($handler)) {
-      if ($file == ".." || $file == ".")
-        continue;
-      
-      require sprintf("%s/%s/%s.class.php", self::PLUGIN_DIR, $file, $file);
-      $plugin = new $file($this->app);
-      $plugin->name = $file;
-      array_push($this->plugins, $plugin);
-    }
+    $spit->addController("download", new DownloadController($this));
+    $spit->addController("themes", new ThemesController($this));
+    $spit->addController("plugins", new PluginsController($this));
   }
 }
 

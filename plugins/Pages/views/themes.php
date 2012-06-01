@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,34 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Spit;
-
-class Plugins {
-
-  const PLUGIN_DIR = "php/plugins";
-
-  public function __construct($app) {
-    $this->app = $app;
-    $this->plugins = array();
-  }
-
-  public function load() {
-    if (!is_dir(self::PLUGIN_DIR)) {
-      return;
-    }
-    
-    $handler = opendir(self::PLUGIN_DIR);
-    while ($file = readdir($handler)) {
-      if ($file == ".." || $file == ".")
-        continue;
-      
-      require sprintf("%s/%s/%s.class.php", self::PLUGIN_DIR, $file, $file);
-      $plugin = new $file($this->app);
-      $plugin->name = $file;
-      array_push($this->plugins, $plugin);
-    }
-  }
-}
-
 ?>
+
+<h2><?=T_("Themes")?></h2>
+<p>SPIT allows you to change your theme. Theme downloads will be available soon.</p>
+
