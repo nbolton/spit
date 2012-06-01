@@ -67,8 +67,8 @@ class Controller {
     return isset($_POST[$name]) ? $_POST[$name] : "";
   }
   
-  protected function auth($userType) {
-    return $this->app->security->auth($userType);
+  protected function auth($userType, $login = true) {
+    return $this->app->security->auth($userType, $login);
   }
   
   public function getViewStyle($view) {
