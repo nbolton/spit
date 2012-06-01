@@ -19,6 +19,10 @@
 
 <h2><?=T_("Download")?></h2>
 
+<h3>File</h3>
 <ul>
   <li><a href="/files/spit-1.0.0-alpha.zip">spit-1.0.0-alpha.zip</a></li>
 </ul>
+
+<h3>SVN</h3>
+<p><pre>svn co http://svn.nbolton.net/spit/trunk spit</pre></p>
