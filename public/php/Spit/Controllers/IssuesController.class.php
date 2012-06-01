@@ -79,7 +79,7 @@ class IssuesController extends Controller {
       switch ($mode) {
         case EditorMode::Create:
           $issue->projectId = $this->app->project->id;
-          $issue->creatorId = $this->app->user->id;
+          $issue->creatorId = $this->app->security->user->id;
           $issue->id = $this->ds->insert($issue);
           break;
         
@@ -126,7 +126,7 @@ class IssuesController extends Controller {
   private function commentPost() {
     $change = new \Spit\Models\Change;
     $change->issueId = $this->getPathPart(2);
-    $change->creatorId = $this->app->user->id;
+    $change->creatorId = $this->app->security->user->id;
     $change->type = \Spit\Models\ChangeType::Comment;
     $this->applyFormValues($change);
     
@@ -135,7 +135,7 @@ class IssuesController extends Controller {
     
     // values needed for "get info" functions.
     $change->created = new DateTime();
-    $change->creator = $this->app->user->name;
+    $change->creator = $this->app->security->user->name;
     
     return array(
       "info" => $this->getChangeInfo($change),
@@ -144,13 +144,13 @@ class IssuesController extends Controller {
   }
   
   private function update($issue, $diff) {
-    $issue->updaterId = $this->app->user->id;
+    $issue->updaterId = $this->app->security->user->id;
     $this->ds->update($issue);
     
     foreach ($diff as $k => $v) {
       $change = new \Spit\Models\Change;
       $change->issueId = $issue->id;
-      $change->creatorId = $this->app->user->id;
+      $change->creatorId = $this->app->security->user->id;
       $change->type = \Spit\Models\ChangeType::Edit;
       $change->name = $k;
       

@@ -17,10 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/libraries.php";
-require "php/Spit/App.class.php";
+namespace Spit;
 
-$app = new Spit\App;
-$app->run();
+class UserType {
+  const Anon = 0x00;
+  const Member = 0x01;
+  const Manager = 0x02;
+  const Admin = 0x04;
+}
 
 ?>

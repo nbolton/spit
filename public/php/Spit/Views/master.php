@@ -58,24 +58,38 @@
     <div class="layout">
       <div class="header">
         <div class="headerContent">
-          <h1><?=$app->getSiteTitle()?></h1>
-          <p><?=$app->getSiteDescription()?></p>
-          <div class="links">
-          <?php if(isset($app->project)): ?>
-          <?php foreach ($app->links as $k => $l): ?>
-            <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
-          <?php endforeach ?>
-          <?php endif ?>
+          <div class="column">
+            <h1><?=$app->getSiteTitle()?></h1>
+            <p><?=$app->getSiteDescription()?></p>
+            <div class="links">
+            <?php if(isset($app->project)): ?>
+            <?php foreach ($app->links as $k => $l): ?>
+              <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
+            <?php endforeach ?>
+            <?php endif ?>
+            </div>
           </div>
-          <div class="language">
-            <button id="language">
-              <span class="text"><?=T_("Language:")?> <?=$app->locale->getCurrent()->name?></span>
-              <img src="<?=$app->getImagePath("pixel.gif")?>" class="arrow" />
-            </button>
-            <div class="menu">
-              <?php foreach ($app->locale->getLanguages() as $l): ?>
-              <div class="item"><a href="?lang=<?=$l->code?>"><?=$l->name?></a></div>
-              <?php endforeach ?>
+          <div class="column">
+            <div class="login">
+              <?php if ($app->security->isLoggedIn()): ?>
+              <p>
+                Logged in: <a href="<?=sprintf("%susers/details/%d/", $app->getProjectRoot(), $app->security->user->id)?>">
+                  <?=$app->security->user->name?></a> (<a href="<?=$app->getProjectRoot() . "logout/"?>">logout</a>).
+              </p>
+              <?php else: ?>
+              <p>Not logged in (<a href="<?=$app->getProjectRoot() . "login/"?>">login</a>).</p>
+              <?php endif ?>
+            </div>
+            <div class="language">
+              <button id="language">
+                <span class="text"><?=T_("Language:")?> <?=$app->locale->getCurrent()->name?></span>
+                <img src="<?=$app->getImagePath("pixel.gif")?>" class="arrow" />
+              </button>
+              <div class="menu">
+                <?php foreach ($app->locale->getLanguages() as $l): ?>
+                <div class="item"><a href="?lang=<?=$l->code?>"><?=$l->name?></a></div>
+                <?php endforeach ?>
+              </div>
             </div>
           </div>
         </div>

@@ -16,8 +16,6 @@
  */
 
 $(function() {
-  $(':input:visible:enabled:first').focus();
-
   $("button#language").click(function() {
     pos = $(this).position();
     width = $(this).outerWidth();
