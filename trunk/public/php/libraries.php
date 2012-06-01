@@ -17,10 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/libraries.php";
-require "php/Spit/App.class.php";
-
-$app = new Spit\App;
-$app->run();
+require "gettext/gettext.inc";
+require "markdown/markdown.php";
+require "lightopenid/openid.php";
 
 ?>

@@ -24,6 +24,7 @@ require "IndexController.class.php";
 require "IssuesController.class.php";
 require "AdminController.class.php";
 require "UsersController.class.php";
+require "LoginController.class.php";
 
 use Exception;
 
@@ -35,6 +36,7 @@ class ControllerProvider {
     $this->map("issues", new IssuesController);
     $this->map("admin", new AdminController);
     $this->map("users", new UsersController);
+    $this->map("login", new LoginController);
   }
   
   public function map($name, $controller) {

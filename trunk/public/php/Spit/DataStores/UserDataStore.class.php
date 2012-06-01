@@ -24,12 +24,26 @@ class UserDataStore extends DataStore {
   const BULK_INSERT_MAX = 500;
 
   public function getMembers() {
-    $result = $this->query("select * from user where member = 1");
+    $result = $this->query("select * from user where typeMask & %d != 0", \Spit\UserType::Member);
     return $this->fromResult($result);
   }
   
   public function getById($id) {
     $result = $this->query("select * from user where id = %d", $id);
+    return $this->fromResultSingle($result);
+  }
+  
+  public function getByEmail($email) {
+    $result = $this->query("select * from user where email = \"%s\"", $email);
+    return $this->fromResultSingle($result);
+  }
+  
+  public function getByOpenId($openId) {
+    $result = $this->query(
+      "select u.* from identity as i " .
+      "inner join user as u on u.id = i.userId " .
+      "where i.url = \"%s\"",
+      $openId);
     return $this->fromResultSingle($result);
   }
   

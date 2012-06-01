@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,11 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ ?>
 
-require "php/libraries.php";
-require "php/Spit/App.class.php";
+<h2><?=$title?></h2>
 
-$app = new Spit\App;
-$app->run();
+<?php if ($cancel): ?>
+<p><?=T_("Login canceled.");?></p>
+<?php elseif ($failed): ?>
+<p><?=T_("Login failed.");?></p>
+<?php endif ?>
 
-?>
+<form action="?start" method="post">
+    <button>Login with Google</button>
+</form>

@@ -29,6 +29,7 @@ require "Path.class.php";
 require "CustomFields.class.php";
 require "EditorMode.class.php";
 require "TitleMode.class.php";
+require "UserType.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";
@@ -68,28 +69,16 @@ class App {
     $this->locale = new Locale;
     $this->plugins = new Plugins($this);
     $this->controllers = new Controllers\ControllerProvider;
-    $this->security = new Security;
+    $this->security = new Security($this);
     $this->error = new Controllers\ErrorController($this);
     $this->path = new Path;
-    
-    // TODO: take values from database.
-    $this->user = new Models\User;
-    $this->user->id = 1;
-    $this->user->name = "Nick Bolton";
-    
-    $this->links = array(
-      new Link(T_("Home"), ""),
-      new Link(T_("Issues"), "issues/")
-    );
-    
-    if ($this->security->userIsType("admin")) {
-      $this->addLink(new Link(T_("Admin"), "admin/"));
-    }
   }
   
   public function run() {
-    
     $this->locale->run();
+    $this->security->run();
+    
+    $this->initLinks();
     
     $this->project = $this->findProject();
     if ($this->project == null) {
@@ -111,6 +100,23 @@ class App {
     
     $this->controller->app = $this;
     $this->controller->run();
+  }
+  
+  private function initLinks() {
+    
+    $this->links = array(
+      new Link(T_("Home"), ""),
+      new Link(T_("Issues"), "issues/")
+    );
+    
+    if (!$this->security->isLoggedIn()) {
+      $this->addLink(new Link(T_("Login"), "login/"));
+    }
+    else {
+      if ($this->security->userIsType(\Spit\UserType::Admin)) {
+        $this->addLink(new Link(T_("Admin"), "admin/"));
+      }
+    }
   }
   
   private function setupMultiProject() {

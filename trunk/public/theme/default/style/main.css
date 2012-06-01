@@ -98,21 +98,25 @@ div.layout div.header div.headerContent {
   padding: 5px 10px 10px 10px;
 }
 
+div.layout div.header div.column {
+  float: left;
+  width: 50%;
+  margin-bottom: 7px;
+}
+
+div.layout div.header div.login {
+  margin-top: 5px;
+  text-align: right;
+}
+
 div.layout div.header p {
   font-size: .9em;
   clear: both;
 }
 
-div.layout div.header div.links,
-div.layout div.header div.language {
-  margin: 7px 0px 7px 0px;
-  float: left;
-  width: 50%;
-}
-
 div.layout div.header div.language {
   text-align: right;
-  margin-top: 0px;
+  margin-top: 10px;
 }
 
 div.layout div.header div.language button {
