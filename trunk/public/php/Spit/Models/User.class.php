@@ -22,6 +22,7 @@ namespace Spit\Models;
 class User {
   public $id;
   public $name;
+  public $typeMask = \Spit\UserType::Newbie;
 }
 
 ?>

@@ -25,6 +25,6 @@
 <p><?=T_("Login failed.");?></p>
 <?php endif ?>
 
-<form action="?start" method="post">
-    <button>Login with Google</button>
+<form action="?start<?=$fromArg?>" method="post">
+  <button>Login with Google</button>
 </form>

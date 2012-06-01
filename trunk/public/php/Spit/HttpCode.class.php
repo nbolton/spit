@@ -19,11 +19,9 @@
 
 namespace Spit;
 
-class UserType {
-  const Newbie = 0x01;
-  const Member = 0x02;
-  const Manager = 0x04;
-  const Admin = 0x08;
+class HttpCode {
+  const NotFound = 404;
+  const Forbidden = 403;
 }
 
 ?>

@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,14 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-namespace Spit;
-
-class UserType {
-  const Newbie = 0x01;
-  const Member = 0x02;
-  const Manager = 0x04;
-  const Admin = 0x08;
-}
-
 ?>
+
+<h2><?=$title?></h2>
+<p><?=sprintf(T_("You do not have access to the URL /%s on this site."), $app->path->toString())?></p>

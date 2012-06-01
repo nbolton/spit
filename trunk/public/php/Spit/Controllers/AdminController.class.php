@@ -22,6 +22,10 @@ namespace Spit\Controllers;
 class AdminController extends Controller {
 
   public function run() {
+    if (!$this->auth(\Spit\UserType::Admin)) {
+      return;
+    }
+    
     switch ($this->getPathPart(1)) {
       case "": $this->showView("admin/index", T_("Admin")); break;
       case "workflow": $this->showView("admin/workflow", T_("Workflow")); break;

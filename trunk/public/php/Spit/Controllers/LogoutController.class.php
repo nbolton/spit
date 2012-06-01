@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit;
+namespace Spit\Controllers;
 
-class UserType {
-  const Newbie = 0x01;
-  const Member = 0x02;
-  const Manager = 0x04;
-  const Admin = 0x08;
+class LogoutController extends Controller {
+  
+  public function run() {
+    $this->app->security->logout();
+  }
 }
 
 ?>

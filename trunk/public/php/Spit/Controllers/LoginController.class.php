@@ -31,6 +31,7 @@ class LoginController extends Controller {
   private function runIndex() {
     $data["cancel"] = false;
     $data["failed"] = false;
+    $data["fromArg"] = isset($_GET["from"]) ? "&from=" . $_GET["from"] : "";
     
     $openId = $this->app->security->openId;
     if (!$openId->mode) {

@@ -52,6 +52,16 @@ class UserDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
+  public function insert($user) {
+    $this->query(
+      "insert into user " .
+      "(email, name, typeMask) " .
+      "values (\"%s\", \"%s\", %d)",
+      $user->email,
+      $user->name,
+      $user->typeMask);
+  }
+  
   public function insertMany($users) {
     $base = 
       "insert into user " .
