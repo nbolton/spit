@@ -36,10 +36,10 @@ class AdminController extends Controller {
   public function runImport() {
     if ($this->isPost() && ($_POST["app"] == "redmine")) {
       $db = new \stdClass();
-      $this->applyFormValues($db, "db", false);
+      $this->applyFormValues($db, "db");
       
       $form = new \stdClass();
-      $this->applyFormValues($form, null, false);
+      $this->applyFormValues($form, null);
       
       $options = new \stdClass();
       $options->clear = isset($form->clear) && ($form->clear == "on");

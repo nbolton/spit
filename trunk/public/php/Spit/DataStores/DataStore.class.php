@@ -89,16 +89,20 @@ abstract class DataStore {
     $args = array_slice($funcArgs, 1);
     
     foreach ($args as $k => $v) {
-      $args[$k] = is_string($v)? $this->escape($v) : $v;
+      $args[$k] = is_string($v)? $this->cleanString($v) : $v;
     }
     
     return $args;
   }
   
-  protected function escape($v) {
+  protected function cleanString($v) {
+    if ($v == null || $v == "") {
+      return "NULL";
+    }
+    
     // escape any strings to prevent sql injection, and
     // also escape % for sprintf.
-    return $this->sql->escape_string(str_replace("%", "%%", $v));
+    return "\"" . $this->sql->escape_string(str_replace("%", "%%", $v)) . "\"";
   }
   
   protected function fromResult($result) {
@@ -144,6 +148,13 @@ abstract class DataStore {
   
   protected function newModel() {
     return new \stdClass;
+  }
+  
+  protected static function nullInt($int) {
+    if ($int == null) {
+      return "NULL";
+    }
+    return (int)$int;
   }
 }
 

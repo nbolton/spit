@@ -93,8 +93,7 @@ class Controller {
     return $_SERVER["REQUEST_METHOD"] == "POST";
   }
   
-  public function applyFormValues($object, $index = null, $diff = true) {
-    $diffs = new \stdClass;
+  public function applyFormValues($object, $index = null, $doDiff = true) {
     
     if ($index == null) {
       $values = $_POST;
@@ -103,13 +102,16 @@ class Controller {
       $values = $_POST[$index];
     }
     
+    $diffs = array();
     foreach ($values as $k => $v) {
-      if ($diff) {
+      if ($doDiff) {
         $old = isset($object->$k) ? (string)$object->$k : "";
         $new = (string)$v;
-        $diff = $this->app->diff($old, $new);
-        if ($diff != null) {
-          $diffs->$k = $diff;
+        if ($old != $new) {
+          $diff = new \stdClass;
+          $diff->oldValue = $old;
+          $diff->newValue = $new;
+          $diffs[$k] = $diff;
         }
       }
       $object->$k = $v;

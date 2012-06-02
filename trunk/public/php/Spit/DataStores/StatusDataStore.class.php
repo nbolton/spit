@@ -33,24 +33,24 @@ class StatusDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
-  public function insertMany($issues) {
+  public function insertMany($status) {
     $base = 
       "insert into status " .
       "(importId, name, closed) values ";
     
-    for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
+    for ($j = 0; $j < count($status) / self::BULK_INSERT_MAX; $j++) {
       
-      $slice = array_slice($issues, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $slice = array_slice($status, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
       $count = count($slice);
       $values = "";
       
       for ($i = 0; $i < $count; $i++) {
         $change = $slice[$i];
         $values .= sprintf(
-          "(%d, \"%s\", %d)%s",
-          $change->importId,
-          $change->name,
-          $change->closed,
+          "(%d, %s, %d)%s",
+          self::nullInt($change->importId),
+          self::cleanString($change->name),
+          (int)$change->closed,
           $i < $count - 1 ? ", " : "");
       }
       
