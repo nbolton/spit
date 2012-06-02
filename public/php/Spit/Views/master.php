@@ -17,9 +17,11 @@
  */
 ?>
 
-<html>
+<html lang="<?=$app->locale->lang?>" xml:lang="<?=$app->locale->lang?>">
   <head>
     <title><?=$fullTitle?></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Language" content="<?=$app->locale->lang?>"/>
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta name="description" content="<?=$app->getSiteDescription()?>" />
     <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/main.css" />

@@ -45,6 +45,7 @@ abstract class DataStore {
     if ($sql->connect_errno) {
       throw new Exception("failed to connect to mysql: " . $sql->connect_error);
     }
+    $sql->set_charset("utf8");
     return $sql;
   }
   
@@ -53,8 +54,7 @@ abstract class DataStore {
     
     \Spit\App::$instance->queryCount++;
     
-    $query = vsprintf($format, $args);
-    //$query = count($args) != 0 ? vsprintf($format, $args) : $format;
+    $query = count($args) != 0 ? vsprintf($format, $args) : $format;
     $result = $this->sql->query($query);
     
     if ($result == null) {
@@ -139,9 +139,6 @@ abstract class DataStore {
   }
   
   protected function parseField($k, $v) {
-    if (is_string($v)) {
-      return mb_convert_encoding($v, "utf-8");
-    }
     return $v;
   }
   
