@@ -32,10 +32,6 @@ class Importer {
   
   public function redmineImport($options) {
     
-    $db = $options->db;
-    $redmine = new \Spit\DataStores\RedmineDataStore(
-      $db->host, $db->user, $db->password, $db->name);
-    
     if ($options->clear) {
       $this->issueDataStore->truncate();
       $this->changeDataStore->truncate();
@@ -49,44 +45,34 @@ class Importer {
       $this->app->security->setUserId($id);
     }
     
-    $statuses = array();
-    foreach ($redmine->getStatuses() as $rms) {
-      $status = new \Spit\Models\Status;
-      $status->importId = (int)$rms->id;
-      $status->name = $rms->name;
-      $status->closed = (bool)$rms->is_closed;
-      array_push($statuses, $status);
-    }
+    $db = $options->db;
+    $redmine = new \Spit\DataStores\RedmineDataStore(
+      $db->host, $db->user, $db->password, $db->name);
     
-    $priorities = array();
-    foreach ($redmine->getPriorities() as $rmp) {
-      $priority = new \Spit\Models\Priority;
-      $priority->importId = (int)$rmp->id;
-      $priority->name = $rmp->name;
-      array_push($priorities, $priority);
-    }
+    $statuses = $this->getStatuses($redmine);
+    $priorities = $this->getPriorities($redmine);
+    $users = $this->getUsers($redmine);
+    $issues = $this->getIssues($redmine);
+    $changes = $this->getChanges($redmine);
     
-    $users = array();
-    foreach ($redmine->getUsers() as $rmu) {
-      // skip user doing the import; don't add twice.
-      if ($this->app->security->user->email == $rmu->mail) {
-        $this->currentUserImportId = (int)$rmu->id;
-        continue;
-      }
-      
-      // skip hacky redmine users.
-      if (($rmu->lastname == "Anonymous") ||
-        ($rmu->firstname == "Redmine" && $rmu->lastname == "Admin")) {
-        continue;
-      }
-      
-      $user = new \Spit\Models\User;
-      $user->importId = (int)$rmu->id;
-      $user->email = $rmu->mail;
-      $user->name = trim($rmu->firstname . " " . $rmu->lastname);
-      array_push($users, $user);
-    }
+    $this->userDataStore->insertMany($users);
+    $userIdMap = $this->getUserIdMap();
     
+    $this->statusDataStore->insertMany($statuses);
+    $statusIdMap = $this->getStatusIdMap();
+    
+    $this->priorityDataStore->insertMany($priorities);
+    $priorityIdMap = $this->getPriorityIdMap();
+    
+    $this->resolveIssueIds($issues, $userIdMap, $statusIdMap, $priorityIdMap);
+    $this->issueDataStore->insertMany($issues);
+    $issueIdMap = $this->getIssueIdMap();
+    
+    $this->resolveChangeIds($changes, $userIdMap, $issueIdMap);
+    $this->changeDataStore->insertMany($changes);
+  }
+  
+  private function getIssues($redmine) {
     $issues = array();
     foreach ($redmine->getIssues() as $rmi) {
       $issue = new \Spit\Models\Issue;
@@ -104,7 +90,10 @@ class Importer {
       $issue->created = $rmi->created_on;
       array_push($issues, $issue);
     }
-    
+    return $issues;
+  }
+  
+  private function getChanges($redmine) {
     $changes = array();
     foreach ($redmine->getJournalDetails() as $rmjd) {
       $change = new \Spit\Models\Change;
@@ -129,22 +118,54 @@ class Importer {
       
       array_push($changes, $change);
     }
-    
-    $this->userDataStore->insertMany($users);
-    $userIdMap = $this->getUserIdMap();
-    
-    $this->statusDataStore->insertMany($statuses);
-    $statusIdMap = $this->getStatusIdMap();
-    
-    $this->priorityDataStore->insertMany($priorities);
-    $priorityIdMap = $this->getPriorityIdMap();
-    
-    $this->resolveIssueIds($issues, $userIdMap, $statusIdMap, $priorityIdMap);
-    $this->issueDataStore->insertMany($issues);
-    $issueIdMap = $this->getIssueIdMap();
-    
-    $this->resolveChangeIds($changes, $userIdMap, $issueIdMap);
-    $this->changeDataStore->insertMany($changes);
+    return $changes;
+  }
+  
+  private function getUsers($redmine) {
+    $users = array();
+    foreach ($redmine->getUsers() as $rmu) {
+      // skip user doing the import; don't add twice.
+      if ($this->app->security->user->email == $rmu->mail) {
+        $this->currentUserImportId = (int)$rmu->id;
+        continue;
+      }
+      
+      // skip hacky redmine users.
+      if (($rmu->lastname == "Anonymous") ||
+        ($rmu->firstname == "Redmine" && $rmu->lastname == "Admin")) {
+        continue;
+      }
+      
+      $user = new \Spit\Models\User;
+      $user->importId = (int)$rmu->id;
+      $user->email = $rmu->mail;
+      $user->name = trim($rmu->firstname . " " . $rmu->lastname);
+      array_push($users, $user);
+    }
+    return $users;
+  }
+  
+  private function getPriorities($redmine) {
+    $priorities = array();
+    foreach ($redmine->getPriorities() as $rmp) {
+      $priority = new \Spit\Models\Priority;
+      $priority->importId = (int)$rmp->id;
+      $priority->name = $rmp->name;
+      array_push($priorities, $priority);
+    }
+    return $priorities;
+  }
+  
+  private function getStatuses($redmine) {
+    $statuses = array();
+    foreach ($redmine->getStatuses() as $rms) {
+      $status = new \Spit\Models\Status;
+      $status->importId = (int)$rms->id;
+      $status->name = $rms->name;
+      $status->closed = (bool)$rms->is_closed;
+      array_push($statuses, $status);
+    }
+    return $statuses;
   }
   
   private function mapFieldName($property, $prop_key) {
