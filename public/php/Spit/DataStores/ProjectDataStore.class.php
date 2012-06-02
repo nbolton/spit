@@ -28,7 +28,7 @@ class ProjectDataStore extends DataStore {
 
   public function getByName($name) {
     $result = $this->query(
-      "select * from project where name=\"%s\"",
+      "select * from project where name=%s",
       $name);
     
     return $this->fromResultSingle($result);

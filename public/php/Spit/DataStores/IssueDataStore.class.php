@@ -75,7 +75,7 @@ class IssueDataStore extends DataStore {
       "left join version as vt on vt.id = i.targetId " .
       "left join version as vf on vf.id = i.foundId " .
       "where i.id = %d",
-      $id
+      (int)$id
     );
     
     return $this->fromResultSingle($result);
@@ -86,15 +86,15 @@ class IssueDataStore extends DataStore {
       "insert into issue " .
       "(projectId, trackerId, statusId, priorityId, targetId, " .
       "foundId, assigneeId, creatorId, title, details, created) " .
-      "values (%d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", now())",
-      $issue->projectId,
-      $issue->trackerId,
-      $issue->statusId,
-      $issue->priorityId,
-      $issue->targetId,
-      $issue->foundId,
-      $issue->assigneeId,
-      $issue->creatorId,
+      "values (%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, now())",
+      (int)$issue->projectId,
+      (int)$issue->trackerId,
+      (int)$issue->statusId,
+      (int)$issue->priorityId,
+      self::nullInt($issue->targetId),
+      self::nullInt($issue->foundId),
+      self::nullInt($issue->assigneeId),
+      self::nullInt($issue->creatorId),
       $issue->title,
       $issue->details);
     
@@ -117,21 +117,21 @@ class IssueDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
         $values .= sprintf(
-          "(%d, %d, %d, %d, %d, %d, %d, %d, %d, %d, \"%s\", \"%s\", \"%s\", \"%s\")%s",
-          $issue->projectId,
-          $issue->trackerId,
-          $issue->statusId,
-          $issue->priorityId,
-          $issue->targetId,
-          $issue->foundId,
-          $issue->assigneeId,
-          $issue->creatorId,
-          $issue->updaterId,
-          $issue->importId,
-          $this->escape($issue->title),
-          $this->escape($issue->details),
-          $issue->created,
-          $issue->updated,
+          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)%s",
+          (int)$issue->projectId,
+          (int)$issue->trackerId,
+          (int)$issue->statusId,
+          (int)$issue->priorityId,
+          self::nullInt($issue->targetId),
+          self::nullInt($issue->foundId),
+          self::nullInt($issue->assigneeId),
+          self::nullInt($issue->creatorId),
+          self::nullInt($issue->updaterId),
+          self::nullInt($issue->importId),
+          $this->cleanString($issue->title),
+          $this->cleanString($issue->details),
+          $this->cleanString($issue->created),
+          $this->cleanString($issue->updated),
           $i < $count - 1 ? ", " : "");
       }
       
@@ -142,20 +142,20 @@ class IssueDataStore extends DataStore {
   public function update($issue) {
     $this->query(
       "update issue set " .
-      "trackerId = %d, statusId = %d, priorityId = %d, targetId = %d, " .
-      "foundId = %d, assigneeId = %d, updaterId = %d, " .
-      "title = \"%s\", details = \"%s\", updated = now() " .
+      "trackerId = %d, statusId = %d, priorityId = %d, targetId = %s, " .
+      "foundId = %s, assigneeId = %s, updaterId = %s, " .
+      "title = %s, details = %s, updated = now() " .
       "where id = %d",
-      $issue->trackerId,
-      $issue->statusId,
-      $issue->priorityId,
-      $issue->targetId,
-      $issue->foundId,
-      $issue->assigneeId,
-      $issue->updaterId,
+      (int)$issue->trackerId,
+      (int)$issue->statusId,
+      (int)$issue->priorityId,
+      self::nullInt($issue->targetId),
+      self::nullInt($issue->foundId),
+      self::nullInt($issue->assigneeId),
+      self::nullInt($issue->updaterId),
       $issue->title,
       $issue->details,
-      $issue->id);
+      (int)$issue->id);
   }
   
   public function truncate() {

@@ -374,21 +374,37 @@ class IssuesController extends Controller {
         return $this->getChangeEditContent($change);
       
       case \Spit\Models\ChangeType::Comment:
-        return Markdown($change->content);
+        return Markdown($change->data);
       
       default: return null;
     }
   }
   
   public function getChangeEditContent($change) {
-    $lines = explode("\n", $change->content);
     $html = "";
-    foreach ($lines as $line) {
-      $class = substr($line, 0, 1) == "+" ? "add" : "remove";
-      $noMarker = substr($line, 1);
-      $html .= sprintf(
-        "<span class=\"%s\">%s</span><br />\n", $class, $noMarker);
+    
+    if ($change->name == "details") {
+      $oldLen = strlen($change->oldValue);
+      $newLen = strlen($change->newValue);
+      if ($oldLen > $newLen) {
+        $html = sprintf(T_("Removed %d character(s)."), $oldLen - $newLen);
+      }
+      else {
+        $html = sprintf(T_("Added %d character(s)."), $newLen - $oldLen);
+      }
     }
+    else {
+      $format = "<span class=\"%s\">%s</span> ";
+      
+      if ($change->oldValue != "") {
+        $html .= sprintf($format, "remove", $change->oldValue);
+      }
+      
+      if ($change->newValue != "") {
+        $html .= sprintf($format, "add", $change->newValue);
+      }
+    }
+    
     return sprintf("<p>%s</p>", $html);
   }
   

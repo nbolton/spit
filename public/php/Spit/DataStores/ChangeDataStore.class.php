@@ -27,13 +27,13 @@ class ChangeDataStore extends DataStore {
   
   public function getForIssue($issueId) {
     $result = $this->query(
-      "select c.id, c.creatorId, c.type, c.name, " .
-      "c.content, c.created, u.name as creator " .
+      "select c.id, c.creatorId, c.type, c.name, c.data, " .
+      "c.oldValue, c.newValue, c.created, u.name as creator " .
       "from `change` as c " .
       "left join user as u on u.id = c.creatorId " .
       "where c.issueId = %d " .
       "order by c.id asc",
-      $issueId
+      (int)$issueId
     );
     
     return $this->fromResult($result);
@@ -42,13 +42,15 @@ class ChangeDataStore extends DataStore {
   public function insert($change) {
     $this->query(
       "insert into `change` " .
-      "(issueId, creatorId, type, name, content, created) " .
-      "values (%d, %d, %d, \"%s\", \"%s\", now())",
-      $change->issueId,
-      $change->creatorId,
-      $change->type,
+      "(issueId, creatorId, type, name, data, oldValue, newValue, created) " .
+      "values (%d, %d, %d, %s, %s, %s, %s, now())",
+      (int)$change->issueId,
+      (int)$change->creatorId,
+      (int)$change->type,
       $change->name,
-      $change->content);
+      $change->data,
+      $change->oldValue,
+      $change->newValue);
     
     return $this->sql->insert_id;
   }
@@ -56,7 +58,7 @@ class ChangeDataStore extends DataStore {
   public function insertMany($issues) {
     $base = 
       "insert into `change` " .
-      "(issueId, creatorId, type, name, content, created) values ";
+      "(issueId, creatorId, type, name, data, oldValue, newValue, created) values ";
     
     for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
       
@@ -67,13 +69,15 @@ class ChangeDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $change = $slice[$i];
         $values .= sprintf(
-          "(%d, %d, %d, \"%s\", \"%s\", \"%s\")%s",
-          $change->issueId,
-          $change->creatorId,
-          $change->type,
-          $change->name,
-          $this->escape($change->content),
-          $change->created,
+          "(%d, %d, %d, %s, %s, %s, %s, %s)%s",
+          (int)$change->issueId,
+          (int)$change->creatorId,
+          (int)$change->type,
+          $this->cleanString($change->name),
+          $this->cleanString($change->data),
+          $this->cleanString($change->oldValue),
+          $this->cleanString($change->newValue),
+          $this->cleanString($change->created),
           $i < $count - 1 ? ", " : "");
       }
       

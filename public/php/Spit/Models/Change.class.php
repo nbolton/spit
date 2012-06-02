@@ -22,12 +22,15 @@ namespace Spit\Models;
 class ChangeType {
   const Edit = 0;
   const Comment = 1;
+  const Upload = 2;
 }
 
 class Change {
   public $id;
-  public $content;
   public $name;
+  public $data;
+  public $oldValue;
+  public $newValue;
 }
 
 ?>

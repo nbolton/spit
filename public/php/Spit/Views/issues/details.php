@@ -47,9 +47,7 @@
     <div class="change">
       <hr />
       <span class="info"><?=$self->getChangeInfo($change)?></span>
-      <?php if ($change->content != ""): ?>
       <span class="content"><?=$self->getChangeContent($change)?></span>
-      <?php endif ?>
     </div>
     <?php endforeach ?>
   </div>

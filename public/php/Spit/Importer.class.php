@@ -97,22 +97,26 @@ class Importer {
     
     $changes = array();
     foreach ($redmine->getJournalDetails() as $rmjd) {
-      if ($rmjd->notes != "") {
-        $type = \Spit\Models\ChangeType::Comment;
-        $content = $this->toMarkdown($rmjd->notes);
-      }
-      else {
-        $type = \Spit\Models\ChangeType::Edit;
-        $content = $this->app->diff($rmjd->old_value, $rmjd->value);
-      }
-      
       $change = new \Spit\Models\Change;
       $change->issueId = (int)$rmjd->journalized_id;
       $change->creatorId = (int)$rmjd->user_id;
-      $change->type = $type;
-      $change->name = $rmjd->prop_key;
-      $change->content = $content;
       $change->created = $rmjd->created_on;
+      
+      if ($rmjd->notes != "") {
+        $change->type = \Spit\Models\ChangeType::Comment;
+        $change->data = $this->toMarkdown($rmjd->notes);
+      }
+      else if ($rmjd->property == "attachment") {
+        $change->type = \Spit\Models\ChangeType::Upload;
+        $change->data = $rmjd->prop_key;
+      }
+      else {
+        $change->type = \Spit\Models\ChangeType::Edit;
+        $change->name = $this->mapFieldName($rmjd->property, $rmjd->prop_key);
+        $change->oldValue = $rmjd->old_value;
+        $change->newValue = $rmjd->value;
+      }
+      
       array_push($changes, $change);
     }
     
@@ -128,6 +132,20 @@ class Importer {
     
     $this->resolveChangeIds($changes, $userIdMap, $issueIdMap);
     $this->changeDataStore->insertMany($changes);
+  }
+  
+  private function mapFieldName($property, $prop_key) {
+    if ($property == "attr") {
+      switch ($prop_key) {
+        case "tracker_id": return "trackerId";
+        case "status_id": return "statusId";
+        case "description": return "details";
+        default: return $prop_key;
+      }
+    }
+    else {
+      return sprintf("%s:%s", $property, $prop_key);
+    }
   }
   
   private function getImportIdMap($ids) {

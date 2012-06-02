@@ -29,12 +29,12 @@ class UserDataStore extends DataStore {
   }
   
   public function getById($id) {
-    $result = $this->query("select * from user where id = %d", $id);
+    $result = $this->query("select * from user where id = %d", (int)$id);
     return $this->fromResultSingle($result);
   }
   
   public function getByEmail($email) {
-    $result = $this->query("select * from user where email = \"%s\"", $email);
+    $result = $this->query("select * from user where email = %s", $email);
     return $this->fromResultSingle($result);
   }
   
@@ -42,7 +42,7 @@ class UserDataStore extends DataStore {
     $result = $this->query(
       "select u.* from identity as i " .
       "inner join user as u on u.id = i.userId " .
-      "where i.url = \"%s\"",
+      "where i.url = %s",
       $openId);
     return $this->fromResultSingle($result);
   }
@@ -56,10 +56,10 @@ class UserDataStore extends DataStore {
     $this->query(
       "insert into user " .
       "(email, name, typeMask) " .
-      "values (\"%s\", \"%s\", %d)",
+      "values (%s, %s, %d)",
       $user->email,
       $user->name,
-      $user->typeMask);
+      (int)$user->typeMask);
     
     return $this->sql->insert_id;
   }
@@ -78,11 +78,11 @@ class UserDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
         $values .= sprintf(
-          "(%d, %d, \"%s\", \"%s\")%s",
-          $issue->importId,
-          $issue->typeMask,
-          $this->escape($issue->email),
-          $this->escape($issue->name),
+          "(%s, %d, %s, %s)%s",
+          self::nullInt($issue->importId),
+          (int)$issue->typeMask,
+          $this->cleanString($issue->email),
+          $this->cleanString($issue->name),
           $i < $count - 1 ? ", " : "");
       }
       
