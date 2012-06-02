@@ -27,6 +27,7 @@ class Importer {
     $this->changeDataStore = new \Spit\DataStores\ChangeDataStore;
     $this->userDataStore = new \Spit\DataStores\UserDataStore;
     $this->statusDataStore = new \Spit\DataStores\StatusDataStore;
+    $this->priorityDataStore = new \Spit\DataStores\PriorityDataStore;
   }
   
   public function redmineImport($options) {
@@ -40,6 +41,7 @@ class Importer {
       $this->changeDataStore->truncate();
       $this->userDataStore->truncate();
       $this->statusDataStore->truncate();
+      $this->priorityDataStore->truncate();
       
       // re-add current user so they aren't logged out.
       $id = $this->userDataStore->insert($this->app->security->user);
@@ -54,6 +56,14 @@ class Importer {
       $status->name = $rms->name;
       $status->closed = (bool)$rms->is_closed;
       array_push($statuses, $status);
+    }
+    
+    $priorities = array();
+    foreach ($redmine->getPriorities() as $rmp) {
+      $priority = new \Spit\Models\Priority;
+      $priority->importId = (int)$rmp->id;
+      $priority->name = $rmp->name;
+      array_push($priorities, $priority);
     }
     
     $users = array();
@@ -126,7 +136,10 @@ class Importer {
     $this->statusDataStore->insertMany($statuses);
     $statusIdMap = $this->getStatusIdMap();
     
-    $this->resolveIssueIds($issues, $userIdMap, $statusIdMap);
+    $this->priorityDataStore->insertMany($priorities);
+    $priorityIdMap = $this->getPriorityIdMap();
+    
+    $this->resolveIssueIds($issues, $userIdMap, $statusIdMap, $priorityIdMap);
     $this->issueDataStore->insertMany($issues);
     $issueIdMap = $this->getIssueIdMap();
     
@@ -180,11 +193,17 @@ class Importer {
     return $this->getImportIdMap($ids);
   }
   
-  private function resolveIssueIds($issues, $userIdMap, $statusIdMap) {
+  private function getPriorityIdMap() {
+    $ids = $this->priorityDataStore->getImportIds();
+    return $this->getImportIdMap($ids);
+  }
+  
+  private function resolveIssueIds($issues, $userIdMap, $statusIdMap, $priorityIdMap) {
     foreach ($issues as $issue) {
       $issue->creatorId = $this->getMapValue($userIdMap, $issue->creatorId);
       $issue->assigneeId = $this->getMapValue($userIdMap, $issue->assigneeId);
       $issue->statusId = $this->getMapValue($statusIdMap, $issue->statusId);
+      $issue->priorityId = $this->getMapValue($priorityIdMap, $issue->priorityId);
     }
   }
   
