@@ -89,7 +89,7 @@ class Importer {
       $issue->assigneeId = (int)$rmi->assigned_to_id;
       $issue->updaterId = null;
       $issue->title = $rmi->subject;
-      $issue->details = $rmi->description;
+      $issue->details = $this->toMarkdown($rmi->description);
       $issue->updated = $rmi->updated_on;
       $issue->created = $rmi->created_on;
       array_push($issues, $issue);
@@ -99,7 +99,7 @@ class Importer {
     foreach ($redmine->getJournalDetails() as $rmjd) {
       if ($rmjd->notes != "") {
         $type = \Spit\Models\ChangeType::Comment;
-        $content = $rmjd->notes;
+        $content = $this->toMarkdown($rmjd->notes);
       }
       else {
         $type = \Spit\Models\ChangeType::Edit;
@@ -175,6 +175,40 @@ class Importer {
       $change->creatorId = $this->getMapValue($userIdMap, $change->creatorId);
       $change->issueId = $this->getMapValue($issueIdMap, $change->issueId);
     }
+  }
+  
+  private function toMarkdown($text) {
+    $lines = preg_split("/\R/", $text);
+    $result = "";
+    foreach ($lines as $line) {
+      
+      // it's too risky to replace individual formatting chars, so only
+      // replace if the char is at the start and end. this solution is
+      // far from perfect, but it will do for now.
+      $line = self::replaceStartAndEnd($line, array(
+        "@" => "`", // monospace
+        "*" => "**", // bold
+      ));
+      
+      // redmine text formatting allows user to line break by inserting
+      // a line break... markdown does not, so add this "trick" (which
+      // is really a hack) to make markdown insert line breaks.
+      $result .= $line . "  \n";
+    }
+    return $result;
+  }
+  
+  private static function replaceStartAndEnd($line, $tokens) {
+    $length = strlen($line);
+    $start = substr($line, 0, 1);
+    $end = substr($line, $length - 1, 1);
+    
+    foreach ($tokens as $search => $replace) {
+      if ($start == $search && $end == $search) {
+        return $replace . substr($line, 1, $length - 2) . $replace;
+      }
+    }
+    return $line;
   }
 }
 
