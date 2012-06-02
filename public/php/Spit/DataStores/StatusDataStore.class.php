@@ -47,7 +47,7 @@ class StatusDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $change = $slice[$i];
         $values .= sprintf(
-          "(%d, %s, %d)%s",
+          "(%s, %s, %d)%s",
           self::nullInt($change->importId),
           $this->cleanString($change->name),
           (int)$change->closed,
