@@ -369,21 +369,17 @@ class IssuesController extends Controller {
   }
   
   public function getChangeContent($change) {
-    switch($change->type) {
-      case \Spit\Models\ChangeType::Edit:
-        return $this->getChangeEditContent($change);
-      
-      case \Spit\Models\ChangeType::Comment:
+    if ($change->type == \Spit\Models\ChangeType::Comment) {
         return Markdown($change->data);
-      
-      default: return null;
     }
-  }
-  
-  public function getChangeEditContent($change) {
+    
     $html = "";
     
-    if ($change->name == "details") {
+    if ($change->type == \Spit\Models\ChangeType::Upload) {
+      $id = $change->data;
+      $html = sprintf(T_("File: <a href=\"?download=%d\">%d</a>"), $id, $id);
+    }
+    elseif ($change->name == "details") {
       $oldLen = strlen($change->oldValue);
       $newLen = strlen($change->newValue);
       if ($oldLen > $newLen) {
@@ -416,6 +412,9 @@ class IssuesController extends Controller {
       
       case ChangeType::Comment:
         return sprintf(T_("%s: %s wrote a comment."), $date, $change->creator);
+      
+      case ChangeType::Upload:
+        return sprintf(T_("%s: %s uploaded a file."), $date, $change->creator);
     }
     
     return null;

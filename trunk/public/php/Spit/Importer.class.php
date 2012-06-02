@@ -89,7 +89,7 @@ class Importer {
       $issue->assigneeId = (int)$rmi->assigned_to_id;
       $issue->updaterId = null;
       $issue->title = $rmi->subject;
-      $issue->details = $this->toMarkdown($rmi->description);
+      $issue->details = self::toMarkdown($rmi->description);
       $issue->updated = $rmi->updated_on;
       $issue->created = $rmi->created_on;
       array_push($issues, $issue);
@@ -104,7 +104,7 @@ class Importer {
       
       if ($rmjd->notes != "") {
         $change->type = \Spit\Models\ChangeType::Comment;
-        $change->data = $this->toMarkdown($rmjd->notes);
+        $change->data = self::toMarkdown($rmjd->notes);
       }
       else if ($rmjd->property == "attachment") {
         $change->type = \Spit\Models\ChangeType::Upload;
@@ -195,37 +195,44 @@ class Importer {
     }
   }
   
-  private function toMarkdown($text) {
+  private static function toMarkdown($text) {
     $lines = preg_split("/\R/", $text);
     $result = "";
     foreach ($lines as $line) {
-      
-      // it's too risky to replace individual formatting chars, so only
-      // replace if the char is at the start and end. this solution is
-      // far from perfect, but it will do for now.
-      $line = self::replaceStartAndEnd($line, array(
-        "@" => "`", // monospace
-        "*" => "**", // bold
-      ));
-      
       // redmine text formatting allows user to line break by inserting
       // a line break... markdown does not, so add this "trick" (which
       // is really a hack) to make markdown insert line breaks.
-      $result .= $line . "  \n";
+      $result .= self::toMarkdownLine($line) . "  \n";
     }
     return $result;
   }
   
-  private static function replaceStartAndEnd($line, $tokens) {
+  private static function toMarkdownLine($line) {
+    // it's too risky to replace individual formatting chars, so only
+    // replace if the char is at the start and end. this solution is
+    // far from perfect, but it will do for now.
+    $tokens = array(
+      "@" => "`", // monospace
+      "*" => "**", // bold
+    );
+    
     $length = strlen($line);
     $start = substr($line, 0, 1);
     $end = substr($line, $length - 1, 1);
+    
+    // some users use # to indicate a command, but in markdown this
+    // actually creates a header. assume the whole line is a command
+    // and convert to monospace by using backticks.
+    if ($start == "#") {
+      return "`" . substr($line, 1, $length - 2) . "`";
+    }
     
     foreach ($tokens as $search => $replace) {
       if ($start == $search && $end == $search) {
         return $replace . substr($line, 1, $length - 2) . $replace;
       }
     }
+    
     return $line;
   }
 }

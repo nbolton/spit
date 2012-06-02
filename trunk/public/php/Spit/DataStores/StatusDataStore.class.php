@@ -49,7 +49,7 @@ class StatusDataStore extends DataStore {
         $values .= sprintf(
           "(%d, %s, %d)%s",
           self::nullInt($change->importId),
-          self::cleanString($change->name),
+          $this->cleanString($change->name),
           (int)$change->closed,
           $i < $count - 1 ? ", " : "");
       }
