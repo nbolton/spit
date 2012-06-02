@@ -29,6 +29,7 @@ class RedmineDataStore extends DataStore {
     if ($sql->connect_errno) {
       throw new Exception("failed to connect to mysql: " . $sql->connect_error);
     }
+    $sql->set_charset("utf8");
     parent::__construct($sql);
   }
 
@@ -43,6 +44,11 @@ class RedmineDataStore extends DataStore {
       "left join journal_details as jd on jd.journal_id = j.id " .
       "where j.journalized_type = \"Issue\""
     );
+    return $this->fromResult($result);
+  }
+
+  public function getStatuses() {
+    $result = $this->query("select * from issue_statuses");
     return $this->fromResult($result);
   }
   

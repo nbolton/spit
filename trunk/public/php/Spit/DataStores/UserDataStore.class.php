@@ -60,12 +60,14 @@ class UserDataStore extends DataStore {
       $user->email,
       $user->name,
       $user->typeMask);
+    
+    return $this->sql->insert_id;
   }
   
   public function insertMany($users) {
     $base = 
       "insert into user " .
-      "(importId, email, name) values ";
+      "(importId, typeMask, email, name) values ";
     
     for ($j = 0; $j < count($users) / self::BULK_INSERT_MAX; $j++) {
       
@@ -76,8 +78,9 @@ class UserDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
         $values .= sprintf(
-          "(%d, \"%s\", \"%s\")%s",
+          "(%d, %d, \"%s\", \"%s\")%s",
           $issue->importId,
+          $issue->typeMask,
           $this->escape($issue->email),
           $this->escape($issue->name),
           $i < $count - 1 ? ", " : "");

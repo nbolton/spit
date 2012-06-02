@@ -107,7 +107,7 @@ class Controller {
       if ($diff) {
         $old = isset($object->$k) ? (string)$object->$k : "";
         $new = (string)$v;
-        $diff = $this->diff($old, $new);
+        $diff = $this->app->diff($old, $new);
         if ($diff != null) {
           $diffs->$k = $diff;
         }
@@ -115,16 +115,6 @@ class Controller {
       $object->$k = $v;
     }
     return $diffs;
-  }
-  
-  public function diff($old, $new) {
-    if ($old == $new) {
-      return null;
-    }
-    $diff = array();
-    if ($old != "") array_push($diff, "-" . $old);
-    if ($new != "") array_push($diff, "+" . $new);
-    return implode("\n", $diff);
   }
   
   public function getValue($object, $field) {

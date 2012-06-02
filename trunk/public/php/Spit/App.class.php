@@ -31,6 +31,7 @@ require "EditorMode.class.php";
 require "TitleMode.class.php";
 require "UserType.class.php";
 require "HttpCode.class.php";
+require "Importer.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";
@@ -51,6 +52,7 @@ require "Models/Issue.class.php";
 require "Models/Project.class.php";
 require "Models/Change.class.php";
 require "Models/User.class.php";
+require "Models/Status.class.php";
 
 require "Models/Fields/Select.class.php";
 require "Models/Fields/TableField.class.php";
@@ -206,6 +208,17 @@ class App {
   public function getLoadTime() {
     // microtime result appears to be in seconds... odd.
     return (microtime(true) - $this->start) * 1000;
+  }
+  
+  // TODO: extend and move to it's own class.
+  public function diff($old, $new) {
+    if ($old == $new) {
+      return null;
+    }
+    $diff = array();
+    if ($old != "") array_push($diff, "-" . $old);
+    if ($new != "") array_push($diff, "+" . $new);
+    return implode("\n", $diff);
   }
 }
 

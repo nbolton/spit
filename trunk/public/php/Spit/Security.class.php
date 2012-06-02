@@ -92,11 +92,15 @@ class Security {
         $user->id = $this->userDataStore->insert($user);
       }
       
-      $_SESSION[self::SESSION_KEY] = $user->id;
+      $this->setUserId($user->id);
       $this->redirectFromLogin();
       return true;
     }
     return false;
+  }
+  
+  public function setUserId($id) {
+    $_SESSION[self::SESSION_KEY] = $id;
   }
   
   public function logout() {
@@ -132,7 +136,7 @@ class Security {
   }
   
   public function isLoggedIn() {
-    return $this->getUserId() != null;
+    return $this->user != null;
   }
 }
 

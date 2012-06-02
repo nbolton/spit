@@ -21,9 +21,45 @@ namespace Spit\DataStores;
 
 class StatusDataStore extends DataStore {
 
+  const BULK_INSERT_MAX = 500;
+  
   public function get() {
     $result = $this->query("select * from status");
     return $this->fromResult($result);
+  }
+  
+  public function getImportIds() {
+    $result = $this->query("select id, importId from status");
+    return $this->fromResult($result);
+  }
+  
+  public function insertMany($issues) {
+    $base = 
+      "insert into status " .
+      "(importId, name, closed) values ";
+    
+    for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
+      
+      $slice = array_slice($issues, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
+      $values = "";
+      
+      for ($i = 0; $i < $count; $i++) {
+        $change = $slice[$i];
+        $values .= sprintf(
+          "(%d, \"%s\", %d)%s",
+          $change->importId,
+          $change->name,
+          $change->closed,
+          $i < $count - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $values);
+    }
+  }
+  
+  public function truncate() {
+    $this->query("truncate table status");
   }
 }
 
