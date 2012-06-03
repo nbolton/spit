@@ -47,10 +47,10 @@ class ChangeDataStore extends DataStore {
       (int)$change->issueId,
       (int)$change->creatorId,
       (int)$change->type,
-      $change->name,
-      $change->data,
-      $change->oldValue,
-      $change->newValue);
+      (string)$change->name,
+      (string)$change->data,
+      (string)$change->oldValue,
+      (string)$change->newValue);
     
     return $this->sql->insert_id;
   }
@@ -68,17 +68,17 @@ class ChangeDataStore extends DataStore {
       
       for ($i = 0; $i < $count; $i++) {
         $change = $slice[$i];
-        $values .= sprintf(
-          "(%d, %d, %d, %s, %s, %s, %s, %s)%s",
+        $values .= $this->format(
+          "(%d, %d, %d, %s, %s, %s, %s, %s)",
           (int)$change->issueId,
           (int)$change->creatorId,
           (int)$change->type,
-          $this->cleanString($change->name),
-          $this->cleanString($change->data),
-          $this->cleanString($change->oldValue),
-          $this->cleanString($change->newValue),
-          $this->cleanString($change->created),
-          $i < $count - 1 ? ", " : "");
+          $change->name,
+          $change->data,
+          $change->oldValue,
+          $change->newValue,
+          $change->created)
+          .($i < $count - 1 ? ", " : "");
       }
       
       $this->query($base . $values);

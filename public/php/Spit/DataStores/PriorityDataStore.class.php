@@ -46,11 +46,11 @@ class PriorityDataStore extends DataStore {
       
       for ($i = 0; $i < $count; $i++) {
         $change = $slice[$i];
-        $values .= sprintf(
-          "(%s, %s)%s",
+        $values .= $this->format(
+          "(%s, %s)",
           self::nullInt($change->importId),
-          $this->cleanString($change->name),
-          $i < $count - 1 ? ", " : "");
+          $change->name)
+          .($i < $count - 1 ? ", " : "");
       }
       
       $this->query($base . $values);

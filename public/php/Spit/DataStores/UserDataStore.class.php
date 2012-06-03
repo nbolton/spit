@@ -77,13 +77,13 @@ class UserDataStore extends DataStore {
       
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
-        $values .= sprintf(
-          "(%s, %d, %s, %s)%s",
+        $values .= $this->format(
+          "(%s, %d, %s, %s)",
           self::nullInt($issue->importId),
           (int)$issue->typeMask,
-          $this->cleanString($issue->email),
-          $this->cleanString($issue->name),
-          $i < $count - 1 ? ", " : "");
+          $issue->email,
+          $issue->name)
+          .($i < $count - 1 ? ", " : "");
       }
       
       $this->query($base . $values);

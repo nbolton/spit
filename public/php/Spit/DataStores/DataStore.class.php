@@ -87,22 +87,24 @@ abstract class DataStore {
   
   private function getSafeArgs($funcArgs) {
     $args = array_slice($funcArgs, 1);
-    
     foreach ($args as $k => $v) {
-      $args[$k] = is_string($v)? $this->cleanString($v) : $v;
+      $args[$k] = $this->cleanArg($v);
     }
-    
     return $args;
   }
   
-  protected function cleanString($v) {
+  private function cleanArg($v) {
     if ($v == null || $v == "") {
       return "NULL";
     }
-    
-    // escape any strings to prevent sql injection, and
-    // also escape % for sprintf.
-    return "\"" . $this->sql->escape_string(str_replace("%", "%%", $v)) . "\"";
+    elseif (is_string($v)) {
+      // escape any strings to prevent sql injection, and
+      // also escape % for sprintf.
+      return "\"" . $this->sql->escape_string(str_replace("%", "%%", $v)) . "\"";
+    }
+    else {
+      return $v;
+    }
   }
   
   protected function fromResult($result) {
@@ -152,9 +154,14 @@ abstract class DataStore {
   
   protected static function nullInt($int) {
     if ($int == null) {
-      return "NULL";
+      return null;
     }
     return (int)$int;
+  }
+  
+  protected function format($format) {
+    $args = $this->getSafeArgs(func_get_args());
+    return vsprintf($format, $args);
   }
 }
 

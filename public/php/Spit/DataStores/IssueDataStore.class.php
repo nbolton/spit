@@ -116,8 +116,8 @@ class IssueDataStore extends DataStore {
       
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
-        $values .= sprintf(
-          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)%s",
+        $values .= $this->format(
+          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
           (int)$issue->projectId,
           (int)$issue->trackerId,
           (int)$issue->statusId,
@@ -128,11 +128,11 @@ class IssueDataStore extends DataStore {
           self::nullInt($issue->creatorId),
           self::nullInt($issue->updaterId),
           self::nullInt($issue->importId),
-          $this->cleanString($issue->title),
-          $this->cleanString($issue->details),
-          $this->cleanString($issue->created),
-          $this->cleanString($issue->updated),
-          $i < $count - 1 ? ", " : "");
+          $issue->title,
+          $issue->details,
+          $issue->created,
+          $issue->updated)
+          .($i < $count - 1 ? ", " : "");
       }
       
       $this->query($base . $values);

@@ -55,8 +55,9 @@ require "Models/User.class.php";
 require "Models/Status.class.php";
 require "Models/Priority.class.php";
 
-require "Models/Fields/Select.class.php";
+require "Models/Fields/SelectField.class.php";
 require "Models/Fields/TableField.class.php";
+require "Models/Fields/TextField.class.php";
 
 class App {
   

@@ -33,7 +33,7 @@
     </div>
     <div class="row">
       <label for="title"><?=T_("Title")?></label>
-      <input id="title" name="title" type="text" class="text" value="<?=$issue->title?>" />
+      <input id="title" name="title" type="text" value="<?=$issue->title?>" />
     </div>
     <div class="row">
       <label for="details"><?=T_("Details")?></label>
@@ -55,11 +55,4 @@
 
 <div class="preview">
   <div id="wmd-preview" class="box"></div>
-</div>
-
-<div id="templates">
-  <div class="row" id="rowWithSelect">
-    <label></label>
-    <select></select>
-  </div>
 </div>

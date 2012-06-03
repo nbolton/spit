@@ -24,6 +24,8 @@ use DateTime;
 
 use \Spit\Models\Fields\Field as Field;
 use \Spit\Models\Fields\TableField as TableField;
+use \Spit\Models\Fields\SelectField as SelectField;
+use \Spit\Models\Fields\TextField as TextField;
 use \Spit\EditorMode as EditorMode;
 use \Spit\Models\ChangeType as ChangeType;
 
@@ -65,7 +67,7 @@ class IssuesController extends Controller {
         
       case EditorMode::Update: {
         $id = $this->getPathPart(2);
-        $issue = $this->ds->getById($id, new \Spit\CustomFields);        
+        $issue = $this->ds->getById($id, new \Spit\CustomFields($this->app));        
         if (!$this->userCanEdit($issue)) {
           return;
         }
@@ -125,7 +127,7 @@ class IssuesController extends Controller {
       exit($this->getJson($this->commentPost()));
     }
     
-    $this->customFields = new \Spit\CustomFields;
+    $this->customFields = new \Spit\CustomFields($this->app);
     
     $id = $this->getPathPart(2);
     $issue = $this->ds->getById($id, $this->customFields);
@@ -263,9 +265,9 @@ class IssuesController extends Controller {
     }
     
     if ($custom) {
-      $customField = $this->customFields->findFieldMapping($fieldName);
-      if ($customField != null) {
-        $v = $this->customFields->mapValue($customField, $v);
+      $values = $this->customFields->getFieldValues($fieldName);
+      if (count($values) != 0) {
+        $v = $values[$v];
       }
     }
     
@@ -275,21 +277,21 @@ class IssuesController extends Controller {
   private function getTextFields() {
     
     $fields = array(
-      new Field("status", T_("Status: ")),
-      new Field("priority", T_("Priority: ")),
-      new Field("assignee", T_("Assignee: ")),
-      new Field("category", T_("Category: ")),
-      new Field("target", T_("Target: ")),
-      new Field("found", T_("Found: ")),
-      new Field("votes", T_("Votes: ")),
-      new Field("creator", T_("Created by: ")),
-      new Field("created", T_("Created on: ")),
-      new Field("updater", T_("Updated by: ")),
-      new Field("updated", T_("Updated on: "))
+      new Field("status", T_("Status:")),
+      new Field("priority", T_("Priority:")),
+      new Field("assignee", T_("Assignee:")),
+      new Field("category", T_("Category:")),
+      new Field("target", T_("Target:")),
+      new Field("found", T_("Found:")),
+      new Field("votes", T_("Votes:")),
+      new Field("creator", T_("Created by:")),
+      new Field("created", T_("Created on:")),
+      new Field("updater", T_("Updated by:")),
+      new Field("updated", T_("Updated on:"))
     );
     
-    foreach ($this->customFields->mappings->fields as $k => $v) {
-      array_push($fields, new Field($k, $v));
+    foreach ($this->customFields->getFieldMap() as $k => $v) {
+      array_push($fields, new Field($k, sprintf(T_("%s:"), $v)));
     }
     
     return $fields;
@@ -309,7 +311,7 @@ class IssuesController extends Controller {
   }
   
   private function getTrackerSelect($trackerId) {
-    $select = new \Spit\Models\Fields\Select("trackerId", T_("Tracker"));
+    $select = new SelectField("trackerId", T_("Tracker"));
     $dataStore = new \Spit\DataStores\TrackerDataStore;
     $this->fillSelectField($select, $dataStore->get(), $trackerId);
     return $select;
@@ -330,39 +332,45 @@ class IssuesController extends Controller {
     $versionDataStore = new \Spit\DataStores\VersionDataStore;
     $userDataStore = new \Spit\DataStores\UserDataStore;
   
-    $status = new \Spit\Models\Fields\Select("statusId", T_("Status"));
+    $status = new SelectField("statusId", T_("Status"));
     $this->fillSelectField($status, $statusDataStore->get(), $issue->statusId);
     array_push($fields, $status);
     
-    $priority = new \Spit\Models\Fields\Select("priorityId", T_("Priority"));
+    $priority = new SelectField("priorityId", T_("Priority"));
     $this->fillSelectField($priority, $priorityDataStore->get(), $issue->priorityId);
     array_push($fields, $priority);
     
-    $found = new \Spit\Models\Fields\Select("foundId", T_("Found"));
+    $found = new SelectField("foundId", T_("Found"));
     $found->add(null, "");
     $this->fillSelectField($found, $versionDataStore->get(), $issue->foundId);
     array_push($fields, $found);
     
-    $target = new \Spit\Models\Fields\Select("targetId", T_("Target"));
+    $target = new SelectField("targetId", T_("Target"));
     $target->add(null, "");
     $this->fillSelectField($target, $versionDataStore->get(), $issue->targetId);
     array_push($fields, $target);
     
-    $assignee = new \Spit\Models\Fields\Select("assigneeId", T_("Assignee"));
+    $assignee = new SelectField("assigneeId", T_("Assignee"));
     $assignee->add(null, "");
     $this->fillSelectField($assignee, $userDataStore->getMembers(), $issue->assigneeId);
     array_push($fields, $assignee);
     
-    // TODO: load custom fields make all fields optional.
-    if ($trackerId != 4) {
-      $platform = new \Spit\Models\Fields\Select("platformId", T_("Platform"));
-      $platform->add(null, "");
-      $platform->add(1, "Windows");
-      $platform->add(1, "Mac OS X");
-      $platform->add(1, "Linux");
-      $platform->add(1, "Unix");
-      $platform->add(1, "Various");
-      array_push($fields, $platform);
+    $customFields = new \Spit\CustomFields($this->app);    
+    foreach ($customFields->getFieldMap() as $name => $label) {
+    
+      $values = $customFields->getFieldValues($name);
+      if (count($values) != 0) {
+        $custom = new SelectField($name, $label);
+        $custom->add(null, "");
+        
+        foreach ($values as $value => $text) {
+          $custom->add($value, $text);
+        }
+      }
+      else {
+        $custom = new TextField($name, $label);
+      }
+      array_push($fields, $custom);
     }
     
     return $fields;

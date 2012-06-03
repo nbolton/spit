@@ -105,8 +105,9 @@ class Controller {
     $diffs = array();
     foreach ($values as $k => $v) {
       if ($doDiff) {
-        $old = isset($object->$k) ? (string)$object->$k : "";
-        $new = (string)$v;
+        $old = isset($object->$k) && $object->$k != "" ? (string)$object->$k : null;
+        $new = $v != "" ? (string)$v : null;
+        
         if ($old != $new) {
           $diff = new \stdClass;
           $diff->oldValue = $old;

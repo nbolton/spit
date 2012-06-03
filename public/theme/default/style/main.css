@@ -199,12 +199,12 @@ form div.row input.checkbox  {
 }
 
 form div.column select,
-form div.column input.text {
+form div.column input[type=text] {
   margin-left: 0px;
   width: 60%;
 }
 
-form input.text,
+form input[type=text],
 form textarea {
   width: 100%;
   max-width: 100%;
