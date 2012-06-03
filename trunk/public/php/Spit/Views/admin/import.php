@@ -40,19 +40,19 @@
     <div class="column">
       <div class="row">
         <label><?=T_("Host")?></label>
-        <input type="textbox" class="text" name="db[host]" value="localhost" />
+        <input type="textbox" name="db[host]" value="localhost" />
       </div>
       <div class="row">
         <label><?=T_("Name")?></label>
-        <input type="textbox" class="text" name="db[name]" value="redmine" />
+        <input type="textbox" name="db[name]" value="redmine" />
       </div>
       <div class="row">
         <label><?=T_("User")?></label>
-        <input type="textbox" class="text" name="db[user]"value="root"  />
+        <input type="textbox" name="db[user]"value="root"  />
       </div>
       <div class="row">
         <label><?=T_("Password")?></label>
-        <input type="textbox" class="text" name="db[password]" />
+        <input type="textbox" name="db[password]" />
       </div>
     </div>
     

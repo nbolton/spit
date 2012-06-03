@@ -46,12 +46,12 @@ class StatusDataStore extends DataStore {
       
       for ($i = 0; $i < $count; $i++) {
         $change = $slice[$i];
-        $values .= sprintf(
-          "(%s, %s, %d)%s",
+        $values .= $this->format(
+          "(%s, %s, %d)",
           self::nullInt($change->importId),
-          $this->cleanString($change->name),
-          (int)$change->closed,
-          $i < $count - 1 ? ", " : "");
+          $change->name,
+          (int)$change->closed)
+          .($i < $count - 1 ? ", " : "");
       }
       
       $this->query($base . $values);

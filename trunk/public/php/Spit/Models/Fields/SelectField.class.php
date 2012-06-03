@@ -22,7 +22,7 @@ namespace Spit\Models\Fields;
 require_once "Field.class.php";
 require_once "SelectOption.class.php";
 
-class Select extends Field {
+class SelectField extends Field {
   
   public $options = array();
   

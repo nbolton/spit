@@ -29,7 +29,6 @@ function viewLoad() {
 }
 
 function loadDynamicFields(tracker) {
-  
   log("loading fields for: " + tracker);
   
   columns = $("div#dynamicFields div.column");
@@ -49,8 +48,12 @@ function loadDynamicFields(tracker) {
     
     columns.empty();
     $.each(data, function(index, field) {
+      log(field.type);
       if (field.type == "select") {
         addSelectRow(field, index, data.length);
+      }
+      else if (field.type == "text") {
+        addTextRow(field, index, data.length);
       }
     });
     columns.fadeIn();
@@ -58,17 +61,32 @@ function loadDynamicFields(tracker) {
   });
 }
 
-function addSelectRow(field, index, length) {
+function addTextRow(field, index, length) {
+  row = $("<div></div>");
+  row.attr("class", "row");
   
-  template = $("div#templates div#rowWithSelect");
-  row = template.clone();
-  row.removeAttr("id");
-  
-  label = row.find("label");
+  label = $("<label></label>");
+  row.append(label);
   label.text(field.label);
   label.attr("for", field.name);
   
-  select = row.find("select");
+  text = $("<input type=\"text\" />");
+  row.append(text);
+  
+  addRow(row, index, length);
+}
+
+function addSelectRow(field, index, length) {
+  row = $("<div></div>");
+  row.attr("class", "row");
+  
+  label = $("<label></label>");
+  row.append(label);
+  label.text(field.label);
+  label.attr("for", field.name);
+  
+  select = $("<select></select>");
+  row.append(select);
   select.attr("id", field.name);
   select.attr("name", field.name);
 
@@ -80,6 +98,10 @@ function addSelectRow(field, index, length) {
       .format(value, selected, option.text));
   }
   
+  addRow(row, index, length);
+}
+
+function addRow(row, index, length) {
   column = $("form div#column" + ((index < Math.ceil(length / 2)) ? 1 : 2));
   column.append(row);
 }

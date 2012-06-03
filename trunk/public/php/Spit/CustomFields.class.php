@@ -24,7 +24,8 @@ class CustomMappings { }
 class CustomFields {
   public $mappings;
 
-  public function __construct() {
+  public function __construct($app) {
+    $this->app = $app;
     $this->mappings = new CustomMappings;
     foreach (Settings::$instance->custom as $k => $v) {
       $this->mappings->$k = $this->getMappings($v);
@@ -32,7 +33,7 @@ class CustomFields {
   }
   
   public function getSqlString($fieldPrefix) {
-    $fields = $this->mappings->fields;
+    $fields = $this->getFieldMap();
     if (count($fields) == 0) {
       return "";
     }
@@ -45,7 +46,47 @@ class CustomFields {
     return sprintf(", %s ", implode(", ", $sqlFields));
   }
   
-  public function getMappings($string) {
+  private function getCustomId() {
+    if (!isset($this->mappings->projects)) {
+      return null;
+    }
+    
+    $projectMap = $this->mappings->projects;
+    if (count($projectMap) == 0) {
+      return array();
+    }
+    
+    return $projectMap[$this->app->project->name];
+  }
+  
+  public function getFieldMap() {
+    $id = $this->getCustomId();
+    if ($id == null) {
+      return array();
+    }
+    
+    $name = "fields" . $id;
+    return $this->mappings->$name;
+  }
+  
+  public function getFieldValues($field) {
+    $id = $this->getCustomId();
+    if ($id == null) {
+      return array();
+    }
+    
+    $name = "keys" . $id;
+    $keyMap = $this->mappings->$name;
+    
+    if (!array_key_exists($field, $keyMap)) {
+      return array();
+    }
+    
+    $valueKey = $keyMap[$field];
+    return $this->mappings->$valueKey;
+  }
+  
+  private function getMappings($string) {
     $mappingStrings = explode(",", $string);
     $mappings = array();
     foreach ($mappingStrings as $mappingString) {
@@ -58,10 +99,6 @@ class CustomFields {
   public function mapValue($field, $key) {
     $valueMap = $this->mappings->$field;
     return $valueMap[$key];
-  }
-  
-  public function findFieldMapping($name) {
-    return $this->findMapping($this->mappings->mappings, $name);
   }
   
   public function findMapping($mappings, $name) {

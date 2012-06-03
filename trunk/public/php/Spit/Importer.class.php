@@ -173,6 +173,7 @@ class Importer {
       switch ($prop_key) {
         case "tracker_id": return "trackerId";
         case "status_id": return "statusId";
+        case "priority_id": return "priorityId";
         case "description": return "details";
         default: return $prop_key;
       }
