@@ -26,7 +26,7 @@ require "Locale.class.php";
 require "Plugins.class.php";
 require "Security.class.php";
 require "Path.class.php";
-require "CustomFields.class.php";
+require "EditorFields.class.php";
 require "EditorMode.class.php";
 require "TitleMode.class.php";
 require "UserType.class.php";

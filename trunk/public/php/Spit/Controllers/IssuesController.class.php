@@ -67,7 +67,7 @@ class IssuesController extends Controller {
         
       case EditorMode::Update: {
         $id = $this->getPathPart(2);
-        $issue = $this->ds->getById($id, new \Spit\CustomFields($this->app));        
+        $issue = $this->ds->getById($id, new \Spit\EditorFields($this->app));        
         if (!$this->userCanEdit($issue)) {
           return;
         }
@@ -127,10 +127,10 @@ class IssuesController extends Controller {
       exit($this->getJson($this->commentPost()));
     }
     
-    $this->customFields = new \Spit\CustomFields($this->app);
+    $this->editorFields = new \Spit\EditorFields($this->app);
     
     $id = $this->getPathPart(2);
-    $issue = $this->ds->getById($id, $this->customFields);
+    $issue = $this->ds->getById($id, $this->editorFields);
     if ($issue == null) {
       $this->showError(404);
       return;
@@ -265,7 +265,7 @@ class IssuesController extends Controller {
     }
     
     if ($custom) {
-      $values = $this->customFields->getFieldValues($fieldName);
+      $values = $this->editorFields->getFieldValues($fieldName);
       if (count($values) != 0) {
         $v = $values[$v];
       }
@@ -290,7 +290,7 @@ class IssuesController extends Controller {
       new Field("updated", T_("Updated on:"))
     );
     
-    foreach ($this->customFields->getFieldMap() as $k => $v) {
+    foreach ($this->editorFields->getFieldMap() as $k => $v) {
       array_push($fields, new Field($k, sprintf(T_("%s:"), $v)));
     }
     
@@ -355,10 +355,11 @@ class IssuesController extends Controller {
     $this->fillSelectField($assignee, $userDataStore->getMembers(), $issue->assigneeId);
     array_push($fields, $assignee);
     
-    $customFields = new \Spit\CustomFields($this->app);    
-    foreach ($customFields->getFieldMap() as $name => $label) {
+    $editorFields = new \Spit\EditorFields($this->app);    
+    foreach ($editorFields->getFieldMap() as $name => $label) {
     
-      $values = $customFields->getFieldValues($name);
+      $values = $editorFields->getFieldValues($name);
+      
       if (count($values) != 0) {
         $custom = new SelectField($name, $label);
         $custom->add(null, "");
@@ -373,7 +374,7 @@ class IssuesController extends Controller {
       array_push($fields, $custom);
     }
     
-    return $fields;
+    return $editorFields->filter($fields, $trackerId);
   }
   
   public function getChangeContent($change) {
