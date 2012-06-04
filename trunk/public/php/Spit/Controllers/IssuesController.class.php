@@ -180,12 +180,8 @@ class IssuesController extends Controller {
       $change->creatorId = $this->app->security->user->id;
       $change->type = \Spit\Models\ChangeType::Edit;
       $change->name = $k;
-      
-      // don't store details diff for now, until we have a better diff.
-      if ($k != "details") {
-        $change->content = $v;
-      }
-      
+      $change->oldValue = $v->oldValue;
+      $change->newValue = $v->newValue;
       $cds = new \Spit\DataStores\ChangeDataStore;
       $cds->insert($change);
     }
