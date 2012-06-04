@@ -31,6 +31,11 @@ class ChangeResolver {
   private function initStaticFields() {
     $this->staticFields = array();
     $this->addField("trackerId", "tracker", new \Spit\DataStores\TrackerDataStore);
+    $this->addField("statusId", "status", new \Spit\DataStores\StatusDataStore);
+    $this->addField("priorityId", "priority", new \Spit\DataStores\PriorityDataStore);
+    $this->addField("foundId", "found", new \Spit\DataStores\VersionDataStore);
+    $this->addField("targetId", "target", new \Spit\DataStores\VersionDataStore);
+    $this->addField("assigneeId", "assignee", new \Spit\DataStores\AssigneeDataStore);
   }
   
   private function addField($id, $name, $dataStore = null) {
