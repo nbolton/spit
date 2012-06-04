@@ -394,11 +394,12 @@ class IssuesController extends Controller {
         $custom->add(null, "");
         
         foreach ($values as $value => $text) {
-          $custom->add($value, $text);
+          $custom->add($value, $text, $issue->$name == $value);
         }
       }
       else {
         $custom = new TextField($name, $label);
+        $custom->value = $issue->$name;
       }
       array_push($fields, $custom);
     }

@@ -74,6 +74,7 @@ function addTextRow(field, index, length) {
   row.append(text);
   text.attr("id", field.name);
   text.attr("name", field.name);
+  text.val(field.value);
   
   addRow(row, index, length);
 }
