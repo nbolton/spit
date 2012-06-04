@@ -464,6 +464,8 @@ class IssuesController extends Controller {
       case "tracker": return T_("Tracker");
       case "title": return T_("Title");
       case "details": return T_("Details");
+      case "status": return T_("Status");
+      case "priority": return T_("Priority");
       case "category": return T_("Category");
       case "found": return T_("Found");
       case "target": return T_("Target");
