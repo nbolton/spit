@@ -32,6 +32,7 @@ require "TitleMode.class.php";
 require "UserType.class.php";
 require "HttpCode.class.php";
 require "Importer.class.php";
+require "ChangeResolver.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";

@@ -64,7 +64,7 @@ class IssueDataStore extends DataStore {
       "t.name as tracker, s.name as status, p.name as priority, " .
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
       "vt.name as target, vf.name as found, cat.name as category " .
-      $custom->getSqlString("custom.") .
+      $custom->getCustomSqlString("custom.") .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
       "inner join status as s on s.id = i.statusId " .
