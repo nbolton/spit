@@ -68,7 +68,7 @@ class IssuesController extends Controller {
         
       case EditorMode::Update: {
         $id = $this->getPathPart(2);
-        $issue = $this->ds->getById($id, new \Spit\EditorFields($this->app));        
+        $issue = $this->ds->getById($id, new \Spit\IssueFields($this->app));        
         if (!$this->userCanEdit($issue)) {
           return;
         }
@@ -128,10 +128,10 @@ class IssuesController extends Controller {
       exit($this->getJson($this->commentPost()));
     }
     
-    $this->editorFields = new \Spit\EditorFields($this->app);
+    $this->issueFields = new \Spit\IssueFields($this->app);
     
     $id = $this->getPathPart(2);
-    $issue = $this->ds->getById($id, $this->editorFields);
+    $issue = $this->ds->getById($id, $this->issueFields);
     if ($issue == null) {
       $this->showError(404);
       return;
@@ -179,6 +179,7 @@ class IssuesController extends Controller {
       $change->issueId = $issue->id;
       $change->creatorId = $this->app->security->user->id;
       $change->type = \Spit\Models\ChangeType::Edit;
+      $this->setChangeValues($change, $k, $v);
       $change->name = $k;
       $change->oldValue = $v->oldValue;
       $change->newValue = $v->newValue;
@@ -262,7 +263,7 @@ class IssuesController extends Controller {
     }
     
     if ($custom) {
-      $values = $this->editorFields->getFieldValues($fieldName);
+      $values = $this->issueFields->getFieldValues($fieldName);
       if (count($values) != 0) {
         $v = $values[$v];
       }
@@ -287,12 +288,12 @@ class IssuesController extends Controller {
       new DisplayField("updated", "updated", T_("Updated on:"))
     );
     
-    $editorFields = new \Spit\EditorFields($this->app);
-    foreach ($editorFields->getFieldMap() as $k => $v) {
+    $issueFields = new \Spit\IssueFields($this->app);
+    foreach ($issueFields->getFieldMap() as $k => $v) {
       array_push($fields, new DisplayField($k, $k, sprintf(T_("%s:"), $v)));
     }
     
-    return $editorFields->filter($fields, $trackerId);
+    return $issueFields->filter($fields, $trackerId);
   }
   
   private function getTableFields() {
@@ -353,10 +354,10 @@ class IssuesController extends Controller {
     $this->fillSelectField($assignee, $userDataStore->getMembers(), $issue->assigneeId);
     array_push($fields, $assignee);
     
-    $editorFields = new \Spit\EditorFields($this->app);    
-    foreach ($editorFields->getFieldMap() as $name => $label) {
+    $issueFields = new \Spit\IssueFields($this->app);    
+    foreach ($issueFields->getFieldMap() as $name => $label) {
     
-      $values = $editorFields->getFieldValues($name);
+      $values = $issueFields->getFieldValues($name);
       
       if (count($values) != 0) {
         $custom = new SelectField($name, $label);
@@ -372,7 +373,7 @@ class IssuesController extends Controller {
       array_push($fields, $custom);
     }
     
-    return $editorFields->filter($fields, $trackerId);
+    return $issueFields->filter($fields, $trackerId);
   }
   
   public function getChangeContent($change) {

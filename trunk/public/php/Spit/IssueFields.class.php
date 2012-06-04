@@ -19,7 +19,7 @@
 
 namespace Spit;
 
-class EditorFields {
+class IssueFields {
   public $mappings;
 
   public function __construct($app) {
