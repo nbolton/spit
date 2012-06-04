@@ -19,16 +19,14 @@
 
 namespace Spit;
 
-class CustomMappings { }
-
-class CustomFields {
+class EditorFields {
   public $mappings;
 
   public function __construct($app) {
     $this->app = $app;
-    $this->mappings = new CustomMappings;
-    foreach (Settings::$instance->custom as $k => $v) {
-      $this->mappings->$k = $this->getMappings($v);
+    $this->mappings = array();
+    foreach (Settings::$instance->fields as $k => $v) {
+      $this->mappings[$k] = $this->getMappings($v);
     }
   }
   
@@ -47,11 +45,11 @@ class CustomFields {
   }
   
   private function getCustomId() {
-    if (!isset($this->mappings->projects)) {
+    if (!isset($this->mappings["projects"])) {
       return null;
     }
     
-    $projectMap = $this->mappings->projects;
+    $projectMap = $this->mappings["projects"];
     if (count($projectMap) == 0) {
       return array();
     }
@@ -65,8 +63,35 @@ class CustomFields {
       return array();
     }
     
-    $name = "fields" . $id;
-    return $this->mappings->$name;
+    return $this->mappings["fields" . $id];
+  }
+  
+  public function filter($fields, $trackerId = null) {
+    $id = $this->getCustomId();
+    if ($id == null) {
+      return array();
+    }
+    
+    // if no tracker specified, we can't filter out ignored fields.
+    if ($trackerId == null) {
+      return $fields;
+    }
+  
+    $excludeMap = $this->mappings["exclude" . $id];
+    if (!array_key_exists($trackerId, $excludeMap)) {
+      return $fields;
+    }
+    
+    $exclude = explode(";", $excludeMap[$trackerId]);
+    
+    $result = array();
+    foreach ($fields as $field) {
+      // if custom field isn't excluded...
+      if (!in_array($field->name, $exclude)) {
+        array_push($result, $field);
+      }
+    }
+    return $result;
   }
   
   public function getFieldValues($field) {
@@ -75,15 +100,14 @@ class CustomFields {
       return array();
     }
     
-    $name = "keys" . $id;
-    $keyMap = $this->mappings->$name;
+    $keyMap = $this->mappings["keys" . $id];
     
     if (!array_key_exists($field, $keyMap)) {
       return array();
     }
     
     $valueKey = $keyMap[$field];
-    return $this->mappings->$valueKey;
+    return $this->mappings[$valueKey];
   }
   
   private function getMappings($string) {
@@ -97,7 +121,7 @@ class CustomFields {
   }
   
   public function mapValue($field, $key) {
-    $valueMap = $this->mappings->$field;
+    $valueMap = $this->mappings[$field];
     return $valueMap[$key];
   }
   
