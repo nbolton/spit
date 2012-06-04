@@ -26,6 +26,7 @@ use \Spit\Models\Fields\Field as Field;
 use \Spit\Models\Fields\TableField as TableField;
 use \Spit\Models\Fields\SelectField as SelectField;
 use \Spit\Models\Fields\TextField as TextField;
+use \Spit\Models\Fields\DisplayField as DisplayField;
 use \Spit\EditorMode as EditorMode;
 use \Spit\Models\ChangeType as ChangeType;
 
@@ -206,7 +207,7 @@ class IssuesController extends Controller {
   
   private function getDetailColumns($issue, $count) {
     $columns = array();
-    $fields = $this->getTextFields();
+    $fields = $this->getTextFields($issue->trackerId);
     $totalFields = count($fields);
     $fieldsPerColumn = $totalFields / $count;
     $fieldIndex = 0;
@@ -220,7 +221,7 @@ class IssuesController extends Controller {
           
           // store value in Field object, a bit weird, but makes
           // the ajax response smaller.
-          $field->value = $this->getPublicValue($field->name, $issue);
+          $field->value = $this->getPublicValue($field->mappedField, $issue);
           
           array_push($column, $field);
         }
@@ -274,27 +275,28 @@ class IssuesController extends Controller {
     return $v;
   }
   
-  private function getTextFields() {
+  private function getTextFields($trackerId) {
     
     $fields = array(
-      new Field("status", T_("Status:")),
-      new Field("priority", T_("Priority:")),
-      new Field("assignee", T_("Assignee:")),
-      new Field("category", T_("Category:")),
-      new Field("target", T_("Target:")),
-      new Field("found", T_("Found:")),
-      new Field("votes", T_("Votes:")),
-      new Field("creator", T_("Created by:")),
-      new Field("created", T_("Created on:")),
-      new Field("updater", T_("Updated by:")),
-      new Field("updated", T_("Updated on:"))
+      new DisplayField("statusId", "status", T_("Status:")),
+      new DisplayField("priorityId", "priority", T_("Priority:")),
+      new DisplayField("assigneeId", "assignee", T_("Assignee:")),
+      new DisplayField("categoryId", "category", T_("Category:")),
+      new DisplayField("targetId", "target", T_("Target:")),
+      new DisplayField("foundId", "found", T_("Found:")),
+      new DisplayField("votes", "votes", T_("Votes:")),
+      new DisplayField("creatorId", "creator", T_("Created by:")),
+      new DisplayField("created", "created", T_("Created on:")),
+      new DisplayField("updaterId", "updater", T_("Updated by:")),
+      new DisplayField("updated", "updated", T_("Updated on:"))
     );
     
-    foreach ($this->editorFields->getFieldMap() as $k => $v) {
-      array_push($fields, new Field($k, sprintf(T_("%s:"), $v)));
+    $editorFields = new \Spit\EditorFields($this->app);
+    foreach ($editorFields->getFieldMap() as $k => $v) {
+      array_push($fields, new DisplayField($k, $k, sprintf(T_("%s:"), $v)));
     }
     
-    return $fields;
+    return $editorFields->filter($fields, $trackerId);
   }
   
   private function getTableFields() {

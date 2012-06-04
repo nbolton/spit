@@ -37,7 +37,9 @@ class IssueDataStore extends DataStore {
       "left join user as u on u.id = i.assigneeId " .
       "order by %s %s limit %d, %d; " .
       "select FOUND_ROWS()",
-      $orderField, $orderDir, (int)$start, (int)$limit
+      $this->literal($orderField),
+      $this->literal($orderDir),
+      (int)$start, (int)$limit
     );
     
     $issuesResult = $results[0];

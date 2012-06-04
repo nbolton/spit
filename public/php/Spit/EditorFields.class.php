@@ -83,7 +83,6 @@ class EditorFields {
     }
     
     $exclude = explode(";", $excludeMap[$trackerId]);
-    
     $result = array();
     foreach ($fields as $field) {
       // if custom field isn't excluded...
