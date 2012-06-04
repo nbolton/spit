@@ -42,7 +42,7 @@ class RedmineDataStore extends DataStore {
     $result = $this->query(
       "select j.*, jd.* from journals as j " .
       "left join journal_details as jd on jd.journal_id = j.id " .
-      "where j.journalized_type = \"Issue\""
+      "where j.journalized_type = 'Issue'"
     );
     return $this->fromResult($result);
   }
@@ -53,7 +53,7 @@ class RedmineDataStore extends DataStore {
   }
 
   public function getPriorities() {
-    $result = $this->query("select id, name from enumerations where type = \"IssuePriority\"");
+    $result = $this->query("select id, name from enumerations where type = 'IssuePriority'");
     return $this->fromResult($result);
   }
   
@@ -73,6 +73,20 @@ class RedmineDataStore extends DataStore {
       "(select count(*) from votes where voteable_id = i.id) as votes " .
       "from issues as i");
     
+    return $this->fromResult($result);
+  }
+  
+  public function getCustomFields() {
+    $result = $this->query(
+      "select id, name from custom_fields " .
+      "where type = 'IssueCustomField'");
+    return $this->fromResult($result);
+  }
+  
+  public function getCustomValues() {
+    $result = $this->query(
+      "select customized_id, custom_field_id, value " .
+      "from custom_values where customized_type = 'Issue'");
     return $this->fromResult($result);
   }
 }

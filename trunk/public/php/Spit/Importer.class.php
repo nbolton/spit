@@ -49,27 +49,31 @@ class Importer {
     $redmine = new \Spit\DataStores\RedmineDataStore(
       $db->host, $db->user, $db->password, $db->name);
     
-    $statuses = $this->getStatuses($redmine);
-    $priorities = $this->getPriorities($redmine);
-    $users = $this->getUsers($redmine);
-    $issues = $this->getIssues($redmine);
-    $changes = $this->getChanges($redmine);
+    $context = new \stdClass;
+    $context->statuses = $this->getStatuses($redmine);
+    $context->priorities = $this->getPriorities($redmine);
+    $context->users = $this->getUsers($redmine);
+    $context->issues = $this->getIssues($redmine);
+    $context->changes = $this->getChanges($redmine);
     
-    $this->userDataStore->insertMany($users);
-    $userIdMap = $this->getUserIdMap();
+    $context->customFields = $this->getCustomFieldMap($redmine);
+    $context->customValues = $this->getCustomValueMap($redmine);
     
-    $this->statusDataStore->insertMany($statuses);
-    $statusIdMap = $this->getStatusIdMap();
+    $this->userDataStore->insertMany($context->users);
+    $context->userIdMap = $this->getUserIdMap();
     
-    $this->priorityDataStore->insertMany($priorities);
-    $priorityIdMap = $this->getPriorityIdMap();
+    $this->statusDataStore->insertMany($context->statuses);
+    $context->statusIdMap = $this->getStatusIdMap();
     
-    $this->resolveIssueIds($issues, $userIdMap, $statusIdMap, $priorityIdMap);
-    $this->issueDataStore->insertMany($issues);
-    $issueIdMap = $this->getIssueIdMap();
+    $this->priorityDataStore->insertMany($context->priorities);
+    $context->priorityIdMap = $this->getPriorityIdMap();
     
-    $this->resolveChangeFields($changes, $userIdMap, $issueIdMap);
-    $this->changeDataStore->insertMany($changes);
+    $this->resolveIssueFields($context);
+    $this->issueDataStore->insertMany($context->issues);
+    $context->issueIdMap = $this->getIssueIdMap();
+    
+    $this->resolveChangeFields($context);
+    $this->changeDataStore->insertMany($context->changes);
   }
   
   private function getIssues($redmine) {
@@ -172,10 +176,13 @@ class Importer {
   private function mapFieldName($property, $prop_key) {
     if ($property == "attr") {
       switch ($prop_key) {
-        case "tracker_id": return "trackerId";
-        case "status_id": return "statusId";
-        case "priority_id": return "priorityId";
+        case "tracker_id": return "tracker";
+        case "status_id": return "status";
+        case "priority_id": return "priority";
+        case "category_id": return "category";
         case "description": return "details";
+        case "fixed_version_id": return "target";
+        case "assigned_to_id": return "assignee";
         default: return $prop_key;
       }
     }
@@ -221,19 +228,50 @@ class Importer {
     return $this->getImportIdMap($ids);
   }
   
-  private function resolveIssueIds($issues, $userIdMap, $statusIdMap, $priorityIdMap) {
-    foreach ($issues as $issue) {
-      $issue->creatorId = $this->getMapValue($userIdMap, $issue->creatorId);
-      $issue->assigneeId = $this->getMapValue($userIdMap, $issue->assigneeId);
-      $issue->statusId = $this->getMapValue($statusIdMap, $issue->statusId);
-      $issue->priorityId = $this->getMapValue($priorityIdMap, $issue->priorityId);
+  private function getCustomFieldMap($redmine) {
+    $map = array();
+    foreach ($redmine->getCustomFields() as $cf) {
+      $map[$cf->id] = $cf->name;
+    }
+    return $map;
+  }
+  
+  private function getCustomValueMap($redmine) {
+    $map = array();
+    foreach ($redmine->getCustomValues() as $cv) {
+      if (array_key_exists($cv->customized_id, $map)) {
+        $custom = $map[$cv->customized_id];
+      }
+      else {
+        $custom = array();
+        $map[$cv->customized_id] = $custom;
+      }
+      $custom[$cv->custom_field_id] = $cv->value;
+    }
+    return $map;
+  }
+  
+  private function resolveIssueFields($context) {
+    foreach ($context->issues as $issue) {
+      $issue->creatorId = $this->getMapValue($context->userIdMap, $issue->creatorId);
+      $issue->assigneeId = $this->getMapValue($context->userIdMap, $issue->assigneeId);
+      $issue->statusId = $this->getMapValue($context->statusIdMap, $issue->statusId);
+      $issue->priorityId = $this->getMapValue($context->priorityIdMap, $issue->priorityId);
     }
   }
   
-  private function resolveChangeFields($changes, $userIdMap, $issueIdMap) {
-    foreach ($changes as $change) {
-      $change->creatorId = $this->getMapValue($userIdMap, $change->creatorId);
-      $change->issueId = $this->getMapValue($issueIdMap, $change->issueId);
+  private function resolveChangeFields($context) {
+    foreach ($context->changes as $change) {
+      $change->creatorId = $this->getMapValue($context->userIdMap, $change->creatorId);
+      $change->issueId = $this->getMapValue($context->issueIdMap, $change->issueId);
+      
+      // resolve custom field names.
+      if (substr($change->name, 0, 2) == "cf") {
+        $customFieldId = substr($change->name, 3);
+        if (array_key_exists($customFieldId, $context->customFields)) {
+          $change->name = $context->customFields[$customFieldId];
+        }
+      }
     }
   }
   
