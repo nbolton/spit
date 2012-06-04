@@ -155,7 +155,7 @@ class IssuesController extends Controller {
     $change->issueId = $this->getPathPart(2);
     $change->creatorId = $this->app->security->user->id;
     $change->type = \Spit\Models\ChangeType::Comment;
-    $this->applyFormValues($change);
+    $change->data = $_POST["content"];
     
     $cds = new \Spit\DataStores\ChangeDataStore;
     $cds->insert($change);
