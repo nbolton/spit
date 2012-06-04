@@ -132,6 +132,7 @@ class IssuesController extends Controller {
     
     $id = $this->getPathPart(2);
     $issue = $this->ds->getById($id, $this->issueFields);
+    
     if ($issue == null) {
       $this->showError(404);
       return;
@@ -174,15 +175,19 @@ class IssuesController extends Controller {
     $issue->updaterId = $this->app->security->user->id;
     $this->ds->update($issue);
     
+    if (count($diff) != 0) {
+      $changeResolver = new \Spit\ChangeResolver(new \Spit\IssueFields($this->app));
+    }
+    
     foreach ($diff as $k => $v) {
       $change = new \Spit\Models\Change;
       $change->issueId = $issue->id;
       $change->creatorId = $this->app->security->user->id;
       $change->type = \Spit\Models\ChangeType::Edit;
-      $this->setChangeValues($change, $k, $v);
       $change->name = $k;
       $change->oldValue = $v->oldValue;
       $change->newValue = $v->newValue;
+      $changeResolver->resolve($change);
       $cds = new \Spit\DataStores\ChangeDataStore;
       $cds->insert($change);
     }
@@ -263,7 +268,7 @@ class IssuesController extends Controller {
     }
     
     if ($custom) {
-      $values = $this->issueFields->getFieldValues($fieldName);
+      $values = $this->issueFields->getCustomFieldValues($fieldName);
       if (count($values) != 0) {
         $v = $values[$v];
       }
@@ -289,7 +294,7 @@ class IssuesController extends Controller {
     );
     
     $issueFields = new \Spit\IssueFields($this->app);
-    foreach ($issueFields->getFieldMap() as $k => $v) {
+    foreach ($issueFields->getCustomFieldMap() as $k => $v) {
       array_push($fields, new DisplayField($k, $k, sprintf(T_("%s:"), $v)));
     }
     
@@ -355,9 +360,9 @@ class IssuesController extends Controller {
     array_push($fields, $assignee);
     
     $issueFields = new \Spit\IssueFields($this->app);    
-    foreach ($issueFields->getFieldMap() as $name => $label) {
+    foreach ($issueFields->getCustomFieldMap() as $name => $label) {
     
-      $values = $issueFields->getFieldValues($name);
+      $values = $issueFields->getCustomFieldValues($name);
       
       if (count($values) != 0) {
         $custom = new SelectField($name, $label);
@@ -416,7 +421,7 @@ class IssuesController extends Controller {
     $date = sprintf("<i>%s</i>", $this->formatDate($change->created));
     switch($change->type) {
       case ChangeType::Edit:
-        return sprintf(T_("%s: %s edited %s."), $date, $change->creator, $change->name);
+        return sprintf(T_("%s: %s edited %s."), $date, $change->creator, $this->getFieldLabel($change->name));
       
       case ChangeType::Comment:
         return sprintf(T_("%s: %s wrote a comment."), $date, $change->creator);
@@ -426,6 +431,19 @@ class IssuesController extends Controller {
     }
     
     return null;
+  }
+  
+  private function getFieldLabel($name) {
+    switch ($name) {
+      case "tracker": return T_("Tracker");
+      case "title": return T_("Title");
+      case "details": return T_("Details");
+      case "category": return T_("Category");
+      case "found": return T_("Found");
+      case "target": return T_("Target");
+      case "assignee": return T_("Assignee");
+      default: return $name;
+    }
   }
 }
 

@@ -26,12 +26,12 @@ class IssueFields {
     $this->app = $app;
     $this->mappings = array();
     foreach (Settings::$instance->fields as $k => $v) {
-      $this->mappings[$k] = $this->getMappings($v);
+      $this->mappings[$k] = $this->getCustomMappings($v);
     }
   }
   
-  public function getSqlString($fieldPrefix) {
-    $fields = $this->getFieldMap();
+  public function getCustomSqlString($fieldPrefix) {
+    $fields = $this->getCustomFieldMap();
     if (count($fields) == 0) {
       return "";
     }
@@ -57,7 +57,7 @@ class IssueFields {
     return $projectMap[$this->app->project->name];
   }
   
-  public function getFieldMap() {
+  public function getCustomFieldMap() {
     $id = $this->getCustomId();
     if ($id == null) {
       return array();
@@ -93,7 +93,7 @@ class IssueFields {
     return $result;
   }
   
-  public function getFieldValues($field) {
+  public function getCustomFieldValues($field) {
     $id = $this->getCustomId();
     if ($id == null) {
       return array();
@@ -109,7 +109,7 @@ class IssueFields {
     return $this->mappings[$valueKey];
   }
   
-  private function getMappings($string) {
+  private function getCustomMappings($string) {
     $mappingStrings = explode(",", $string);
     $mappings = array();
     foreach ($mappingStrings as $mappingString) {

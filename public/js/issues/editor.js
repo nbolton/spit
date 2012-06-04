@@ -72,6 +72,8 @@ function addTextRow(field, index, length) {
   
   text = $("<input type=\"text\" />");
   row.append(text);
+  text.attr("id", field.name);
+  text.attr("name", field.name);
   
   addRow(row, index, length);
 }
