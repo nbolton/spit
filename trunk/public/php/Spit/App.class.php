@@ -58,6 +58,7 @@ require "Models/Priority.class.php";
 require "Models/Fields/SelectField.class.php";
 require "Models/Fields/TableField.class.php";
 require "Models/Fields/TextField.class.php";
+require "Models/Fields/DisplayField.class.php";
 
 class App {
   

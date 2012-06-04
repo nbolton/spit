@@ -22,6 +22,12 @@ namespace Spit\DataStores;
 use mysqli;
 use Exception;
 
+class LiteralString {
+  public function __construct($str) {
+    $this->str = $str;
+  }
+}
+
 abstract class DataStore {
 
   protected static $globalSql;
@@ -102,6 +108,9 @@ abstract class DataStore {
       // also escape % for sprintf.
       return "\"" . $this->sql->escape_string(str_replace("%", "%%", $v)) . "\"";
     }
+    elseif (is_object($v)) {
+      return (string)$v->str;
+    }
     else {
       return $v;
     }
@@ -162,6 +171,10 @@ abstract class DataStore {
   protected function format($format) {
     $args = $this->getSafeArgs(func_get_args());
     return vsprintf($format, $args);
+  }
+  
+  protected function literal($str) {
+    return new LiteralString($str);
   }
 }
 
