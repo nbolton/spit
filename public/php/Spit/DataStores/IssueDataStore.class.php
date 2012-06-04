@@ -63,8 +63,9 @@ class IssueDataStore extends DataStore {
       "i.title, i.details, i.votes, i.created, i.updated, " .
       "t.name as tracker, s.name as status, p.name as priority, " .
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
-      "vt.name as target, vf.name as found, cat.name as category " .
-      $custom->getCustomSqlString("custom.") .
+      "vt.name as target, vf.name as found, cat.name as category, " .
+      "custom.id as customId " .
+      $this->getCustomSelect($custom, "custom.") .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
       "inner join status as s on s.id = i.statusId " .
@@ -160,6 +161,37 @@ class IssueDataStore extends DataStore {
       (int)$issue->id);
   }
   
+  public function updateCustom($issueId, $map) {
+    
+    $pairs = array();
+    foreach ($map as $k => $v) {
+      array_push($pairs, $this->format("%s = %s", $this->literal($k), $v));
+    }
+    
+    $this->query(
+      "update custom set %s where issueId = %d",
+      $this->literal(implode(", ", $pairs)),
+      (int)$issueId
+    );
+  }
+  
+  public function insertCustom($issueId, $map) {
+    
+    $fields = array();
+    $values = array();
+    foreach ($map as $k => $v) {
+      array_push($fields, $k);
+      array_push($values, $this->cleanArg($v));
+    }
+    
+    $this->query(
+      "insert into custom (issueId, %s) values (%d, %s)",
+      $this->literal(implode(", ", $fields)),
+      (int)$issueId,
+      $this->literal(implode(", ", $values))
+    );
+  }
+  
   public function truncate() {
     $this->query("truncate table issue");
   }
@@ -175,6 +207,20 @@ class IssueDataStore extends DataStore {
   
   protected function newModel() {
     return new \Spit\Models\Issue();
+  }
+  
+  private function getCustomSelect($custom, $fieldPrefix) {
+    $fields = $custom->getCustomFieldMap();
+    if (count($fields) == 0) {
+      return "";
+    }
+    
+    $sqlFields = array();
+    foreach ($fields as $k => $v) {
+      array_push($sqlFields, $fieldPrefix . $k);
+    }
+    
+    return sprintf(", %s ", implode(", ", $sqlFields));
   }
 }
 

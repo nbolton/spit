@@ -95,7 +95,9 @@ class IssuesController extends Controller {
           break;
         
         case EditorMode::Update:
-          $this->update($issue, $diff);
+          if (count($diff) != 0) {
+            $this->update($issue, $diff);
+          }
           break;
       }
       
@@ -175,10 +177,10 @@ class IssuesController extends Controller {
     $issue->updaterId = $this->app->security->user->id;
     $this->ds->update($issue);
     
-    if (count($diff) != 0) {
-      $changeResolver = new \Spit\ChangeResolver(new \Spit\IssueFields($this->app));
-    }
+    $issueFields = new \Spit\IssueFields($this->app);
+    $this->updateCustom($issue, $diff, $issueFields);
     
+    $changeResolver = new \Spit\ChangeResolver($issueFields);
     foreach ($diff as $k => $v) {
       $change = new \Spit\Models\Change;
       $change->issueId = $issue->id;
@@ -190,6 +192,29 @@ class IssuesController extends Controller {
       $changeResolver->resolve($change);
       $cds = new \Spit\DataStores\ChangeDataStore;
       $cds->insert($change);
+    }
+  }
+  
+  private function updateCustom($issue, $diff, $issueFields) {
+    $map = $issueFields->getCustomFieldMap();
+    $fields = array();
+    
+    foreach ($diff as $k => $v) {
+      // if the changed field is a custom field...
+      if (array_key_exists($k, $map)) {
+        $fields[$k] = $v->newValue;
+      }
+    }
+    
+    if (count($fields) == 0) {
+      return;
+    }
+    
+    if ($issue->customId == null) {
+      $this->ds->insertCustom($issue->id, $fields);
+    }
+    else {
+      $this->ds->updateCustom($issue->id, $fields);
     }
   }
   

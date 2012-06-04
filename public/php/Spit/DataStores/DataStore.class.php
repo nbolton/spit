@@ -56,7 +56,7 @@ abstract class DataStore {
   }
   
   public function query($format) {
-    $args = $this->getSafeArgs(func_get_args());
+    $args = $this->getCleanArgs(func_get_args());
     
     \Spit\App::$instance->queryCount++;
     
@@ -71,7 +71,7 @@ abstract class DataStore {
   }
   
   public function multiQuery($format) {
-    $args = $this->getSafeArgs(func_get_args());
+    $args = $this->getCleanArgs(func_get_args());
     
     \Spit\App::$instance->queryCount++;
     
@@ -91,7 +91,7 @@ abstract class DataStore {
     return $results;
   }
   
-  private function getSafeArgs($funcArgs) {
+  protected function getCleanArgs($funcArgs) {
     $args = array_slice($funcArgs, 1);
     foreach ($args as $k => $v) {
       $args[$k] = $this->cleanArg($v);
@@ -99,7 +99,7 @@ abstract class DataStore {
     return $args;
   }
   
-  private function cleanArg($v) {
+  protected function cleanArg($v) {
     if ($v == null || $v == "") {
       return "NULL";
     }
@@ -169,7 +169,7 @@ abstract class DataStore {
   }
   
   protected function format($format) {
-    $args = $this->getSafeArgs(func_get_args());
+    $args = $this->getCleanArgs(func_get_args());
     return vsprintf($format, $args);
   }
   
