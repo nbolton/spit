@@ -109,7 +109,7 @@ class IssueDataStore extends DataStore {
       "insert into issue " .
       "(projectId, trackerId, statusId, priorityId, targetId, " .
       "foundId, assigneeId, creatorId, updaterId, importId, " .
-      "title, details, created, updated) values ";
+      "title, details, votes, created, updated) values ";
     
     for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
       
@@ -120,7 +120,7 @@ class IssueDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
         $values .= $this->format(
-          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s)",
           (int)$issue->projectId,
           (int)$issue->trackerId,
           (int)$issue->statusId,
@@ -133,6 +133,7 @@ class IssueDataStore extends DataStore {
           self::nullInt($issue->importId),
           $issue->title,
           $issue->details,
+          (int)$issue->votes,
           $issue->created,
           $issue->updated)
           .($i < $count - 1 ? ", " : "");

@@ -68,7 +68,7 @@ class Importer {
     $this->issueDataStore->insertMany($issues);
     $issueIdMap = $this->getIssueIdMap();
     
-    $this->resolveChangeIds($changes, $userIdMap, $issueIdMap);
+    $this->resolveChangeFields($changes, $userIdMap, $issueIdMap);
     $this->changeDataStore->insertMany($changes);
   }
   
@@ -86,6 +86,7 @@ class Importer {
       $issue->updaterId = null;
       $issue->title = $rmi->subject;
       $issue->details = self::toMarkdown($rmi->description);
+      $issue->votes = isset($rmi->votes_value) ? $rmi->votes_value : 0;
       $issue->updated = $rmi->updated_on;
       $issue->created = $rmi->created_on;
       array_push($issues, $issue);
@@ -229,7 +230,7 @@ class Importer {
     }
   }
   
-  private function resolveChangeIds($changes, $userIdMap, $issueIdMap) {
+  private function resolveChangeFields($changes, $userIdMap, $issueIdMap) {
     foreach ($changes as $change) {
       $change->creatorId = $this->getMapValue($userIdMap, $change->creatorId);
       $change->issueId = $this->getMapValue($issueIdMap, $change->issueId);

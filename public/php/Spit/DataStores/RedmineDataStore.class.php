@@ -61,6 +61,20 @@ class RedmineDataStore extends DataStore {
     $result = $this->query("select * from users");
     return $this->fromResult($result);
   }
+  
+  public function getVotes() {
+    $exists = $this->query("show tables like 'votes'")->num_rows == 1;
+    if (!$exists) {
+      return array();
+    }
+    
+    $result = $this->query(
+      "select i.id, " .
+      "(select count(*) from votes where voteable_id = i.id) as votes " .
+      "from issues as i");
+    
+    return $this->fromResult($result);
+  }
 }
 
 ?>
