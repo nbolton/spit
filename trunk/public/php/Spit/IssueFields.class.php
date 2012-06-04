@@ -30,20 +30,6 @@ class IssueFields {
     }
   }
   
-  public function getCustomSqlString($fieldPrefix) {
-    $fields = $this->getCustomFieldMap();
-    if (count($fields) == 0) {
-      return "";
-    }
-    
-    $sqlFields = array();
-    foreach ($fields as $k => $v) {
-      array_push($sqlFields, $fieldPrefix . $k);
-    }
-    
-    return sprintf(", %s ", implode(", ", $sqlFields));
-  }
-  
   private function getCustomId() {
     if (!isset($this->mappings["projects"])) {
       return null;
