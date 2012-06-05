@@ -29,6 +29,7 @@ use \Spit\Models\Fields\TextField as TextField;
 use \Spit\Models\Fields\DisplayField as DisplayField;
 use \Spit\EditorMode as EditorMode;
 use \Spit\Models\ChangeType as ChangeType;
+use \Spit\Models\RelationType as RelationType;
 
 class IssuesController extends Controller {
   
@@ -101,7 +102,7 @@ class IssuesController extends Controller {
           break;
       }
       
-      header(sprintf("Location: %sissues/details/%d/", $this->app->getProjectRoot(), $issue->id));
+      header("Location: " . $this->app->linkProvider->forIssue($issue->id));
       exit;
     }
     
@@ -147,6 +148,9 @@ class IssuesController extends Controller {
     
     $cds = new \Spit\DataStores\ChangeDataStore;
     $data["changes"] = $cds->getForIssue($id);
+    
+    $rds = new \Spit\DataStores\RelationDataStore;
+    $data["relations"] = $rds->getForIssue($id);
     
     $this->showView("issues/details", $this->getIssueTitle($issue), $data, \Spit\TitleMode::Affix);
   }
@@ -474,6 +478,34 @@ class IssuesController extends Controller {
       case "assignee": return T_("Assignee");
       default: return $name;
     }
+  }
+  
+  public function getRelationInfo($relation, $issueId) {
+    if ($relation->type == RelationType::Generic) {
+      $format = T_("Related to: %s");
+    }
+    
+    if ($relation->leftId == $issueId) {
+      $id = $relation->rightId;
+      switch ($relation->type) {
+        case RelationType::Duplicates: $format = T_("Duplicates: %s"); break;
+        case RelationType::Blocks: $format = T_("Blocks: %s"); break;
+        case RelationType::Follows: $format = T_("Follows: %s"); break;
+      }
+    }
+    else {
+      $id = $relation->leftId;
+      switch ($relation->type) {
+        case RelationType::Duplicates: $format = T_("Duplicated by: %s"); break;
+        case RelationType::Blocks: $format = T_("Blocked by: %s"); break;
+        case RelationType::Follows: $format = T_("Followed by: %s"); break;
+      }
+    }
+    
+    $issue = $this->ds->getTitleById($id);
+    $link = $this->app->linkProvider->forIssue($issue->id);
+    $issueInfo = sprintf("<a href=\"%s\">#%d</a> - %s", $link, $issue->id, $issue->title);
+    return sprintf($format, $issueInfo);
   }
 }
 

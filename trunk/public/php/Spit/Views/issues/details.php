@@ -44,6 +44,17 @@
   </span>
   <?php endif ?>
   
+  <?php if (count($relations) != 0): ?>
+  <hr />
+  <span class="relations">
+    <ul>
+    <?php foreach($relations as $relation): ?>
+      <li><?=$self->getRelationInfo($relation, $issue->id)?></li>
+    <?php endforeach ?>
+    </ul>
+  </span>
+  <?php endif ?>
+  
   <div class="changes">
     <?php foreach($changes as $change): ?>
     <div class="change">
