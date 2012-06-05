@@ -60,6 +60,7 @@ require "Models/Priority.class.php";
 require "Models/Tracker.class.php";
 require "Models/Version.class.php";
 require "Models/Category.class.php";
+require "Models/Relation.class.php";
 
 require "Models/Fields/SelectField.class.php";
 require "Models/Fields/TableField.class.php";

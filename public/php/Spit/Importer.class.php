@@ -19,6 +19,8 @@
 
 namespace Spit;
 
+use \Spit\Models\RelationType as RelationType;
+
 class Importer {
   
   public function __construct($app) {
@@ -67,6 +69,7 @@ class Importer {
     $this->loadTrackers($context);
     $this->loadVersions($context);
     $this->loadCategories($context);
+    $this->loadRelations($context);
     
     $this->loadCustomFieldValues($context);
     $context->customFields = $this->getCustomFieldMap($context->redmine);
@@ -98,6 +101,9 @@ class Importer {
     
     $this->resolveChangeFields($context);
     $this->changeDataStore->insertMany($context->changes);
+    
+    $this->resolveRelationFields($context);
+    $this->issueDataStore->insertRelationMany($context->relations);
   }
   
   private function insertCustomValues($context) {
@@ -334,6 +340,28 @@ class Importer {
     }
   }
   
+  private function loadRelations($context) {
+    $context->relations = array();
+    
+    foreach ($context->redmine->getRelations() as $rmr) {
+      $relation = new \stdClass;
+      $relation->leftId = $rmr->issue_from_id;
+      $relation->rightId = $rmr->issue_to_id;
+      $relation->type = $this->convertRelationType($rmr->relation_type);
+      
+      array_push($context->relations, $relation);
+    }
+  }
+  
+  private function convertRelationType($redmineType) {
+    switch ($redmineType) {
+      case "duplicates": return RelationType::Duplicates;
+      case "blocks": return RelationType::Blocks;
+      case "follows": return RelationType::Follows;
+      default: return RelationType::Generic;
+    }
+  }
+  
   private function mapFieldName($property, $prop_key) {
     if ($property == "attr") {
       switch ($prop_key) {
@@ -479,6 +507,13 @@ class Importer {
           $change->name = $context->customFields[$customFieldId];
         }
       }
+    }
+  }
+  
+  private function resolveRelationFields($context) {
+    foreach ($context->relations as $relation) {
+      $relation->leftId = $this->getMapValue($context->issueIdMap, $relation->leftId);
+      $relation->rightId = $this->getMapValue($context->issueIdMap, $relation->rightId);
     }
   }
   

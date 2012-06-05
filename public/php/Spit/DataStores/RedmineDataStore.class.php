@@ -90,6 +90,11 @@ class RedmineDataStore extends DataStore {
     $result = $this->query("select * from issue_categories");
     return $this->fromResult($result);
   }
+  
+  public function getRelations() {
+    $result = $this->query("select * from issue_relations");
+    return $this->fromResult($result);
+  }
 }
 
 ?>
