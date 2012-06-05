@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 05, 2012 at 03:26 AM
+-- Generation Time: Jun 05, 2012 at 10:13 PM
 -- Server version: 5.5.20
 -- PHP Version: 5.3.10
 
@@ -23,11 +23,30 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `attachment`
+--
+
+CREATE TABLE IF NOT EXISTS `attachment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `issueId` int(11) NOT NULL,
+  `creatorId` int(11) DEFAULT NULL,
+  `originalName` varchar(255) NOT NULL,
+  `physicalName` varchar(255) NOT NULL,
+  `size` int(11) NOT NULL,
+  `contentType` varchar(50) DEFAULT NULL,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=483 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `category`
 --
 
 CREATE TABLE IF NOT EXISTS `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `importId` int(11) DEFAULT NULL,
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
@@ -49,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `change` (
   `newValue` text,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15489 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15490 ;
 
 -- --------------------------------------------------------
 
@@ -64,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `custom` (
   `googleId` varchar(6) DEFAULT NULL,
   `redmineId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2981 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3233 ;
 
 -- --------------------------------------------------------
 
@@ -91,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `issue` (
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3233 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3240 ;
 
 -- --------------------------------------------------------
 
@@ -119,6 +138,20 @@ CREATE TABLE IF NOT EXISTS `project` (
   `description` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `relation`
+--
+
+CREATE TABLE IF NOT EXISTS `relation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `leftId` int(11) NOT NULL,
+  `rightId` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=253 ;
 
 -- --------------------------------------------------------
 
@@ -160,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(250) NOT NULL,
   `name` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3315 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3316 ;
 
 -- --------------------------------------------------------
 
