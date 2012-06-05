@@ -400,12 +400,15 @@ class IssuesController extends Controller {
         $custom->add(null, "");
         
         foreach ($values as $value => $text) {
-          $custom->add($value, $text, $issue->$name == $value);
+          $selected = isset($issue->$name) && $issue->$name == $value;
+          $custom->add($value, $text, $selected);
         }
       }
       else {
         $custom = new TextField($name, $label);
-        $custom->value = $issue->$name;
+        if (isset($issue->$name)) {
+          $custom->value = $issue->$name;
+        }
       }
       array_push($fields, $custom);
     }
