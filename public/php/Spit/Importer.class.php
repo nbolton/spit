@@ -533,17 +533,18 @@ class Importer {
     $start = substr($line, 0, 1);
     $end = substr($line, $length - 1, 1);
     
-    // some users use # to indicate a command, but in markdown this
-    // actually creates a header. assume the whole line is a command
-    // and convert to monospace by using backticks.
-    if ($start == "#") {
-      return "`" . substr($line, 1, $length - 2) . "`";
-    }
-    
     foreach ($tokens as $search => $replace) {
       if ($start == $search && $end == $search) {
         return $replace . substr($line, 1, $length - 2) . $replace;
       }
+    }
+    
+    // hashes are used sometimes when users want to write
+    // a command, and also redmine counts this as numbering.
+    // either way, we will just preserve the character by
+    // putting a space infront (this stops it becomming a header).
+    if ($start == "#") {
+      return " " . $line;
     }
     
     return $line;
