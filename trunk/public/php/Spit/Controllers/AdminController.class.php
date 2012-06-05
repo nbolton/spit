@@ -45,10 +45,16 @@ class AdminController extends Controller {
       $options->clear = isset($form->clear) && ($form->clear == "on");
       $options->db = $db;
       
+      // map redmine ids to spit field names.
       $options->customMap = array();
       $options->customMap[3] = "googleId";
-      $options->customMap[4] = "foundId";
       $options->customMap[6] = "platformId";
+      
+      // redmine custom id for the foundId field.
+      $options->foundIdCustom = 4;
+      
+      // get the following fields by copying the other.
+      $options->copyFields["redmineId"] = "importId";
       
       $importer = new \Spit\Importer($this->app);
       $importer->redmineImport($options);

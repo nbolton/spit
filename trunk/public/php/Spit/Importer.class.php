@@ -105,6 +105,7 @@ class Importer {
       $custom = new \stdClass;
       $custom->id = $context->issueIdMap[$issue->importId];
       $custom->values = $this->getCustomValues($issue, $fields, $context);
+      
       if (!$this->isEmpty($custom->values)) {
         array_push($valueLists, $custom);
       }
@@ -145,6 +146,13 @@ class Importer {
             $map[$field] = $value;
           }
         }
+      }
+    }
+    
+    foreach ($fields as $field) {
+      if (array_key_exists($field, $context->options->copyFields)) {
+        $source = $context->options->copyFields[$field];
+        $map[$field] = $issue->$source;
       }
     }
     
@@ -292,6 +300,7 @@ class Importer {
   private function loadVersions($context) {
     $context->versions = array();
     $context->versionMap = array();
+    $context->versionValueMap = array();
     
     foreach ($context->redmine->getVersions() as $rmv) {
       $version = new \Spit\Models\Version;
@@ -300,6 +309,7 @@ class Importer {
       
       array_push($context->versions, $version);
       $context->versionMap[$rmv->id] = $rmv->name;
+      $context->versionValueMap[$rmv->name] = $rmv->id;
     }
   }
   
@@ -404,7 +414,28 @@ class Importer {
       $issue->priorityId = $this->getMapValue($context->priorityIdMap, $issue->priorityId);
       $issue->trackerId = $this->getMapValue($context->trackerIdMap, $issue->trackerId);
       $issue->targetId = $this->getMapValue($context->versionIdMap, $issue->targetId);
+      $issue->foundId = $this->findFoundId($context, $issue->importId);
     }
+  }
+  
+  private function findFoundId($context, $redmineId) {
+    if (!isset($context->options->foundIdCustom)) {
+      return null;
+    }
+    
+    // finds a version id based on the version number.
+    if (array_key_exists($redmineId, $context->customValues)) {
+      $values = $context->customValues[$redmineId];
+      if (array_key_exists($context->options->foundIdCustom, $values)) {
+        $value = $values[$context->options->foundIdCustom];
+        if (array_key_exists($value, $context->versionValueMap)) {
+          $redmineVersionId = $context->versionValueMap[$value];
+          return $context->versionIdMap[$redmineVersionId];
+        }
+      }
+    }
+    
+    return null;
   }
   
   private function resolveChangeFields($context) {
