@@ -51,6 +51,7 @@ require "DataStores/RedmineDataStore.class.php";
 require "DataStores/AssigneeDataStore.class.php";
 require "DataStores/CategoryDataStore.class.php";
 require "DataStores/RelationDataStore.class.php";
+require "DataStores/AttachmentDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";

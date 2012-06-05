@@ -34,6 +34,7 @@ class Importer {
     $this->versionDataStore = new \Spit\DataStores\VersionDataStore;
     $this->categoryDataStore = new \Spit\DataStores\CategoryDataStore;
     $this->relationDataStore = new \Spit\DataStores\RelationDataStore;
+    $this->attachmentDataStore = new \Spit\DataStores\AttachmentDataStore;
     $this->issueFields = new \Spit\IssueFields($app);
   }
   
@@ -49,6 +50,7 @@ class Importer {
       $this->versionDataStore->truncate();
       $this->categoryDataStore->truncate();
       $this->relationDataStore->truncate();
+      $this->attachmentDataStore->truncate();
       
       // re-add current user so they aren't logged out.
       $id = $this->userDataStore->insert($this->app->security->user);
@@ -72,6 +74,7 @@ class Importer {
     $this->loadVersions($context);
     $this->loadCategories($context);
     $this->loadRelations($context);
+    $this->loadAttachments($context);
     
     $this->loadCustomFieldValues($context);
     $context->customFields = $this->getCustomFieldMap($context->redmine);
@@ -106,6 +109,9 @@ class Importer {
     
     $this->resolveRelationFields($context);
     $this->relationDataStore->insertMany($context->relations);
+    
+    $this->resolveAttachmentFields($context);
+    $this->attachmentDataStore->insertMany($context->attachments);
   }
   
   private function insertCustomValues($context) {
@@ -355,6 +361,22 @@ class Importer {
     }
   }
   
+  private function loadAttachments($context) {
+    $context->attachments = array();
+    
+    foreach ($context->redmine->getAttachments() as $rma) {
+      $attachment = new \stdClass;
+      $attachment->issueId = $rma->container_id;
+      $attachment->creatorId = $rma->author_id;
+      $attachment->originalName = $rma->filename;
+      $attachment->physicalName = $rma->disk_filename;
+      $attachment->size = $rma->filesize;
+      $attachment->contentType = $rma->content_type;
+      $attachment->created = $rma->created_on;
+      array_push($context->attachments, $attachment);
+    }
+  }
+  
   private function convertRelationType($redmineType) {
     switch ($redmineType) {
       case "duplicates": return RelationType::Duplicates;
@@ -392,7 +414,7 @@ class Importer {
   }
   
   private function getMapValue($map, $key) {
-    return array_key_exists($key, $map) ? $map[$key] : null;;
+    return array_key_exists($key, $map) ? $map[$key] : null;
   }
   
   private function getUserIdMap() {
@@ -516,6 +538,13 @@ class Importer {
     foreach ($context->relations as $relation) {
       $relation->leftId = $this->getMapValue($context->issueIdMap, $relation->leftId);
       $relation->rightId = $this->getMapValue($context->issueIdMap, $relation->rightId);
+    }
+  }
+  
+  private function resolveAttachmentFields($context) {
+    foreach ($context->attachments as $attachment) {
+      $attachment->issueId = $this->getMapValue($context->issueIdMap, $attachment->issueId);
+      $attachment->creatorId = $this->getMapValue($context->userIdMap, $attachment->creatorId);
     }
   }
   
