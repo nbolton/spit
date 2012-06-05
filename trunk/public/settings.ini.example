@@ -8,4 +8,8 @@ database = "spit"
 defaultTitle = "SPIT"
 defaultDescription = "Simple PHP Issue Tracker"
 singleProject = "spit"
+dateFormat = "j M Y"
 dateTimeFormat = "j M Y H:i"
+
+[fields]
+projects = "spit=1"
