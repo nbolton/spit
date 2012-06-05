@@ -150,6 +150,9 @@ class IssuesController extends Controller {
     $rds = new \Spit\DataStores\RelationDataStore;
     $data["relations"] = $rds->getForIssue($id);
     
+    $ads = new \Spit\DataStores\AttachmentDataStore;
+    $data["attachments"] = $ads->getForIssue($id);
+    
     $this->showView("issues/details", $this->getIssueTitle($issue), $data, \Spit\TitleMode::Affix);
   }
   
@@ -521,6 +524,11 @@ class IssuesController extends Controller {
     $link = $this->app->linkProvider->forIssue($issue->id);
     $issueInfo = sprintf("<a href=\"%s\">#%d</a> - %s", $link, $issue->id, $issue->title);
     return sprintf($format, $issueInfo);
+  }
+  
+  public function getAttachmentInfo($attachment) {
+    $link = $this->app->linkProvider->forAttachment($attachment);
+    return sprintf("<a href=\"%s\">%s</a>", $link, $attachment->originalName);
   }
 }
 

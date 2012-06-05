@@ -55,6 +55,17 @@
   </span>
   <?php endif ?>
   
+  <?php if (count($attachments) != 0): ?>
+  <hr />
+  <span class="attachments">
+    <ul>
+    <?php foreach($attachments as $attachment): ?>
+      <li><?=$self->getAttachmentInfo($attachment)?></li>
+    <?php endforeach ?>
+    </ul>
+  </span>
+  <?php endif ?>
+  
   <div class="changes">
     <?php foreach($changes as $change): ?>
     <div class="change">

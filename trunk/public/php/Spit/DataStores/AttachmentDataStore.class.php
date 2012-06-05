@@ -27,9 +27,14 @@ class AttachmentDataStore extends DataStore {
     $result = $this->query("select * from attachment");
     return $this->fromResult($result);
   }
+
+  public function getForIssue($issueId) {
+    $result = $this->query("select * from attachment where issueId = %d", (int)$issueId);
+    return $this->fromResult($result);
+  }
   
   public function insertMany($attachments) {
-    $base = 
+    $base =
       "insert into attachment " .
       "(issueId, creatorId, originalName, physicalName, size, contentType, created) values ";
     

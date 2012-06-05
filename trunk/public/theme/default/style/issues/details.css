@@ -81,3 +81,16 @@ div.comment form textarea {
 div.comment form input.button {
   margin-left: -1px;
 }
+
+span.attachments ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+span.attachments li {
+  background-image: url('../../image/attachment.png');
+  background-repeat: no-repeat;
+  background-position: 0 4px;
+  padding: 2px 0px 2px 17px;
+}
