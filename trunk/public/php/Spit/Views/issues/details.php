@@ -36,11 +36,13 @@
     <?php endforeach ?>
   </div>
   <?php endforeach ?>
-  <hr />
   
+  <?php if (trim($issue->details) != ""): ?>
+  <hr />
   <span class="details">
     <?=Markdown($issue->details)?>
   </span>
+  <?php endif ?>
   
   <div class="changes">
     <?php foreach($changes as $change): ?>
