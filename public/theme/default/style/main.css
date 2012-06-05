@@ -35,7 +35,7 @@ h1, h2, h3 {
 
 p {
   padding: 0px;
-  margin: 8px 0px 8px 0px;
+  margin: 9px 0px 9px 0px;
 }
 
 h1 {
@@ -53,7 +53,7 @@ h3 {
 ul, ol {
   margin: 0px;
   margin-left: 1em;
-  padding: .5em 0px .5em .5em;
+  padding: 0px 0px 0px .5em;
 }
 
 a img {

@@ -243,7 +243,7 @@ class IssuesController extends Controller {
   
   private function getTableData($page, $limit) {
     $start = ($page - 1) * $limit;
-    $results = $this->ds->get($start, $limit, "updated", "desc");
+    $results = $this->ds->get($start, $limit);
     
     $issues = $results[0];
     $this->replaceWithPublicValues($issues);
