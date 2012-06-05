@@ -33,6 +33,9 @@ use \Spit\Models\RelationType as RelationType;
 
 class IssuesController extends Controller {
   
+  const DEFAULT_STATUS = 1;
+  const DEFAULT_PRIORITY = 2;
+  
   public function __construct() {
     $this->ds = new \Spit\DataStores\IssueDataStore;
   }
@@ -379,14 +382,17 @@ class IssuesController extends Controller {
     $categoryDataStore = new \Spit\DataStores\CategoryDataStore;
   
     $status = new SelectField("statusId", T_("Status"));
-    $this->fillSelectField($status, $statusDataStore->get(), $issue->statusId);
+    $this->fillSelectField($status, $statusDataStore->get(),
+      $issue->statusId != null ? $issue->statusId : self::DEFAULT_STATUS);
     array_push($fields, $status);
     
     $priority = new SelectField("priorityId", T_("Priority"));
-    $this->fillSelectField($priority, $priorityDataStore->get(), $issue->priorityId);
+    $this->fillSelectField($priority, $priorityDataStore->get(),
+      $issue->priorityId != null ? $issue->priorityId : self::DEFAULT_PRIORITY);
     array_push($fields, $priority);
     
     $category = new SelectField("categoryId", T_("Category"));
+    $category->add(null, "");
     $this->fillSelectField($category, $categoryDataStore->get(), $issue->categoryId);
     array_push($fields, $category);
     
