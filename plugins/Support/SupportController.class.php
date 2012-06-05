@@ -24,6 +24,27 @@ class SupportController extends Spit\Controllers\Controller {
   }
   
   public function run() {
+    if (!$this->auth(\Spit\UserType::Newbie)) {
+      return;
+    }
+    
+    if ($this->isPost()) {
+      $issue = new \Spit\Models\Issue;
+      $issue->projectId = $this->app->project->id;
+      $issue->creatorId = $this->app->security->user->id;
+      $issue->trackerId = 3; // support
+      $issue->statusId = 1; // new
+      $issue->priorityId = 2; // normal
+      $issue->title = $_POST["title"];
+      $issue->details = $_POST["steps"];
+      
+      $dataStore = new \Spit\DataStores\IssueDataStore;
+      $id = $dataStore->insert($issue);
+      
+      header("Location: " . $this->app->linkProvider->forIssue($id));
+      return;
+    }
+    
     $this->showView("support");
   }
 }
