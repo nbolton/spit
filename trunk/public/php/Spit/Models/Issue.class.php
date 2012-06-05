@@ -29,6 +29,7 @@ class Issue {
   public $priorityId;
   public $foundId;
   public $targetId;
+  public $categoryId;
 }
 
 ?>
