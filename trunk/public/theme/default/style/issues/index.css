@@ -23,6 +23,10 @@ div#issues {
 div#issues table {
   display: none;
 }
+
+div#issues table td {
+  vertical-align: top;
+}
  
 div.loading {
   text-align: center;
