@@ -373,6 +373,7 @@ class IssuesController extends Controller {
     $priorityDataStore = new \Spit\DataStores\PriorityDataStore;
     $versionDataStore = new \Spit\DataStores\VersionDataStore;
     $userDataStore = new \Spit\DataStores\UserDataStore;
+    $categoryDataStore = new \Spit\DataStores\CategoryDataStore;
   
     $status = new SelectField("statusId", T_("Status"));
     $this->fillSelectField($status, $statusDataStore->get(), $issue->statusId);
@@ -381,6 +382,10 @@ class IssuesController extends Controller {
     $priority = new SelectField("priorityId", T_("Priority"));
     $this->fillSelectField($priority, $priorityDataStore->get(), $issue->priorityId);
     array_push($fields, $priority);
+    
+    $category = new SelectField("categoryId", T_("Category"));
+    $this->fillSelectField($category, $categoryDataStore->get(), $issue->categoryId);
+    array_push($fields, $category);
     
     $found = new SelectField("foundId", T_("Found"));
     $found->add(null, "");
