@@ -45,6 +45,11 @@ class AdminController extends Controller {
       $options->clear = isset($form->clear) && ($form->clear == "on");
       $options->db = $db;
       
+      $options->customMap = array();
+      $options->customMap[3] = "googleId";
+      $options->customMap[4] = "foundId";
+      $options->customMap[6] = "platformId";
+      
       $importer = new \Spit\Importer($this->app);
       $importer->redmineImport($options);
     }

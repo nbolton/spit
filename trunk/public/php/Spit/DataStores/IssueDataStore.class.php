@@ -193,8 +193,39 @@ class IssueDataStore extends DataStore {
     );
   }
   
+  public function insertCustomMany($fields, $valueLists) {
+    $base = sprintf(
+      "insert into custom (issueId, %s) values ",
+      implode(", ", $fields));
+    
+    for ($j = 0; $j < count($valueLists) / self::BULK_INSERT_MAX; $j++) {
+      
+      $slice = array_slice($valueLists, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
+      $sql = "";
+      
+      for ($i = 0; $i < $count; $i++) {
+        $custom = $slice[$i];
+        
+        $cleanValues = array();
+        foreach ($custom->values as $value) {
+          array_push($cleanValues, $this->cleanArg($value));
+        }
+        
+        $sql .= $this->format(
+          "(%d, %s)",
+          (int)$custom->id,
+          $this->literal(implode(", ", $cleanValues)))
+          .($i < $count - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $sql);
+    }
+  }
+  
   public function truncate() {
     $this->query("truncate table issue");
+    $this->query("truncate table `custom`");
   }
   
   protected function parseField($k, $v) {
