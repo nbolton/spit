@@ -282,3 +282,11 @@ div.paging {
 div.content div.clear {
   clear: both;
 }
+
+div.preview div.box {
+  padding: 0px 8px 0px 8px;
+}
+
+div.preview div.box pre {
+  overflow: hidden;
+}

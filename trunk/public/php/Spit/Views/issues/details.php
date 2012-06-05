@@ -60,8 +60,12 @@
     <img src="<?=$app->getImagePath("edit.png")?>"/>Write comment</a>
   </p>
   <form>
-    <textarea name="content"></textarea>
+    <div id="wmd-button-bar" class="wmd-button-bar"></div>
+    <textarea id="wmd-input" name="content" class="wmd-input"></textarea>
     <input class="button" type="button" value="<?=T_("OK")?>" />
+    <div class="preview">
+      <div id="wmd-preview" class="box"></div>
+    </div>
   </form>
   <div class="loading">
     <img src="<?=$app->getImagePath("loading.gif")?>" />
