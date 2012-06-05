@@ -17,11 +17,13 @@
 
 function viewLoad() {
   tracker = $("select#trackerId");
-  loadDynamicFields(tracker.val());
+  if (tracker.is("*")) {
+    loadDynamicFields(tracker.val());
   
-  tracker.change(function() {
-    loadDynamicFields($(this).val());
-  });
+    tracker.change(function() {
+      loadDynamicFields($(this).val());
+    });
+  }
   
   var converter = Markdown.getSanitizingConverter();
   var editor = new Markdown.Editor(converter);

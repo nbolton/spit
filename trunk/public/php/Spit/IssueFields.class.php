@@ -52,13 +52,7 @@ class IssueFields {
     return $this->mappings["fields" . $id];
   }
   
-  public function filter($fields, $trackerId = null, $forEditor = false) {
-    // only members can see fields for the editor.
-    if ($forEditor && $this->app->security->isLoggedIn() &&
-      !$this->app->security->userIsType(\Spit\UserType::Member)) {
-      return array();
-    }
-    
+  public function filter($fields, $trackerId = null, $forEditor = false) {    
     $id = $this->getCustomId();
     if ($id == null) {
       return array();
