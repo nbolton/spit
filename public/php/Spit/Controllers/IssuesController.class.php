@@ -197,6 +197,8 @@ class IssuesController extends Controller {
   }
   
   private function update($issue, $diff) {
+    $issue->closed = $this->statusIsClosed($issue->statusId);
+    
     $issue->updaterId = $this->app->security->user->id;
     $this->ds->update($issue);
     
@@ -216,6 +218,17 @@ class IssuesController extends Controller {
       $cds = new \Spit\DataStores\ChangeDataStore;
       $cds->insert($change);
     }
+  }
+  
+  private function statusIsClosed($statusId) {
+    $dataStore = new \Spit\DataStores\StatusDataStore;
+    $statuses = $dataStore->get();
+    foreach ($statuses as $status) {
+      if ($status->id == $statusId) {
+        return $status->closed;
+      }
+    }
+    return false;
   }
   
   private function updateCustom($issue, $diff, $issueFields) {
