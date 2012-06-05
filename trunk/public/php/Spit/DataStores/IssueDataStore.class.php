@@ -165,6 +165,7 @@ class IssueDataStore extends DataStore {
       (int)$issue->id);
   }
   
+  // TODO: move to new data store
   public function updateCustom($issueId, $map) {
     
     $pairs = array();
@@ -179,6 +180,7 @@ class IssueDataStore extends DataStore {
     );
   }
   
+  // TODO: move to new data store
   public function insertCustom($issueId, $map) {
     
     $fields = array();
@@ -196,6 +198,7 @@ class IssueDataStore extends DataStore {
     );
   }
   
+  // TODO: move to new data store
   public function insertCustomMany($fields, $valueLists) {
     $base = sprintf(
       "insert into custom (issueId, %s) values ",
@@ -226,9 +229,36 @@ class IssueDataStore extends DataStore {
     }
   }
   
+  // TODO: move to new data store
+  public function insertRelationMany($relations) {
+    $base = 
+      "insert into relation " .
+      "(leftId, rightId, type) values ";
+    
+    for ($j = 0; $j < count($relations) / self::BULK_INSERT_MAX; $j++) {
+      
+      $slice = array_slice($relations, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
+      $values = "";
+      
+      for ($i = 0; $i < $count; $i++) {
+        $relation = $slice[$i];
+        $values .= $this->format(
+          "(%d, %d, %d)",
+          (int)$relation->leftId,
+          (int)$relation->rightId,
+          (int)$relation->type)
+          .($i < $count - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $values);
+    }
+  }
+  
   public function truncate() {
     $this->query("truncate table issue");
     $this->query("truncate table `custom`");
+    $this->query("truncate table relation");
   }
   
   protected function parseField($k, $v) {
