@@ -420,7 +420,7 @@ class IssuesController extends Controller {
       array_push($fields, $custom);
     }
     
-    return $issueFields->filter($fields, $trackerId);
+    return $issueFields->filter($fields, $trackerId, true);
   }
   
   public function getChangeContent($change) {
