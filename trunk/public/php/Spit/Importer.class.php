@@ -292,6 +292,7 @@ class Importer {
   private function loadStatuses($context) {
     $context->statuses = array();
     $context->statusMap = array();
+    $context->statusCloseMap = array();
     
     foreach ($context->redmine->getStatuses() as $rms) {
       $status = new \Spit\Models\Status;
@@ -301,6 +302,7 @@ class Importer {
       
       array_push($context->statuses, $status);
       $context->statusMap[$rms->id] = $rms->name;
+      $context->statusClosedMap[$rms->id] = $rms->is_closed;
     }
   }
   
@@ -488,6 +490,7 @@ class Importer {
     foreach ($context->issues as $issue) {
       $issue->creatorId = $this->getMapValue($context->userIdMap, $issue->creatorId);
       $issue->assigneeId = $this->getMapValue($context->userIdMap, $issue->assigneeId);
+      $issue->closed = $this->getMapValue($context->statusClosedMap, $issue->statusId);
       $issue->statusId = $this->getMapValue($context->statusIdMap, $issue->statusId);
       $issue->priorityId = $this->getMapValue($context->priorityIdMap, $issue->priorityId);
       $issue->categoryId = $this->getMapValue($context->categoryIdMap, $issue->categoryId);

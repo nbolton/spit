@@ -39,6 +39,7 @@ class IssueDataStore extends DataStore {
       "inner join status as s on s.id = i.statusId " .
       "inner join priority as p on p.id = i.priorityId " .
       "left join user as u on u.id = i.assigneeId " .
+      "where i.closed = 0 " .
       "order by %s limit %d, %d; " .
       "select FOUND_ROWS()",
       $this->literal($order),
@@ -63,7 +64,7 @@ class IssueDataStore extends DataStore {
     $result = $this->query(
       "select i.id, i.trackerId, i.statusId, i.priorityId, i.categoryId, " .
       "i.targetId, i.foundId, i.assigneeId, i.creatorId, i.updaterId, " .
-      "i.title, i.details, i.votes, i.created, i.updated, " .
+      "i.title, i.details, i.votes, i.closed, i.created, i.updated, " .
       "t.name as tracker, s.name as status, p.name as priority, " .
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
       "vt.name as target, vf.name as found, cat.name as category, " .
@@ -100,7 +101,7 @@ class IssueDataStore extends DataStore {
     $this->query(
       "insert into issue " .
       "(projectId, trackerId, statusId, priorityId, categoryId, targetId, " .
-      "foundId, assigneeId, creatorId, title, details, created) " .
+      "foundId, assigneeId, creatorId, title, details, closed, created) " .
       "values (%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, now())",
       (int)$issue->projectId,
       (int)$issue->trackerId,
@@ -112,7 +113,8 @@ class IssueDataStore extends DataStore {
       self::nullInt($issue->assigneeId),
       self::nullInt($issue->creatorId),
       $issue->title,
-      $issue->details);
+      $issue->details,
+      (int)$issue->closed);
     
     return $this->sql->insert_id;
   }
@@ -122,7 +124,7 @@ class IssueDataStore extends DataStore {
       "insert into issue " .
       "(projectId, trackerId, statusId, priorityId, categoryId, targetId, " .
       "foundId, assigneeId, creatorId, updaterId, importId, " .
-      "title, details, votes, created, updated) values ";
+      "title, details, votes, closed, created, updated) values ";
     
     for ($j = 0; $j < count($issues) / self::BULK_INSERT_MAX; $j++) {
       
@@ -133,7 +135,7 @@ class IssueDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
         $values .= $this->format(
-          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s)",
+          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %d, %s, %s)",
           (int)$issue->projectId,
           (int)$issue->trackerId,
           (int)$issue->statusId,
@@ -148,6 +150,7 @@ class IssueDataStore extends DataStore {
           $issue->title,
           $issue->details,
           (int)$issue->votes,
+          (int)$issue->closed,
           $issue->created,
           $issue->updated)
           .($i < $count - 1 ? ", " : "");
@@ -162,7 +165,7 @@ class IssueDataStore extends DataStore {
       "update issue set " .
       "trackerId = %d, statusId = %d, priorityId = %d, categoryId = %s, targetId = %s, " .
       "foundId = %s, assigneeId = %s, updaterId = %s, " .
-      "title = %s, details = %s, updated = now() " .
+      "title = %s, details = %s, closed = %d, updated = now() " .
       "where id = %d",
       (int)$issue->trackerId,
       (int)$issue->statusId,
@@ -174,6 +177,7 @@ class IssueDataStore extends DataStore {
       self::nullInt($issue->updaterId),
       $issue->title,
       $issue->details,
+      (int)$issue->closed,
       (int)$issue->id);
   }
   
