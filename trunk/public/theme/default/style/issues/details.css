@@ -17,6 +17,7 @@
 
 div.box {
   padding: 7px;
+  margin-top: 7px;
 }
 
 div.box div.column {
