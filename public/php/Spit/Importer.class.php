@@ -30,6 +30,7 @@ class Importer {
     $this->priorityDataStore = new \Spit\DataStores\PriorityDataStore;
     $this->trackerDataStore = new \Spit\DataStores\TrackerDataStore;
     $this->versionDataStore = new \Spit\DataStores\VersionDataStore;
+    $this->issueFields = new \Spit\IssueFields($app);
   }
   
   public function redmineImport($options) {
@@ -49,9 +50,10 @@ class Importer {
       $this->app->security->setUserId($id);
     }
     
-    $db = $options->db;
     $context = new \stdClass;
+    $context->options = $options;
     
+    $db = $options->db;
     $context->redmine = new \Spit\DataStores\RedmineDataStore(
       $db->host, $db->user, $db->password, $db->name);
     
@@ -63,6 +65,7 @@ class Importer {
     $this->loadTrackers($context);
     $this->loadVersions($context);
     
+    $this->loadCustomFieldValues($context);
     $context->customFields = $this->getCustomFieldMap($context->redmine);
     $context->customValues = $this->getCustomValueMap($context->redmine);
     
@@ -85,8 +88,89 @@ class Importer {
     $this->issueDataStore->insertMany($context->issues);
     $context->issueIdMap = $this->getIssueIdMap();
     
+    $this->insertCustomValues($context);
+    
     $this->resolveChangeFields($context);
     $this->changeDataStore->insertMany($context->changes);
+  }
+  
+  private function insertCustomValues($context) {
+    $fields = array();
+    foreach ($this->issueFields->getCustomFieldMap() as $k => $v) {
+      array_push($fields, $k);
+    }
+    
+    $valueLists = array();
+    foreach ($context->issues as $issue) {
+      $custom = new \stdClass;
+      $custom->id = $context->issueIdMap[$issue->importId];
+      $custom->values = $this->getCustomValues($issue, $fields, $context);
+      if (!$this->isEmpty($custom->values)) {
+        array_push($valueLists, $custom);
+      }
+    }
+    
+    $this->issueDataStore->insertCustomMany($fields, $valueLists);
+  }
+  
+  private function isEmpty($list) {
+    foreach ($list as $item) {
+      if ($item != null) {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  private function getCustomValues($issue, $fields, $context) {
+    $map = array();
+    if (array_key_exists($issue->importId, $context->customValues)) {
+      $values = $context->customValues[$issue->importId];
+      foreach ($values as $id => $value) {
+        if (array_key_exists($id, $context->options->customMap)) {
+          $field = $context->options->customMap[$id];
+          $valueMap = $context->customFieldValues[$field];
+          
+          if (count($valueMap) != 0) {
+            // the field has values, so try and figure out which one it is.
+            foreach ($valueMap as $possibleValue => $possibleId) {
+              if ($value == $possibleValue) {
+                $map[$field] = $possibleId;
+              }
+            }
+          }
+          else {
+            // the field has no values, so assume that it's a plain text
+            // field which doesn't use ids; just store the value.
+            $map[$field] = $value;
+          }
+        }
+      }
+    }
+    
+    // flatten the key value pairs to just values, and put them
+    // in the same order as the fields (so the sql columns match).
+    $result = array();
+    foreach ($fields as $field) {
+      $value = null;
+      if (array_key_exists($field, $map)) {
+        $value = $map[$field];
+      }
+      array_push($result, $value);
+    }
+    return $result;
+  }
+  
+  private function loadCustomFieldValues($context) {
+    $context->customFieldValues = array();
+    foreach ($context->options->customMap as $redmineId => $spitId) {
+      $valueMap = array();
+      foreach ($this->issueFields->getCustomFieldValues($spitId) as $id => $value) {
+        // used to map values to ids.
+        $valueMap[$value] = $id;
+      }
+      $context->customFieldValues[$spitId] = $valueMap;
+    }
   }
   
   private function loadIssues($context) {
@@ -296,14 +380,18 @@ class Importer {
   private function getCustomValueMap($redmine) {
     $map = array();
     foreach ($redmine->getCustomValues() as $cv) {
+      if ($cv->value == null) {
+        continue;
+      }
+      
       if (array_key_exists($cv->customized_id, $map)) {
         $custom = $map[$cv->customized_id];
       }
       else {
         $custom = array();
-        $map[$cv->customized_id] = $custom;
       }
       $custom[$cv->custom_field_id] = $cv->value;
+      $map[$cv->customized_id] = $custom;
     }
     return $map;
   }
