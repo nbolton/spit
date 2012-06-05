@@ -36,6 +36,7 @@ class ChangeResolver {
     $this->addField("foundId", "found", new \Spit\DataStores\VersionDataStore);
     $this->addField("targetId", "target", new \Spit\DataStores\VersionDataStore);
     $this->addField("assigneeId", "assignee", new \Spit\DataStores\AssigneeDataStore);
+    $this->addField("categoryId", "category", new \Spit\DataStores\CategoryDataStore);
   }
   
   private function addField($id, $name, $dataStore = null) {
