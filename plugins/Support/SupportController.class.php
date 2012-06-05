@@ -36,7 +36,17 @@ class SupportController extends Spit\Controllers\Controller {
       $issue->statusId = 1; // new
       $issue->priorityId = 2; // normal
       $issue->title = $_POST["title"];
-      $issue->details = $_POST["steps"];
+      
+      $issue->details = sprintf(
+        "**Steps to reproduce:**\n\n%s\n\n" .
+        "**Versions and operating systems:**\n\n%s\n\n" .
+        "**Temporary workarounds:**\n\n%s\n\n" .
+        "**Additional comments:**\n\n%s",
+        $_POST["steps"],
+        $_POST["versions"],
+        $_POST["workaround"] != "" ? $_POST["workaround"] : "None",
+        $_POST["comments"] != "" ? $_POST["comments"] : "None"
+      );
       
       $dataStore = new \Spit\DataStores\IssueDataStore;
       $id = $dataStore->insert($issue);
