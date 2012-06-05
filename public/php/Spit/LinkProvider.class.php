@@ -29,6 +29,10 @@ class LinkProvider {
   public function forIssue($id) {
     return sprintf("%s/issues/details/%d/", $this->app->getProjectRoot(false), $id);
   }
+  
+  public function forAttachment($attachment) {
+    return sprintf("%s/attachments/%s", $this->app->getProjectRoot(false), $attachment->physicalName);
+  }
 }
 
 ?>

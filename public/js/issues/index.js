@@ -100,12 +100,9 @@ function loadIssues(page, results) {
       th = $("<th></th>");
       header.append(th);
       
-      a = $("<a></a>");
-      th.append(a);
-      
       th.attr("style", field.name);
-      a.text(field.label);
-      a.attr("href", "javascript:void(0)");
+      th.text(field.label);
+      th.attr("href", "javascript:void(0)");
     });
     
     tbody = table.find("tbody");
