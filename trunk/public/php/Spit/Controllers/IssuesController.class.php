@@ -90,9 +90,7 @@ class IssuesController extends Controller {
       
       switch ($mode) {
         case EditorMode::Create:
-          $issue->projectId = $this->app->project->id;
-          $issue->creatorId = $this->app->security->user->id;
-          $issue->id = $this->ds->insert($issue);
+          $this->insert($issue, $diff);
           break;
         
         case EditorMode::Update:
@@ -177,6 +175,15 @@ class IssuesController extends Controller {
       "info" => $this->getChangeInfo($change),
       "html" => $this->getChangeContent($change)
     );
+  }
+  
+  private function insert($issue, $diff) {
+    $issue->projectId = $this->app->project->id;
+    $issue->creatorId = $this->app->security->user->id;
+    $issue->id = $this->ds->insert($issue);
+    
+    $issueFields = new \Spit\IssueFields($this->app);
+    $this->updateCustom($issue, $diff, $issueFields);
   }
   
   private function update($issue, $diff) {
