@@ -87,13 +87,14 @@ class IssueDataStore extends DataStore {
   public function insert($issue) {
     $this->query(
       "insert into issue " .
-      "(projectId, trackerId, statusId, priorityId, targetId, " .
+      "(projectId, trackerId, statusId, priorityId, categoryId, targetId, " .
       "foundId, assigneeId, creatorId, title, details, created) " .
-      "values (%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, now())",
+      "values (%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, now())",
       (int)$issue->projectId,
       (int)$issue->trackerId,
       (int)$issue->statusId,
       (int)$issue->priorityId,
+      self::nullInt($issue->categoryId),
       self::nullInt($issue->targetId),
       self::nullInt($issue->foundId),
       self::nullInt($issue->assigneeId),
@@ -107,7 +108,7 @@ class IssueDataStore extends DataStore {
   public function insertMany($issues) {
     $base = 
       "insert into issue " .
-      "(projectId, trackerId, statusId, priorityId, targetId, " .
+      "(projectId, trackerId, statusId, priorityId, categoryId, targetId, " .
       "foundId, assigneeId, creatorId, updaterId, importId, " .
       "title, details, votes, created, updated) values ";
     
@@ -120,11 +121,12 @@ class IssueDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $issue = $slice[$i];
         $values .= $this->format(
-          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s)",
+          "(%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %d, %s, %s)",
           (int)$issue->projectId,
           (int)$issue->trackerId,
           (int)$issue->statusId,
           (int)$issue->priorityId,
+          self::nullInt($issue->categoryId),
           self::nullInt($issue->targetId),
           self::nullInt($issue->foundId),
           self::nullInt($issue->assigneeId),
@@ -146,13 +148,14 @@ class IssueDataStore extends DataStore {
   public function update($issue) {
     $this->query(
       "update issue set " .
-      "trackerId = %d, statusId = %d, priorityId = %d, targetId = %s, " .
+      "trackerId = %d, statusId = %d, priorityId = %d, categoryId = %s, targetId = %s, " .
       "foundId = %s, assigneeId = %s, updaterId = %s, " .
       "title = %s, details = %s, updated = now() " .
       "where id = %d",
       (int)$issue->trackerId,
       (int)$issue->statusId,
       (int)$issue->priorityId,
+      self::nullInt($issue->categoryId),
       self::nullInt($issue->targetId),
       self::nullInt($issue->foundId),
       self::nullInt($issue->assigneeId),

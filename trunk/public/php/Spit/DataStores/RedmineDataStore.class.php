@@ -62,20 +62,6 @@ class RedmineDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
-  public function getVotes() {
-    $exists = $this->query("show tables like 'votes'")->num_rows == 1;
-    if (!$exists) {
-      return array();
-    }
-    
-    $result = $this->query(
-      "select i.id, " .
-      "(select count(*) from votes where voteable_id = i.id) as votes " .
-      "from issues as i");
-    
-    return $this->fromResult($result);
-  }
-  
   public function getCustomFields() {
     $result = $this->query(
       "select id, name from custom_fields " .
@@ -97,6 +83,11 @@ class RedmineDataStore extends DataStore {
   
   public function getVersions() {
     $result = $this->query("select * from versions");
+    return $this->fromResult($result);
+  }
+  
+  public function getCategories() {
+    $result = $this->query("select * from issue_categories");
     return $this->fromResult($result);
   }
 }
