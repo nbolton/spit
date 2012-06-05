@@ -84,6 +84,15 @@ class IssueDataStore extends DataStore {
     return $this->fromResultSingle($result);
   }
   
+  public function getTitleById($id) {
+    $result = $this->query(
+      "select id, title from issue where id = %d",
+      (int)$id
+    );
+    
+    return $this->fromResultSingle($result);
+  }
+  
   public function insert($issue) {
     $this->query(
       "insert into issue " .
@@ -229,36 +238,9 @@ class IssueDataStore extends DataStore {
     }
   }
   
-  // TODO: move to new data store
-  public function insertRelationMany($relations) {
-    $base = 
-      "insert into relation " .
-      "(leftId, rightId, type) values ";
-    
-    for ($j = 0; $j < count($relations) / self::BULK_INSERT_MAX; $j++) {
-      
-      $slice = array_slice($relations, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
-      $count = count($slice);
-      $values = "";
-      
-      for ($i = 0; $i < $count; $i++) {
-        $relation = $slice[$i];
-        $values .= $this->format(
-          "(%d, %d, %d)",
-          (int)$relation->leftId,
-          (int)$relation->rightId,
-          (int)$relation->type)
-          .($i < $count - 1 ? ", " : "");
-      }
-      
-      $this->query($base . $values);
-    }
-  }
-  
   public function truncate() {
     $this->query("truncate table issue");
     $this->query("truncate table `custom`");
-    $this->query("truncate table relation");
   }
   
   protected function parseField($k, $v) {

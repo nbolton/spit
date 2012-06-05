@@ -144,6 +144,9 @@ class Controller {
   }
   
   public function formatDate($date) {
+    if ($date->format("H:i") == "00:00") {
+    return $date->format($this->app->settings->site->dateFormat);
+    }
     return $date->format($this->app->settings->site->dateTimeFormat);
   }
 }

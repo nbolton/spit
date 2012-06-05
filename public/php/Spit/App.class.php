@@ -33,6 +33,7 @@ require "UserType.class.php";
 require "HttpCode.class.php";
 require "Importer.class.php";
 require "ChangeResolver.class.php";
+require "LinkProvider.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";
@@ -49,6 +50,7 @@ require "DataStores/UserDataStore.class.php";
 require "DataStores/RedmineDataStore.class.php";
 require "DataStores/AssigneeDataStore.class.php";
 require "DataStores/CategoryDataStore.class.php";
+require "DataStores/RelationDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";
@@ -85,6 +87,7 @@ class App {
     $this->security = new Security($this);
     $this->error = new Controllers\ErrorController($this);
     $this->path = new Path;
+    $this->linkProvider = new LinkProvider($this);
   }
   
   public function run() {
@@ -156,14 +159,17 @@ class App {
     $this->error->show($code);
   }
   
-  public function getRoot() {
+  public function getRoot($trailingSlash = true) {
     $scriptName = $_SERVER['SCRIPT_NAME'];
     $pos = strrpos($scriptName, "/");
+    if (!$trailingSlash && substr($scriptName, 0, 1) == "/") {
+      return substr($scriptName, 1, $pos);
+    }
     return substr($scriptName, 0, $pos + 1);
   }
   
-  public function getProjectRoot() {
-    $root = $this->getRoot();
+  public function getProjectRoot($trailingSlash = true) {
+    $root = $this->getRoot($trailingSlash);
     if ($this->isSingleProject() || !isset($this->project)) {
       return $root;
     }

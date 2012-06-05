@@ -33,6 +33,7 @@ class Importer {
     $this->trackerDataStore = new \Spit\DataStores\TrackerDataStore;
     $this->versionDataStore = new \Spit\DataStores\VersionDataStore;
     $this->categoryDataStore = new \Spit\DataStores\CategoryDataStore;
+    $this->relationDataStore = new \Spit\DataStores\RelationDataStore;
     $this->issueFields = new \Spit\IssueFields($app);
   }
   
@@ -47,6 +48,7 @@ class Importer {
       $this->trackerDataStore->truncate();
       $this->versionDataStore->truncate();
       $this->categoryDataStore->truncate();
+      $this->relationDataStore->truncate();
       
       // re-add current user so they aren't logged out.
       $id = $this->userDataStore->insert($this->app->security->user);
@@ -103,7 +105,7 @@ class Importer {
     $this->changeDataStore->insertMany($context->changes);
     
     $this->resolveRelationFields($context);
-    $this->issueDataStore->insertRelationMany($context->relations);
+    $this->relationDataStore->insertMany($context->relations);
   }
   
   private function insertCustomValues($context) {
