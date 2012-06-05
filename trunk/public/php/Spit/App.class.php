@@ -56,6 +56,8 @@ require "Models/Change.class.php";
 require "Models/User.class.php";
 require "Models/Status.class.php";
 require "Models/Priority.class.php";
+require "Models/Tracker.class.php";
+require "Models/Version.class.php";
 
 require "Models/Fields/SelectField.class.php";
 require "Models/Fields/TableField.class.php";

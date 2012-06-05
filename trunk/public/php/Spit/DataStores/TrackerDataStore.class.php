@@ -21,9 +21,44 @@ namespace Spit\DataStores;
 
 class TrackerDataStore extends DataStore {
 
+  const BULK_INSERT_MAX = 500;
+
   public function get() {
     $result = $this->query("select * from tracker");
     return $this->fromResult($result);
+  }
+  
+  public function getImportIds() {
+    $result = $this->query("select id, importId from tracker");
+    return $this->fromResult($result);
+  }
+  
+  public function insertMany($tracker) {
+    $base = 
+      "insert into tracker " .
+      "(importId, name) values ";
+    
+    for ($j = 0; $j < count($tracker) / self::BULK_INSERT_MAX; $j++) {
+      
+      $slice = array_slice($tracker, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
+      $values = "";
+      
+      for ($i = 0; $i < $count; $i++) {
+        $tracker = $slice[$i];
+        $values .= $this->format(
+          "(%s, %s)",
+          self::nullInt($tracker->importId),
+          $tracker->name)
+          .($i < $count - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $values);
+    }
+  }
+  
+  public function truncate() {
+    $this->query("truncate table tracker");
   }
 }
 
