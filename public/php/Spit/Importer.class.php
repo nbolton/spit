@@ -100,6 +100,7 @@ class Importer {
       $issue->priorityId = (int)$rmi->priority_id;
       $issue->creatorId = (int)$rmi->author_id;
       $issue->assigneeId = (int)$rmi->assigned_to_id;
+      $issue->targetId = (int)$rmi->fixed_version_id;
       $issue->updaterId = null;
       $issue->title = $rmi->subject;
       $issue->details = self::toMarkdown($rmi->description);
@@ -323,7 +324,7 @@ class Importer {
       $change->creatorId = $this->getMapValue($context->userIdMap, $change->creatorId);
       $change->issueId = $this->getMapValue($context->issueIdMap, $change->issueId);
       
-      $this->resolveChangeValue($change, $context);
+      $this->resolveChangeValues($change, $context);
       
       // resolve custom field names.
       if (substr($change->name, 0, 2) == "cf") {
@@ -335,7 +336,7 @@ class Importer {
     }
   }
   
-  private function resolveChangeValue($change, $context) {
+  private function resolveChangeValues($change, $context) {
     switch ($change->name) {
       case "status": $map = $context->statusMap; break;
       case "tracker": $map = $context->trackerMap; break;
@@ -347,8 +348,15 @@ class Importer {
       if (array_key_exists($change->oldValue, $map)) {
         $change->oldValue = $map[$change->oldValue];
       }
+      else {
+        $change->oldValue = "?";
+      }
+      
       if (array_key_exists($change->newValue, $map)) {
         $change->newValue = $map[$change->newValue];
+      }
+      else {
+        $change->newValue = "?";
       }
     }
   }
