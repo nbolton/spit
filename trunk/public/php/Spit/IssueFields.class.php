@@ -52,7 +52,13 @@ class IssueFields {
     return $this->mappings["fields" . $id];
   }
   
-  public function filter($fields, $trackerId = null, $excludeReadOnly = false) {
+  public function filter($fields, $trackerId = null, $forEditor = false) {
+    // only members can see fields for the editor.
+    if ($forEditor && $this->app->security->isLoggedIn() &&
+      !$this->app->security->userIsType(\Spit\UserType::Member)) {
+      return array();
+    }
+    
     $id = $this->getCustomId();
     if ($id == null) {
       return array();
@@ -91,7 +97,7 @@ class IssueFields {
     foreach ($fields as $field) {
       // if custom field isn't excluded...
       if (!in_array($field->name, $exclude) &&
-        (!$excludeReadOnly || !in_array($field->name, $readOnly))) {
+        (!$forEditor || !in_array($field->name, $readOnly))) {
         array_push($result, $field);
       }
     }
