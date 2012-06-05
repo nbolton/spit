@@ -89,6 +89,16 @@ class RedmineDataStore extends DataStore {
       "from custom_values where customized_type = 'Issue'");
     return $this->fromResult($result);
   }
+  
+  public function getTrackers() {
+    $result = $this->query("select * from trackers");
+    return $this->fromResult($result);
+  }
+  
+  public function getVersions() {
+    $result = $this->query("select * from versions");
+    return $this->fromResult($result);
+  }
 }
 
 ?>

@@ -28,6 +28,8 @@ class Importer {
     $this->userDataStore = new \Spit\DataStores\UserDataStore;
     $this->statusDataStore = new \Spit\DataStores\StatusDataStore;
     $this->priorityDataStore = new \Spit\DataStores\PriorityDataStore;
+    $this->trackerDataStore = new \Spit\DataStores\TrackerDataStore;
+    $this->versionDataStore = new \Spit\DataStores\VersionDataStore;
   }
   
   public function redmineImport($options) {
@@ -38,6 +40,8 @@ class Importer {
       $this->userDataStore->truncate();
       $this->statusDataStore->truncate();
       $this->priorityDataStore->truncate();
+      $this->trackerDataStore->truncate();
+      $this->versionDataStore->truncate();
       
       // re-add current user so they aren't logged out.
       $id = $this->userDataStore->insert($this->app->security->user);
@@ -46,18 +50,24 @@ class Importer {
     }
     
     $db = $options->db;
-    $redmine = new \Spit\DataStores\RedmineDataStore(
+    $context = new \stdClass;
+    
+    $context->redmine = new \Spit\DataStores\RedmineDataStore(
       $db->host, $db->user, $db->password, $db->name);
     
-    $context = new \stdClass;
-    $context->statuses = $this->getStatuses($redmine);
-    $context->priorities = $this->getPriorities($redmine);
-    $context->users = $this->getUsers($redmine);
-    $context->issues = $this->getIssues($redmine);
-    $context->changes = $this->getChanges($redmine);
+    $this->loadStatuses($context);
+    $this->loadPriorities($context);
+    $this->loadUsers($context);
+    $this->loadIssues($context);
+    $this->loadChanges($context);
+    $this->loadTrackers($context);
+    $this->loadVersions($context);
     
-    $context->customFields = $this->getCustomFieldMap($redmine);
-    $context->customValues = $this->getCustomValueMap($redmine);
+    $context->customFields = $this->getCustomFieldMap($context->redmine);
+    $context->customValues = $this->getCustomValueMap($context->redmine);
+    
+    $this->trackerDataStore->insertMany($context->trackers);
+    $context->trackerIdMap = $this->getTrackerIdMap();
     
     $this->userDataStore->insertMany($context->users);
     $context->userIdMap = $this->getUserIdMap();
@@ -68,6 +78,9 @@ class Importer {
     $this->priorityDataStore->insertMany($context->priorities);
     $context->priorityIdMap = $this->getPriorityIdMap();
     
+    $this->versionDataStore->insertMany($context->versions);
+    $context->versionIdMap = $this->getVersionIdMap();
+    
     $this->resolveIssueFields($context);
     $this->issueDataStore->insertMany($context->issues);
     $context->issueIdMap = $this->getIssueIdMap();
@@ -76,9 +89,9 @@ class Importer {
     $this->changeDataStore->insertMany($context->changes);
   }
   
-  private function getIssues($redmine) {
-    $issues = array();
-    foreach ($redmine->getIssues() as $rmi) {
+  private function loadIssues($context) {
+    $context->issues = array();
+    foreach ($context->redmine->getIssues() as $rmi) {
       $issue = new \Spit\Models\Issue;
       $issue->importId = (int)$rmi->id;
       $issue->projectId = 1;
@@ -93,14 +106,13 @@ class Importer {
       $issue->votes = isset($rmi->votes_value) ? $rmi->votes_value : 0;
       $issue->updated = $rmi->updated_on;
       $issue->created = $rmi->created_on;
-      array_push($issues, $issue);
+      array_push($context->issues, $issue);
     }
-    return $issues;
   }
   
-  private function getChanges($redmine) {
-    $changes = array();
-    foreach ($redmine->getJournalDetails() as $rmjd) {
+  private function loadChanges($context) {
+    $context->changes = array();
+    foreach ($context->redmine->getJournalDetails() as $rmjd) {
       $change = new \Spit\Models\Change;
       $change->issueId = (int)$rmjd->journalized_id;
       $change->creatorId = (int)$rmjd->user_id;
@@ -121,14 +133,13 @@ class Importer {
         $change->newValue = $rmjd->value;
       }
       
-      array_push($changes, $change);
+      array_push($context->changes, $change);
     }
-    return $changes;
   }
   
-  private function getUsers($redmine) {
-    $users = array();
-    foreach ($redmine->getUsers() as $rmu) {
+  private function loadUsers($context) {
+    $context->users = array();
+    foreach ($context->redmine->getUsers() as $rmu) {
       // skip user doing the import; don't add twice.
       if ($this->app->security->user->email == $rmu->mail) {
         $this->currentUserImportId = (int)$rmu->id;
@@ -145,32 +156,66 @@ class Importer {
       $user->importId = (int)$rmu->id;
       $user->email = $rmu->mail;
       $user->name = trim($rmu->firstname . " " . $rmu->lastname);
-      array_push($users, $user);
+      
+      array_push($context->users, $user);
     }
-    return $users;
   }
   
-  private function getPriorities($redmine) {
-    $priorities = array();
-    foreach ($redmine->getPriorities() as $rmp) {
+  private function loadPriorities($context) {
+    $context->priorities = array();
+    $context->priorityMap = array();
+    
+    foreach ($context->redmine->getPriorities() as $rmp) {
       $priority = new \Spit\Models\Priority;
       $priority->importId = (int)$rmp->id;
       $priority->name = $rmp->name;
-      array_push($priorities, $priority);
+      
+      array_push($context->priorities, $priority);
+      $context->priorityMap[$rmp->id] = $rmp->name;
     }
-    return $priorities;
   }
   
-  private function getStatuses($redmine) {
-    $statuses = array();
-    foreach ($redmine->getStatuses() as $rms) {
+  private function loadStatuses($context) {
+    $context->statuses = array();
+    $context->statusMap = array();
+    
+    foreach ($context->redmine->getStatuses() as $rms) {
       $status = new \Spit\Models\Status;
       $status->importId = (int)$rms->id;
       $status->name = $rms->name;
       $status->closed = (bool)$rms->is_closed;
-      array_push($statuses, $status);
+      
+      array_push($context->statuses, $status);
+      $context->statusMap[$rms->id] = $rms->name;
     }
-    return $statuses;
+  }
+  
+  private function loadTrackers($context) {
+    $context->trackers = array();
+    $context->trackerMap = array();
+    
+    foreach ($context->redmine->getTrackers() as $rmt) {
+      $tracker = new \Spit\Models\Tracker;
+      $tracker->importId = $rmt->id;
+      $tracker->name = $rmt->name;
+      
+      array_push($context->trackers, $tracker);
+      $context->trackerMap[$rmt->id] = $rmt->name;
+    }
+  }
+  
+  private function loadVersions($context) {
+    $context->versions = array();
+    $context->versionMap = array();
+    
+    foreach ($context->redmine->getVersions() as $rmv) {
+      $version = new \Spit\Models\Version;
+      $version->importId = $rmv->id;
+      $version->name = $rmv->name;
+      
+      array_push($context->versions, $version);
+      $context->versionMap[$rmv->id] = $rmv->name;
+    }
   }
   
   private function mapFieldName($property, $prop_key) {
@@ -180,6 +225,7 @@ class Importer {
         case "status_id": return "status";
         case "priority_id": return "priority";
         case "category_id": return "category";
+        case "subject": return "title";
         case "description": return "details";
         case "fixed_version_id": return "target";
         case "assigned_to_id": return "assignee";
@@ -228,6 +274,16 @@ class Importer {
     return $this->getImportIdMap($ids);
   }
   
+  private function getTrackerIdMap() {
+    $ids = $this->trackerDataStore->getImportIds();
+    return $this->getImportIdMap($ids);
+  }
+  
+  private function getVersionIdMap() {
+    $ids = $this->versionDataStore->getImportIds();
+    return $this->getImportIdMap($ids);
+  }
+  
   private function getCustomFieldMap($redmine) {
     $map = array();
     foreach ($redmine->getCustomFields() as $cf) {
@@ -257,6 +313,8 @@ class Importer {
       $issue->assigneeId = $this->getMapValue($context->userIdMap, $issue->assigneeId);
       $issue->statusId = $this->getMapValue($context->statusIdMap, $issue->statusId);
       $issue->priorityId = $this->getMapValue($context->priorityIdMap, $issue->priorityId);
+      $issue->trackerId = $this->getMapValue($context->trackerIdMap, $issue->trackerId);
+      $issue->targetId = $this->getMapValue($context->versionIdMap, $issue->targetId);
     }
   }
   
@@ -265,12 +323,32 @@ class Importer {
       $change->creatorId = $this->getMapValue($context->userIdMap, $change->creatorId);
       $change->issueId = $this->getMapValue($context->issueIdMap, $change->issueId);
       
+      $this->resolveChangeValue($change, $context);
+      
       // resolve custom field names.
       if (substr($change->name, 0, 2) == "cf") {
         $customFieldId = substr($change->name, 3);
         if (array_key_exists($customFieldId, $context->customFields)) {
           $change->name = $context->customFields[$customFieldId];
         }
+      }
+    }
+  }
+  
+  private function resolveChangeValue($change, $context) {
+    switch ($change->name) {
+      case "status": $map = $context->statusMap; break;
+      case "tracker": $map = $context->trackerMap; break;
+      case "target": $map = $context->versionMap; break;
+      case "priority": $map = $context->priorityMap; break;
+    }
+    
+    if (isset($map)) {
+      if (array_key_exists($change->oldValue, $map)) {
+        $change->oldValue = $map[$change->oldValue];
+      }
+      if (array_key_exists($change->newValue, $map)) {
+        $change->newValue = $map[$change->newValue];
       }
     }
   }
