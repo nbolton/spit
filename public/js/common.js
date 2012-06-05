@@ -68,6 +68,10 @@ function updateLoadStats(stats) {
   $("span.queries").text(initialQueries + queries);
 }
 
+function scrollUp() {
+  $('html, body').animate({scrollTop: 0}, 500);
+}
+
 function scrollDown() {
   $('html, body').animate({scrollTop: $(document).height()}, 500);
 }

@@ -21,6 +21,7 @@
 
 <form method="post">
   <div class="box">
+    <?php if ($self->userCanEditAdvanced()): ?>
     <div class="column">
       <div class="row">
         <label for="trackerId"><?=T_("Tracker")?></label>
@@ -31,6 +32,8 @@
         </select>
       </div>
     </div>
+    <?php endif ?>
+    
     <div class="row">
       <label for="title"><?=T_("Title")?></label>
       <input id="title" name="title" type="text" value="<?=$issue->title?>" />

@@ -18,7 +18,10 @@
 ?>
 
 <h2><?=$title?></h2>
+
+<?php if ($self->userCanCreate(true)): ?>
 <p><a href="new/"><?=T_("New issue")?></a></p>
+<?php endif ?>
 
 <div id="issues">
   <div class="box">

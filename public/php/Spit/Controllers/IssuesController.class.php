@@ -64,7 +64,7 @@ class IssuesController extends Controller {
     switch ($mode) {
       case EditorMode::Create: {
         $issue = new \Spit\Models\Issue;
-        if (!$this->auth(\Spit\UserType::Newbie)) {
+        if (!$this->userCanCreate()) {
           return;
         }
         break;
@@ -109,6 +109,10 @@ class IssuesController extends Controller {
     
     $title = ($mode == EditorMode::Create) ? T_("New Issue") : T_("Edit Issue");
     $this->showView("issues/editor", $title, $data);
+  }
+  
+  public function userCanCreate($passive = false) {
+    return $this->auth(\Spit\UserType::Member, $passive);
   }
   
   public function userCanEdit($issue, $passive = false) {
@@ -535,6 +539,10 @@ class IssuesController extends Controller {
   public function getAttachmentInfo($attachment) {
     $link = $this->app->linkProvider->forAttachment($attachment);
     return sprintf("<a href=\"%s\">%s</a>", $link, $attachment->originalName);
+  }
+  
+  public function userCanEditAdvanced() {
+    return $this->app->security->userIsType(\Spit\UserType::Member);
   }
 }
 
