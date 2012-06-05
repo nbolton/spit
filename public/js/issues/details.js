@@ -19,6 +19,19 @@ function viewLoad() {
   form = $("div.comment form");
   link = $("div.comment a.edit");
   
+  var converter = Markdown.getSanitizingConverter();
+  var editor = new Markdown.Editor(converter);
+  editor.run();
+  
+  editor.hooks.chain("onPreviewRefresh", function() {
+    if ($("textarea#wmd-input").val() == "") {
+      $("div.preview").hide();
+    }
+    else {
+      $("div.preview").show();
+    }
+  });
+  
   link.click(function() {
     $(this).hide();
     form.fadeIn();

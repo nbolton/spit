@@ -16,10 +16,5 @@
  */
 
 div.preview div.box {
-  padding: 10px;
-  margin-top: 10px;
-}
-
-div.preview div.box pre {
-  overflow: hidden;
+  margin-top: 12px;
 }

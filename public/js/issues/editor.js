@@ -26,6 +26,15 @@ function viewLoad() {
   var converter = Markdown.getSanitizingConverter();
   var editor = new Markdown.Editor(converter);
   editor.run();
+  
+  editor.hooks.chain("onPreviewRefresh", function() {
+    if ($("textarea#wmd-input").val() == "") {
+      $("div.preview").hide();
+    }
+    else {
+      $("div.preview").show();
+    }
+  });
 }
 
 function loadDynamicFields(tracker) {

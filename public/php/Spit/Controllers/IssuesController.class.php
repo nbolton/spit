@@ -126,6 +126,8 @@ class IssuesController extends Controller {
   }
   
   private function runDetails() {
+    $this->useMarkdown = true;
+    
     if ($this->isJsonPost()) {
       exit($this->getJson($this->commentPost()));
     }
