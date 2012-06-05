@@ -48,6 +48,7 @@ require "DataStores/VersionDataStore.class.php";
 require "DataStores/UserDataStore.class.php";
 require "DataStores/RedmineDataStore.class.php";
 require "DataStores/AssigneeDataStore.class.php";
+require "DataStores/CategoryDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";
@@ -58,6 +59,7 @@ require "Models/Status.class.php";
 require "Models/Priority.class.php";
 require "Models/Tracker.class.php";
 require "Models/Version.class.php";
+require "Models/Category.class.php";
 
 require "Models/Fields/SelectField.class.php";
 require "Models/Fields/TableField.class.php";

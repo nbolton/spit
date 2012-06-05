@@ -30,6 +30,7 @@ class Importer {
     $this->priorityDataStore = new \Spit\DataStores\PriorityDataStore;
     $this->trackerDataStore = new \Spit\DataStores\TrackerDataStore;
     $this->versionDataStore = new \Spit\DataStores\VersionDataStore;
+    $this->categoryDataStore = new \Spit\DataStores\CategoryDataStore;
     $this->issueFields = new \Spit\IssueFields($app);
   }
   
@@ -43,6 +44,7 @@ class Importer {
       $this->priorityDataStore->truncate();
       $this->trackerDataStore->truncate();
       $this->versionDataStore->truncate();
+      $this->categoryDataStore->truncate();
       
       // re-add current user so they aren't logged out.
       $id = $this->userDataStore->insert($this->app->security->user);
@@ -64,6 +66,7 @@ class Importer {
     $this->loadChanges($context);
     $this->loadTrackers($context);
     $this->loadVersions($context);
+    $this->loadCategories($context);
     
     $this->loadCustomFieldValues($context);
     $context->customFields = $this->getCustomFieldMap($context->redmine);
@@ -83,6 +86,9 @@ class Importer {
     
     $this->versionDataStore->insertMany($context->versions);
     $context->versionIdMap = $this->getVersionIdMap();
+    
+    $this->categoryDataStore->insertMany($context->categories);
+    $context->categoryIdMap = $this->getCategoryIdMap();
     
     $this->resolveIssueFields($context);
     $this->issueDataStore->insertMany($context->issues);
@@ -193,6 +199,7 @@ class Importer {
       $issue->creatorId = (int)$rmi->author_id;
       $issue->assigneeId = (int)$rmi->assigned_to_id;
       $issue->targetId = (int)$rmi->fixed_version_id;
+      $issue->categoryId = (int)$rmi->category_id;
       $issue->updaterId = null;
       $issue->title = $rmi->subject;
       $issue->details = self::toMarkdown($rmi->description);
@@ -313,6 +320,20 @@ class Importer {
     }
   }
   
+  private function loadCategories($context) {
+    $context->categories = array();
+    $context->categoryMap = array();
+    
+    foreach ($context->redmine->getCategories() as $rmc) {
+      $category = new \Spit\Models\Category;
+      $category->importId = $rmc->id;
+      $category->name = $rmc->name;
+      
+      array_push($context->categories, $category);
+      $context->categoryMap[$rmc->id] = $rmc->name;
+    }
+  }
+  
   private function mapFieldName($property, $prop_key) {
     if ($property == "attr") {
       switch ($prop_key) {
@@ -379,6 +400,11 @@ class Importer {
     return $this->getImportIdMap($ids);
   }
   
+  private function getCategoryIdMap() {
+    $ids = $this->categoryDataStore->getImportIds();
+    return $this->getImportIdMap($ids);
+  }
+  
   private function getCustomFieldMap($redmine) {
     $map = array();
     foreach ($redmine->getCustomFields() as $cf) {
@@ -412,6 +438,7 @@ class Importer {
       $issue->assigneeId = $this->getMapValue($context->userIdMap, $issue->assigneeId);
       $issue->statusId = $this->getMapValue($context->statusIdMap, $issue->statusId);
       $issue->priorityId = $this->getMapValue($context->priorityIdMap, $issue->priorityId);
+      $issue->categoryId = $this->getMapValue($context->categoryIdMap, $issue->categoryId);
       $issue->trackerId = $this->getMapValue($context->trackerIdMap, $issue->trackerId);
       $issue->targetId = $this->getMapValue($context->versionIdMap, $issue->targetId);
       $issue->foundId = $this->findFoundId($context, $issue->importId);
@@ -460,6 +487,7 @@ class Importer {
       case "status": $map = $context->statusMap; break;
       case "tracker": $map = $context->trackerMap; break;
       case "target": $map = $context->versionMap; break;
+      case "category": $map = $context->categoryMap; break;
       case "priority": $map = $context->priorityMap; break;
     }
     
