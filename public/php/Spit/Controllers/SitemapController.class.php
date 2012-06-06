@@ -19,24 +19,10 @@
 
 namespace Spit\Controllers;
 
-class IndexController extends Controller {
+class SitemapController extends Controller {
   
   public function run() {
-    if (isset($this->app->project)) {
-      $this->showView("index");
-    }
-    else {
-      $dataStore = new \Spit\DataStores\ProjectDataStore;
-      if ($this->app->security->isLoggedIn()) {
-        $projects = $dataStore->getForUser($this->app->security->user->id);
-      }
-      else {
-        $projects = array();
-      }
-      $data["projects"] = $projects;
-      
-      $this->showView("projects", T_("Projects"), $data);
-    }
+    
   }
 }
 

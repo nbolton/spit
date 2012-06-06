@@ -26,6 +26,7 @@ require "AdminController.class.php";
 require "UsersController.class.php";
 require "LoginController.class.php";
 require "LogoutController.class.php";
+require "SitemapController.class.php";
 
 use Exception;
 
@@ -39,6 +40,7 @@ class ControllerProvider {
     $this->map("users", new UsersController);
     $this->map("login", new LoginController);
     $this->map("logout", new LogoutController);
+    $this->map("Sitemap.xml", new SitemapController);
   }
   
   public function map($name, $controller) {
