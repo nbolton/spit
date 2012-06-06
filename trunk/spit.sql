@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 05, 2012 at 10:13 PM
+-- Generation Time: Jun 06, 2012 at 04:33 PM
 -- Server version: 5.5.20
 -- PHP Version: 5.3.10
 
@@ -26,7 +26,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `attachment`
 --
 
-CREATE TABLE IF NOT EXISTS `attachment` (
+CREATE TABLE `attachment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `issueId` int(11) NOT NULL,
   `creatorId` int(11) DEFAULT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `attachment` (
   `contentType` varchar(50) DEFAULT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=483 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -44,12 +44,12 @@ CREATE TABLE IF NOT EXISTS `attachment` (
 -- Table structure for table `category`
 --
 
-CREATE TABLE IF NOT EXISTS `category` (
+CREATE TABLE `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `category` (
 -- Table structure for table `change`
 --
 
-CREATE TABLE IF NOT EXISTS `change` (
+CREATE TABLE `change` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `issueId` int(11) NOT NULL,
   `creatorId` int(11) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS `change` (
   `newValue` text,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15490 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -76,14 +76,14 @@ CREATE TABLE IF NOT EXISTS `change` (
 -- Table structure for table `custom`
 --
 
-CREATE TABLE IF NOT EXISTS `custom` (
+CREATE TABLE `custom` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `issueId` int(11) NOT NULL,
   `platformId` int(11) DEFAULT NULL,
   `googleId` varchar(6) DEFAULT NULL,
   `redmineId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3233 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `custom` (
 -- Table structure for table `issue`
 --
 
-CREATE TABLE IF NOT EXISTS `issue` (
+CREATE TABLE `issue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projectId` int(11) NOT NULL,
   `trackerId` int(11) NOT NULL,
@@ -107,10 +107,11 @@ CREATE TABLE IF NOT EXISTS `issue` (
   `title` varchar(250) NOT NULL,
   `details` text NOT NULL,
   `votes` int(11) NOT NULL,
+  `closed` bit(1) NOT NULL,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3240 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -118,12 +119,12 @@ CREATE TABLE IF NOT EXISTS `issue` (
 -- Table structure for table `priority`
 --
 
-CREATE TABLE IF NOT EXISTS `priority` (
+CREATE TABLE `priority` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -131,13 +132,14 @@ CREATE TABLE IF NOT EXISTS `priority` (
 -- Table structure for table `project`
 --
 
-CREATE TABLE IF NOT EXISTS `project` (
+CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `importId` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `title` varchar(50) NOT NULL,
   `description` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -145,13 +147,13 @@ CREATE TABLE IF NOT EXISTS `project` (
 -- Table structure for table `relation`
 --
 
-CREATE TABLE IF NOT EXISTS `relation` (
+CREATE TABLE `relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `leftId` int(11) NOT NULL,
   `rightId` int(11) NOT NULL,
   `type` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=253 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -159,13 +161,13 @@ CREATE TABLE IF NOT EXISTS `relation` (
 -- Table structure for table `status`
 --
 
-CREATE TABLE IF NOT EXISTS `status` (
+CREATE TABLE `status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(20) NOT NULL,
   `closed` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -173,12 +175,12 @@ CREATE TABLE IF NOT EXISTS `status` (
 -- Table structure for table `tracker`
 --
 
-CREATE TABLE IF NOT EXISTS `tracker` (
+CREATE TABLE `tracker` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -186,14 +188,14 @@ CREATE TABLE IF NOT EXISTS `tracker` (
 -- Table structure for table `user`
 --
 
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `typeMask` int(11) NOT NULL,
   `email` varchar(250) NOT NULL,
   `name` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3316 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -201,12 +203,12 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Table structure for table `version`
 --
 
-CREATE TABLE IF NOT EXISTS `version` (
+CREATE TABLE `version` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
