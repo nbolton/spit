@@ -77,6 +77,7 @@ class App {
   public static $instance;
   
   public $queryCount = 0;
+  public $project;
   
   public function __construct() {
     self::$instance = $this;
@@ -97,14 +98,9 @@ class App {
     
     $this->initLinks();
     
-    $this->project = $this->findProject();
-    if ($this->project == null) {
+    if (!$this->initProject()) {
       $this->showError(404);
       return;
-    }
-    
-    if (!$this->isSingleProject()) {
-      $this->setupMultiProject();
     }
     
     $this->plugins->load();
@@ -136,23 +132,33 @@ class App {
     }
   }
   
-  private function setupMultiProject() {
-  
-    $this->addLink(new Link(T_("Projects"), $this->getRoot(), true));
-    
-    // offset the path so that pages wanting index 1 get 2,
-    // since the part at 0 is now the project name.
-    $this->path->setOffset(1);
-  }
-  
-  private function findProject() {
+  private function initProject() {
     $dataStore = new DataStores\ProjectDataStore;
-    if ($this->isSingleProject()) {
-      return $dataStore->getByName($this->settings->site->singleProject);
+    
+    if (!$this->isSingleProject()) {
+      if ($this->path->get(0) == null) {
+        // if no project is set, the index controller will
+        // just show project links.
+        return true;
+      }
+      
+      $this->project = $dataStore->getByName($this->path->get(0));
+      
+      $this->addLink(new Link(T_("Projects"), $this->getRoot(), true));
+      
+      // offset the path so that pages wanting index 1 get 2,
+      // since the part at 0 is now the project name.
+      $this->path->setOffset(1);
     }
     else {
-      return $dataStore->getByName($this->path->get(0));
+      $this->project = $dataStore->getByName($this->settings->site->singleProject);
     }
+    
+    if ($this->project == null) {
+      return false;
+    }
+    
+    return true;
   }
   
   public function showError($code) {
@@ -171,7 +177,7 @@ class App {
   
   public function getProjectRoot($trailingSlash = true) {
     $root = $this->getRoot($trailingSlash);
-    if ($this->isSingleProject() || !isset($this->project)) {
+    if ($this->isSingleProject() || ($this->project == null)) {
       return $root;
     }
     return $root . $this->project->name . "/";
