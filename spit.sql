@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 06, 2012 at 04:33 PM
+-- Generation Time: Jun 06, 2012 at 05:09 PM
 -- Server version: 5.5.20
 -- PHP Version: 5.3.10
 
@@ -116,6 +116,19 @@ CREATE TABLE `issue` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `member`
+--
+
+CREATE TABLE `member` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `projectId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `priority`
 --
 
@@ -138,6 +151,7 @@ CREATE TABLE `project` (
   `name` varchar(50) NOT NULL,
   `title` varchar(50) NOT NULL,
   `description` varchar(250) NOT NULL,
+  `isPublic` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 

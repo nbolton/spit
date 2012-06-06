@@ -27,7 +27,7 @@ class IndexController extends Controller {
     }
     else {
       $dataStore = new \Spit\DataStores\ProjectDataStore;
-      $data["projects"] = $dataStore->get();
+      $data["projects"] = $dataStore->getForUser($this->app->security->user->id);
       $this->showView("projects", T_("Projects"), $data);
     }
   }
