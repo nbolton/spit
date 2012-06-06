@@ -25,7 +25,7 @@ class IssueDataStore extends DataStore {
 
   const BULK_INSERT_MAX = 500;
   
-  public function get($start, $limit, $order = null) {
+  public function get($projectId, $start, $limit, $order = null) {
     if ($order == null) {
       // sort by updated, or if null, created.
       $order = "greatest(coalesce(updated, 0), coalesce(created, 0)) desc";
@@ -39,9 +39,10 @@ class IssueDataStore extends DataStore {
       "inner join status as s on s.id = i.statusId " .
       "inner join priority as p on p.id = i.priorityId " .
       "left join user as u on u.id = i.assigneeId " .
-      "where i.closed = 0 " .
+      "where i.projectId = %d and i.closed = 0 " .
       "order by %s limit %d, %d; " .
       "select FOUND_ROWS()",
+      (int)$projectId,
       $this->literal($order),
       (int)$start, (int)$limit
     );
