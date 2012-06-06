@@ -117,10 +117,14 @@ class App {
   
   private function initLinks() {
     
-    $this->links = array(
-      new Link(T_("Home"), ""),
-      new Link(T_("Issues"), "issues/")
-    );
+    // links that can be accessed even if there is no project.
+    $this->globalLinks = array(null, "login", "logout", "admin");
+    
+    $this->links = array(new Link(T_("Home"), null));
+    
+    if ($this->project != null) {
+      $this->addLink(new Link(T_("Issues"), "issues/"));
+    }
     
     if (!$this->security->isLoggedIn()) {
       $this->addLink(new Link(T_("Login"), "login/"));
@@ -136,7 +140,7 @@ class App {
     $dataStore = new DataStores\ProjectDataStore;
     
     if (!$this->isSingleProject()) {
-      if ($this->path->get(0) == null) {
+      if (in_array($this->path->get(0), $this->globalLinks)) {
         // if no project is set, the index controller will
         // just show project links.
         return true;

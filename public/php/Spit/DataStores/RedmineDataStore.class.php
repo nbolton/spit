@@ -32,6 +32,11 @@ class RedmineDataStore extends DataStore {
     $sql->set_charset("utf8");
     parent::__construct($sql);
   }
+  
+  public function getProjects() {
+    $result = $this->query("select * from projects");
+    return $this->fromResult($result);
+  }
 
   public function getIssues() {
     $result = $this->query("select * from issues");
