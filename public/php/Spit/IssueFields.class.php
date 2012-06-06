@@ -25,8 +25,10 @@ class IssueFields {
   public function __construct($app) {
     $this->app = $app;
     $this->mappings = array();
-    foreach (Settings::$instance->fields as $k => $v) {
-      $this->mappings[$k] = $this->getCustomMappings($v);
+    if (isset(Settings::$instance->fields)) {
+      foreach (Settings::$instance->fields as $k => $v) {
+        $this->mappings[$k] = $this->getCustomMappings($v);
+      }
     }
   }
   
@@ -56,14 +58,15 @@ class IssueFields {
     return $this->mappings["fields" . $id];
   }
   
-  public function filter($fields, $trackerId = null, $forEditor = false) {    
-    $id = $this->getCustomId();
-    if ($id == null) {
-      return array();
-    }
-    
+  public function filter($fields, $trackerId = null, $forEditor = false) {
     // if no tracker specified, we can't filter out ignored fields.
     if ($trackerId == null) {
+      return $fields;
+    }
+    
+    $id = $this->getCustomId();
+    if ($id == null) {
+      // do not filter if there are no settings for this project.
       return $fields;
     }
   
