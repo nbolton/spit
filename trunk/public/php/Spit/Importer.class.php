@@ -35,6 +35,7 @@ class Importer {
     $this->categoryDataStore = new \Spit\DataStores\CategoryDataStore;
     $this->relationDataStore = new \Spit\DataStores\RelationDataStore;
     $this->attachmentDataStore = new \Spit\DataStores\AttachmentDataStore;
+    $this->projectDataStore = new \Spit\DataStores\ProjectDataStore;
     $this->issueFields = new \Spit\IssueFields($app);
   }
   
@@ -51,6 +52,7 @@ class Importer {
       $this->categoryDataStore->truncate();
       $this->relationDataStore->truncate();
       $this->attachmentDataStore->truncate();
+      $this->projectDataStore->truncate();
       
       // re-add current user so they aren't logged out.
       $id = $this->userDataStore->insert($this->app->security->user);
@@ -65,6 +67,7 @@ class Importer {
     $context->redmine = new \Spit\DataStores\RedmineDataStore(
       $db->host, $db->user, $db->password, $db->name);
     
+    $this->loadProjects($context);
     $this->loadStatuses($context);
     $this->loadPriorities($context);
     $this->loadUsers($context);
@@ -75,6 +78,9 @@ class Importer {
     $this->loadCategories($context);
     $this->loadRelations($context);
     $this->loadAttachments($context);
+    
+    $this->projectDataStore->insertMany($context->projects);
+    $context->projectIdMap = $this->getProjectIdMap();
     
     $this->loadCustomFieldValues($context);
     $context->customFields = $this->getCustomFieldMap($context->redmine);
@@ -206,7 +212,7 @@ class Importer {
     foreach ($context->redmine->getIssues() as $rmi) {
       $issue = new \Spit\Models\Issue;
       $issue->importId = (int)$rmi->id;
-      $issue->projectId = 1;
+      $issue->projectId = (int)$rmi->project_id;
       $issue->trackerId = (int)$rmi->tracker_id;
       $issue->statusId = (int)$rmi->status_id;
       $issue->priorityId = (int)$rmi->priority_id;
@@ -303,6 +309,18 @@ class Importer {
       array_push($context->statuses, $status);
       $context->statusMap[$rms->id] = $rms->name;
       $context->statusClosedMap[$rms->id] = $rms->is_closed;
+    }
+  }
+  
+  private function loadProjects($context) {
+    $context->projects = array();
+    foreach ($context->redmine->getProjects() as $rmp) {
+      $project = new \Spit\Models\Project;
+      $project->importId = (int)$rmp->id;
+      $project->name = $rmp->identifier;
+      $project->title = $rmp->name;
+      $project->description = $rmp->description;
+      array_push($context->projects, $project);
     }
   }
   
@@ -429,6 +447,11 @@ class Importer {
     return $map;
   }
   
+  private function getProjectIdMap() {
+    $ids = $this->projectDataStore->getImportIds();
+    return $this->getImportIdMap($ids);
+  }
+  
   private function getIssueIdMap() {
     $ids = $this->issueDataStore->getImportIds();
     return $this->getImportIdMap($ids);
@@ -488,6 +511,7 @@ class Importer {
   
   private function resolveIssueFields($context) {
     foreach ($context->issues as $issue) {
+      $issue->projectId = $this->getMapValue($context->projectIdMap, $issue->projectId);
       $issue->creatorId = $this->getMapValue($context->userIdMap, $issue->creatorId);
       $issue->assigneeId = $this->getMapValue($context->userIdMap, $issue->assigneeId);
       $issue->closed = $this->getMapValue($context->statusClosedMap, $issue->statusId);

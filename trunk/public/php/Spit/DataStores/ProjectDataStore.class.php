@@ -21,6 +21,8 @@ namespace Spit\DataStores;
 
 class ProjectDataStore extends DataStore {
 
+  const BULK_INSERT_MAX = 500;
+
   public function get() {
     $result = $this->query("select * from project");
     return $this->fromResult($result);
@@ -32,6 +34,41 @@ class ProjectDataStore extends DataStore {
       $name);
     
     return $this->fromResultSingle($result);
+  }
+  
+  public function getImportIds() {
+    $result = $this->query("select id, importId from project");
+    return $this->fromResult($result);
+  }
+  
+  public function insertMany($projects) {
+    $base = 
+      "insert into project " .
+      "(importId, name, title, description) values ";
+    
+    for ($j = 0; $j < count($projects) / self::BULK_INSERT_MAX; $j++) {
+      
+      $slice = array_slice($projects, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $count = count($slice);
+      $values = "";
+      
+      for ($i = 0; $i < $count; $i++) {
+        $project = $slice[$i];
+        $values .= $this->format(
+          "(%d, %s, %s, %s)",
+          self::nullInt($project->importId),
+          $project->name,
+          $project->title,
+          $project->description)
+          .($i < $count - 1 ? ", " : "");
+      }
+      
+      $this->query($base . $values);
+    }
+  }
+  
+  public function truncate() {
+    $this->query("truncate table project");
   }
   
   protected function newModel() {

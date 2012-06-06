@@ -64,11 +64,9 @@
             <h1><?=$app->getSiteTitle()?></h1>
             <p><?=$app->getSiteDescription()?></p>
             <div class="links">
-            <?php if(isset($app->project)): ?>
             <?php foreach ($app->links as $k => $l): ?>
               <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
             <?php endforeach ?>
-            <?php endif ?>
             </div>
           </div>
           <div class="column">

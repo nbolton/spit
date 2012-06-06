@@ -31,6 +31,10 @@ class IssueFields {
   }
   
   private function getCustomId() {
+    if ($this->app->project == null) {
+      return null;
+    }
+    
     if (!isset($this->mappings["projects"])) {
       return null;
     }
