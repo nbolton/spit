@@ -1,0 +1,96 @@
+/*
+ * SPIT: Simple PHP Issue Tracker
+ * Copyright (C) 2012 Nick Bolton
+ * 
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file COPYING that should have accompanied this file.
+ * 
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+div.box {
+  padding: 7px;
+  margin-top: 7px;
+}
+
+div.box div.column {
+  float: left;
+  width: 40%;
+}
+
+div.box div.row {
+  width: 100%;
+  margin-bottom: 7px;
+}
+
+div.box div.row,
+div.box div.row div.label,
+div.box div.row div.value {
+  float: left;
+  white-space: nowrap;
+}
+
+div.box div.row div.value span.empty {
+  color: #ddd;
+}
+
+div.box div.row div.label {
+  font-weight: bold;
+  width: 30%;
+  padding-right: 20px;
+}
+
+div.box span.details pre {
+  overflow: hidden;
+}
+
+hr {
+  clear: both;
+}
+
+div.changes span.add {
+  background-color: #d1e1ad;
+  color: #405a04;
+}
+
+div.changes span.remove {
+  background-color: #e5bdb2;
+  color: #a82400;
+  text-decoration: line-through;
+}
+
+div.change span.info {
+  color: #aaa;
+}
+
+div.comment form {
+  display: none;
+}
+
+div.comment form textarea {
+  height: 100px;
+}
+
+div.comment form input.button {
+  margin-left: -1px;
+}
+
+span.attachments ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+span.attachments li {
+  background-image: url('../../image/attachment.png');
+  background-repeat: no-repeat;
+  background-position: 0 4px;
+  padding: 2px 0px 2px 17px;
+}

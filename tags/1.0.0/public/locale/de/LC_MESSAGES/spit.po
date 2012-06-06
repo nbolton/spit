@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-24 23:21-0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: C:\\Projects\\spit\\trunk\\public\\\n"
+"X-Poedit-KeywordsList: T_\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: php/Spit/Controllers/IssuesController.class.php:27
+#: php/Spit/Views/master.php:37
+msgid "Issues"
+msgstr "Probleme"
+
+#: php/Spit/Controllers/IssuesController.class.php:38
+msgid "New Issue"
+msgstr "Neue ausgabe"
+
+#: php/Spit/Views/index.php:20
+msgid "Hello World"
+msgstr "Hallo Welt"
+
+#: php/Spit/Views/index.php:21
+#, php-format
+msgid "Welcome to %s."
+msgstr "Willkommen bei %s."
+
+#: php/Spit/Views/master.php:36
+msgid "Home"
+msgstr "Start"
+
+#: php/Spit/Views/master.php:41
+msgid "Language:"
+msgstr "Sprache:"
+
+#: php/Spit/Views/master.php:60
+#, php-format
+msgid "Powered by %s. Copyright &copy; %s 2012."
+msgstr "Präsentiert von %s. Urheberrecht &copy; %s 2012."
+
+#: php/Spit/Views/issues/editor.php:25
+msgid "Tracker"
+msgstr "Tracker"
+
+#: php/Spit/Views/issues/editor.php:35
+msgid "Title"
+msgstr "Titel"
+
+#: php/Spit/Views/issues/editor.php:39
+msgid "Details"
+msgstr "Einzelheiten"
+
+#: php/Spit/Views/issues/editor.php:44
+msgid "Status"
+msgstr "Status"
+
+#: php/Spit/Views/issues/editor.php:60
+msgid "Priority"
+msgstr "Priorität"
+
+#: php/Spit/Views/issues/editor.php:70
+msgid "Version"
+msgstr "Version"
+
+#: php/Spit/Views/issues/editor.php:79
+msgid "Platform"
+msgstr "Plattform"
+
+#: php/Spit/Views/issues/editor.php:90
+msgid "Assignee"
+msgstr "Assignee"
+
+#: php/Spit/Views/issues/index.php:21
+msgid "New"
+msgstr "Neu"
+

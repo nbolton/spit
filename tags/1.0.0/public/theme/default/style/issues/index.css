@@ -1,0 +1,43 @@
+/*
+ * SPIT: Simple PHP Issue Tracker
+ * Copyright (C) 2012 Nick Bolton
+ * 
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file COPYING that should have accompanied this file.
+ * 
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+div#issues {
+  margin-top: 10px;
+  min-height: 400px;
+}
+ 
+div#issues table {
+  display: none;
+}
+
+div#issues table td {
+  vertical-align: top;
+}
+ 
+div.loading {
+  text-align: center;
+  width: 100%;
+  z-index: 10;
+  padding-top: 100px;
+  height: 150px;
+}
+
+div.loading img {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
