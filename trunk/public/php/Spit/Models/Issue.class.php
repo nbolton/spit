@@ -30,6 +30,7 @@ class Issue {
   public $foundId;
   public $targetId;
   public $categoryId;
+  public $closed;
 }
 
 ?>
