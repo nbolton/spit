@@ -52,6 +52,7 @@ require "DataStores/AssigneeDataStore.class.php";
 require "DataStores/CategoryDataStore.class.php";
 require "DataStores/RelationDataStore.class.php";
 require "DataStores/AttachmentDataStore.class.php";
+require "DataStores/MemberDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";
@@ -99,7 +100,6 @@ class App {
     $this->initLinks();
     
     if (!$this->initProject()) {
-      $this->showError(404);
       return;
     }
     
@@ -159,10 +159,32 @@ class App {
     }
     
     if ($this->project == null) {
+      $this->showError(HttpCode::NotFound);
+      return false;
+    }
+    
+    if (!$this->project->isPublic && !$this->userIsMember($this->project)) {
+      $this->showError(HttpCode::Forbidden);
       return false;
     }
     
     return true;
+  }
+  
+  private function userIsMember($project) {
+    if (!$this->security->isLoggedIn()) {
+      return false;
+    }
+    
+    $dataStore = new DataStores\MemberDataStore;
+    $members = $dataStore->getForProject($project->id);
+    foreach ($members as $member) {
+      if ($member->userId == $this->security->user->id) {
+        return true;
+      }
+    }
+    
+    return false;
   }
   
   public function showError($code) {

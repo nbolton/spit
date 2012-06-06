@@ -320,6 +320,7 @@ class Importer {
       $project->name = $rmp->identifier;
       $project->title = $rmp->name;
       $project->description = $rmp->description;
+      $project->isPublic = $rmp->is_public;
       array_push($context->projects, $project);
     }
   }

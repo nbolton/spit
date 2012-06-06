@@ -23,8 +23,13 @@ class ProjectDataStore extends DataStore {
 
   const BULK_INSERT_MAX = 500;
 
-  public function get() {
-    $result = $this->query("select * from project");
+  public function getForUser($userId) {
+    $result = $this->query(
+      "select p.* from project as p ".
+      "left join member as m on m.projectId = p.id " .
+      "where p.isPublic = 1 or m.userId = %d",
+      (int)$userId
+    );
     return $this->fromResult($result);
   }
 
@@ -44,7 +49,7 @@ class ProjectDataStore extends DataStore {
   public function insertMany($projects) {
     $base = 
       "insert into project " .
-      "(importId, name, title, description) values ";
+      "(importId, name, title, description, isPublic) values ";
     
     for ($j = 0; $j < count($projects) / self::BULK_INSERT_MAX; $j++) {
       
@@ -55,11 +60,12 @@ class ProjectDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $project = $slice[$i];
         $values .= $this->format(
-          "(%d, %s, %s, %s)",
+          "(%d, %s, %s, %s, %d)",
           self::nullInt($project->importId),
           $project->name,
           $project->title,
-          $project->description)
+          $project->description,
+          (int)$project->isPublic)
           .($i < $count - 1 ? ", " : "");
       }
       

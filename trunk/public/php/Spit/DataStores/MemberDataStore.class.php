@@ -1,4 +1,5 @@
 <?php
+
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -15,16 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- ?>
 
-<h2><?=T_("Projects")?></h2>
+namespace Spit\DataStores;
 
-<?php if (count($projects) != 0): ?>
-<ul>
-<?php foreach($projects as $project): ?>
-  <li><a href="<?=$project->name?>/"><?=$project->title?></a></li>
-<?php endforeach ?>
-</ul>
-<?php else: ?>
-<p><?=T_("No projects are visible to you.")?></p>
-<?php endif ?>
+class MemberDataStore extends DataStore {
+
+  public function getForProject($projectId) {
+    $result = $this->query("select * from member where projectId = %d", (int)$projectId);
+    return $this->fromResult($result);
+  }
+}
+
+?>
