@@ -60,6 +60,15 @@ class IssueDataStore extends DataStore {
     $result = $this->query("select id, importId from issue");
     return $this->fromResult($result);
   }
+  
+  public function getPublicIds() {
+    $result = $this->query(
+      "select i.id from issue as i " .
+      "inner join project as p on p.id = i.projectId " .
+      "where p.isPublic = 1"
+    );
+    return $this->fromResult($result);
+  }
 
   public function getById($id, $custom) {
     $result = $this->query(

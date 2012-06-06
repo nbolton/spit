@@ -93,7 +93,7 @@ class App {
     $this->linkProvider = new LinkProvider($this);
     
     // links that can be accessed even if there is no project.
-    $this->globalLinks = array(null, "login", "logout", "admin");
+    $this->globalLinks = array(null, "login", "logout", "admin", "Sitemap.xml");
     $this->links = array();
   }
   

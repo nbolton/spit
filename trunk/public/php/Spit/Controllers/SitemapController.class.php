@@ -22,7 +22,19 @@ namespace Spit\Controllers;
 class SitemapController extends Controller {
   
   public function run() {
+    $dataStore = new \Spit\DataStores\IssueDataStore;
+    $issues = $dataStore->getPublicIds();
+    $links = "";
     
+    foreach ($issues as $issue) {
+      $links .= sprintf(
+        "<url><loc>http://%s%s</loc></url>",
+        $_SERVER["HTTP_HOST"],
+        $this->app->linkProvider->forIssue($issue->id));
+    }
+    
+    $format = "<?xml version=\"1.0\" ?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">%s</urlset>";
+    exit(sprintf($format, $links));
   }
 }
 
