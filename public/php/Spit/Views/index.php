@@ -18,5 +18,13 @@
  ?>
 
 <h2><?=T_("Hello World")?></h2>
-<p><?=sprintf(T_("Welcome to %s."), "SPIT, a Simple PHP Issue Tracker")?></p>
-<p><a href="issues/"><?=T_("Issues")?></a></p>
+<p>
+<?php
+echo sprintf(
+  T_("Welcome to %s, a free and open source issue tracker by %s."),
+  "<a href=\"http://spit-foss.org\">SPIT</a> (Simple PHP Issue Tracker)",
+  "Nick Bolton"
+);
+?>
+</p>
+<p><a href="issues/"><?=T_("View issues")?></a></p>
