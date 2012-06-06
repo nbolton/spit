@@ -102,7 +102,7 @@ class IssueDataStore extends DataStore {
       "insert into issue " .
       "(projectId, trackerId, statusId, priorityId, categoryId, targetId, " .
       "foundId, assigneeId, creatorId, title, details, closed, created) " .
-      "values (%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, now())",
+      "values (%d, %d, %d, %d, %s, %s, %s, %s, %s, %s, %s, %d, now())",
       (int)$issue->projectId,
       (int)$issue->trackerId,
       (int)$issue->statusId,

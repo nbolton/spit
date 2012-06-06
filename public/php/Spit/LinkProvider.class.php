@@ -31,7 +31,7 @@ class LinkProvider {
   }
   
   public function forAttachment($attachment) {
-    return sprintf("%s/attachments/%s", $this->app->getProjectRoot(false), $attachment->physicalName);
+    return sprintf("%s/files/%s", $this->app->getProjectRoot(false), $attachment->physicalName);
   }
 }
 
