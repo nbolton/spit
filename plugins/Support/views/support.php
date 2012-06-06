@@ -56,9 +56,9 @@ textarea.support {
       <h3><?=T_("Steps to reproduce bug")?></h3>
       <p><?=T_("Complete the numbered steps needed to reproduce the problem.")?></p>
 <textarea name="steps" class="support">
- 1. Disengage warp drive
- 2. Reverse the sheild polarity
- 3. Engage the Heisenberg compensators
+1. Disengage warp drive
+2. Reverse the sheild polarity
+3. Engage the Heisenberg compensators
 
 Expected: McChicken sandwich rematerialized
 
