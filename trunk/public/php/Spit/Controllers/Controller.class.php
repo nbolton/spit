@@ -79,7 +79,7 @@ class Controller {
   }
   
   public function getViewScript($view) {
-    $path = sprintf("%sjs/%s.js", $this->app->getProjectRoot(), $view);
+    $path = sprintf("%sjs/%s.js", $this->app->getRoot(), $view);
     if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {
       return sprintf("<script type=\"text/javascript\" src=\"%s\"></script>\n", $path);
     }
