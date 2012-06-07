@@ -129,7 +129,7 @@ class App {
     }
     
     if (!$this->security->isLoggedIn()) {
-      $this->addLink(new Link(T_("Login"), $this->linkProvider->forLogin()));
+      $this->addLink(new Link(T_("Login"), $this->linkProvider->forLogin(false)));
     }
     else {
       if ($this->security->userIsType(\Spit\UserType::Admin)) {
