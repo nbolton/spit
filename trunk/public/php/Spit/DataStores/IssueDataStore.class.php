@@ -28,12 +28,13 @@ class IssueDataStore extends DataStore {
   public function get($projectId, $start, $limit, $order = null) {
     if ($order == null) {
       // sort by updated, or if null, created.
-      $order = "greatest(coalesce(updated, 0), coalesce(created, 0)) desc";
+      $order = "activity desc";
     }
     $results = $this->multiQuery(
       "select SQL_CALC_FOUND_ROWS " .
-      "i.id, i.assigneeId, i.title, i.votes, i.updated, t.name as tracker, " .
-      "s.name as status, p.name as priority, u.name as assignee " .
+      "i.id, i.assigneeId, i.title, i.votes, t.name as tracker, " .
+      "s.name as status, p.name as priority, u.name as assignee, " .
+      "greatest(coalesce(updated, 0), coalesce(created, 0), coalesce(lastComment, 0)) as activity " .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
       "inner join status as s on s.id = i.statusId " .
@@ -189,6 +190,10 @@ class IssueDataStore extends DataStore {
       $issue->details,
       (int)$issue->closed,
       (int)$issue->id);
+  }
+  
+  public function updateLastComment($id) {
+    $this->query("update issue set lastComment = now() where id = %d", (int)$id);
   }
   
   // TODO: move to new data store
