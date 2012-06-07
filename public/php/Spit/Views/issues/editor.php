@@ -19,7 +19,7 @@
 
 <h2><?=$title?></h2>
 
-<form method="post">
+<form method="post" id="editor">
   <div class="box">
     <?php if ($self->userCanEditAdvanced()): ?>
     <div class="column">
@@ -35,11 +35,11 @@
     <?php endif ?>
     
     <div class="row">
-      <label for="title"><?=T_("Title")?></label>
+      <label for="title"><?=T_("Title")?>*</label>
       <input id="title" name="title" type="text" value="<?=addslashes($issue->title)?>" />
     </div>
     <div class="row">
-      <label for="details"><?=T_("Details")?></label>
+      <label for="wmd-input"><?=T_("Details")?>*</label>
       <div id="wmd-button-bar" class="wmd-button-bar"></div>
       <textarea id="wmd-input" name="details" type="details" class="wmd-input"><?=$issue->details?></textarea>
     </div>

@@ -33,9 +33,6 @@ use \Spit\Models\RelationType as RelationType;
 
 class IssuesController extends Controller {
   
-  const DEFAULT_STATUS = 1;
-  const DEFAULT_PRIORITY = 2;
-  
   public function __construct() {
     $this->ds = new \Spit\DataStores\IssueDataStore;
   }
@@ -419,9 +416,10 @@ class IssuesController extends Controller {
     return $select;
   }
   
-  private function fillSelectField($select, $data, $selected) {
+  private function fillSelectField($select, $data, $default) {
     foreach ($data as $item) {
-      $select->add($item->id, T_($item->name), $selected == $item->id);
+      $selected = $item->id == $default || (isset($item->isDefault) && $item->isDefault);
+      $select->add($item->id, T_($item->name), $selected);
     }
   }
   
@@ -436,13 +434,11 @@ class IssuesController extends Controller {
     $categoryDataStore = new \Spit\DataStores\CategoryDataStore;
   
     $status = new SelectField("statusId", T_("Status"));
-    $this->fillSelectField($status, $statusDataStore->get(),
-      $issue->statusId != null ? $issue->statusId : self::DEFAULT_STATUS);
+    $this->fillSelectField($status, $statusDataStore->get(), $issue->statusId);
     array_push($fields, $status);
     
     $priority = new SelectField("priorityId", T_("Priority"));
-    $this->fillSelectField($priority, $priorityDataStore->get(),
-      $issue->priorityId != null ? $issue->priorityId : self::DEFAULT_PRIORITY);
+    $this->fillSelectField($priority, $priorityDataStore->get(), $issue->priorityId);
     array_push($fields, $priority);
     
     $category = new SelectField("categoryId", T_("Category"));
