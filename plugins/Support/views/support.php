@@ -49,7 +49,7 @@ textarea.support {
     
     <div class="field">
       <h3><?=T_("Summary")?></h3>
-      <input name="title" type="text" />
+      <input name="title" type="text" maxlength="50" />
     </div>
     
     <div class="field">
