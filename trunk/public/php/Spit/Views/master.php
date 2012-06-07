@@ -24,12 +24,16 @@
     <meta http-equiv="Content-Language" content="<?=$app->locale->lang?>"/>
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta name="description" content="<?=$app->getSiteDescription()?>" />
+    
     <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/main.css" />
     <?=$app->controller->getViewStyle($view);?>
+    <?php if ($self->useMarkdown): ?>
+    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/pagedown.css" />
+    <?php endif ?>
+    
     <script type="text/javascript" src="<?=$app->getRoot()?>js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="<?=$app->getRoot()?>js/common.js"></script>
     <?php if ($self->useMarkdown): ?>
-    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/pagedown.css" />
     <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Converter.js"></script>
     <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Sanitizer.js"></script>
     <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Editor.js"></script>
@@ -40,6 +44,7 @@
     </style>
     <?php endif ?>
     <?=$app->controller->getViewScript($view);?>
+    
     <?php if(isset($app->settings->site->googleAnalytics)): ?>
     <script type="text/javascript">
 
