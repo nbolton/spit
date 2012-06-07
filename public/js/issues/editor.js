@@ -16,6 +16,23 @@
  */
 
 function viewLoad() {
+  $("form#editor").submit(function() {
+    title = $("input[name='title']");
+    details = $("textarea[name='details']");
+    
+    invalid = 0;
+    if (title.val() == "") {
+      title.parent().find("label").css("color", "red");
+      invalid++;
+    }
+    if (details.val() == "") {
+      details.parent().find("label").css("color", "red");
+      invalid++;
+    }
+    
+    return invalid == 0;
+  });
+  
   tracker = $("select#trackerId");
   if (tracker.is("*")) {
     loadDynamicFields(tracker.val());
