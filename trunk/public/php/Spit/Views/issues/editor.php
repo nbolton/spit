@@ -36,7 +36,7 @@
     
     <div class="row">
       <label for="title"><?=T_("Title")?></label>
-      <input id="title" name="title" type="text" value="<?=$issue->title?>" />
+      <input id="title" name="title" type="text" value="<?=addslashes($issue->title)?>" />
     </div>
     <div class="row">
       <label for="details"><?=T_("Details")?></label>
