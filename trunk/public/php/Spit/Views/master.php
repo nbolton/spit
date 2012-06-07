@@ -37,11 +37,6 @@
     <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Converter.js"></script>
     <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Sanitizer.js"></script>
     <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Editor.js"></script>
-    <style type="text/css">
-    .wmd-button > span {
-      background-image: url(<?=$app->getImagePath("wmd-buttons.png")?>);
-    }
-    </style>
     <?php endif ?>
     <?=$app->controller->getViewScript($view);?>
     
