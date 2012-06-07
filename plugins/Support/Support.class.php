@@ -24,6 +24,7 @@ class Support {
   public function __construct($spit) {
     $spit->addLink(new Spit\Link(T_("Support"), "support/"));
     $spit->addController("support", new SupportController($this));
+    $spit->newIssueUserType = \Spit\UserType::Member;
   }
 }
 
