@@ -42,12 +42,10 @@
   <table class="issues">
     <thead>
       <tr>
-        <th class="checkbox"><a href="javascript:void(0)"><img src="<?=$app->getImagePath("toggle_check.png")?>"></a></th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td class="checkbox"><input name="id" type="checkbox"></td>
       </tr>
     </tbody>
   </table>
