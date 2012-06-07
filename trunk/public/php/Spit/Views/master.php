@@ -32,6 +32,7 @@
     <?php endif ?>
     
     <script type="text/javascript" src="<?=$app->getRoot()?>js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>js/jquery.validate.min.js"></script>
     <script type="text/javascript" src="<?=$app->getRoot()?>js/common.js"></script>
     <?php if ($self->useMarkdown): ?>
     <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Converter.js"></script>
