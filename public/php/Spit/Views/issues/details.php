@@ -77,14 +77,18 @@
   </div>
 </div>
 
+<?php if ($app->security->isLoggedIn()): ?>
+
 <div class="comment">
-  <p><a class="edit" href="javascript:void(0)">
-    <img src="<?=$app->getImagePath("edit.png")?>"/>Write comment</a>
+  <p>
+    <a id="writeComment" href="javascript:void(0)">
+      <img src="<?=$app->getImagePath("edit.png")?>"/><?=T_("Write comment")?>
+    </a>
   </p>
   <form>
     <div id="wmd-button-bar" class="wmd-button-bar"></div>
     <textarea id="wmd-input" name="content" class="wmd-input"></textarea>
-    <input class="button" type="button" value="<?=T_("OK")?>" />
+    <input class="button" type="button" value="<?=T_("OK")?>" /> <a id="cancelComment" href="javascript:void(0)">Cancel</a>
     <div class="preview">
       <div id="wmd-preview" class="box"></div>
     </div>
@@ -93,6 +97,20 @@
     <img src="<?=$app->getImagePath("loading.gif")?>" />
   </div>
 </div>
+
+<?php if(isset($_GET["comment"])): ?>
+<script type="text/javascript">
+showCommentsBox();
+</script>
+<?php endif ?>
+
+<?php else: ?>
+
+<div class="comment">
+  <p><a href="?comment"><img src="<?=$app->getImagePath("edit.png")?>"/><?=T_("Write comment")?></a></p>
+</div>
+
+<?php endif ?>
 
 <div id="templates">
   <div class="change">

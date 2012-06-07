@@ -17,7 +17,11 @@
 
 function viewLoad() {
   form = $("div.comment form");
-  link = $("div.comment a.edit");
+  
+  // if user isn't logged in, then there is no form.
+  if (form.length == 0) {
+    return;
+  }
   
   var converter = Markdown.getSanitizingConverter();
   var editor = new Markdown.Editor(converter);
@@ -32,10 +36,12 @@ function viewLoad() {
     }
   });
   
-  link.click(function() {
-    $(this).hide();
-    form.fadeIn();
-    scrollDown();
+  $("a#writeComment").click(function() {
+    showCommentsBox();
+  });
+  
+  $("a#cancelComment").click(function() {
+    hideCommentsBox();
   });
   
   form.find("input.button").click(function() {
@@ -43,8 +49,7 @@ function viewLoad() {
     log("sending comment: " + content);
     
     form.hide();
-    loading = $("div.comment div.loading");
-    loading.fadeIn();
+    $("div.comment div.loading").fadeIn();
     scrollDown();
     
     $.post("", {
@@ -59,15 +64,28 @@ function viewLoad() {
       change = $("div#templates div.change").clone();
       change.find("span.info").html(data.info);
       change.find("span.content").html(data.html);
-      
       $("div.changes").append(change);
       
-      form.find("textarea").val("");
-      loading.hide();
-      link.show();
-      scrollDown();
+      hideCommentsBox();
     },
     "json")
     .error(log("error"));
   });
+}
+
+function showCommentsBox() {
+  $("a#writeComment").hide();
+  $("div.preview").hide();
+  $("div.comment form").fadeIn();
+  $("div.comment form textarea").focus();
+  scrollDown();
+}
+
+function hideCommentsBox() {
+  $("div.comment form textarea").val("");
+  $("div.comment form").hide();
+  $("div.comment div.loading").hide();
+  $("a#writeComment").show();
+  $("div.preview").hide();
+  scrollDown();
 }

@@ -61,17 +61,21 @@ class IssuesController extends Controller {
   private function runEditor($mode) {
     $this->useMarkdown = true;
   
+    $lp = $this->app->linkProvider;
+    
     switch ($mode) {
       case EditorMode::Create: {
         $issue = new \Spit\Models\Issue;
         if (!$this->userCanCreate()) {
           return;
         }
+        $lp->securityRedirect = $lp->forIssueIndex();
         break;
       }
         
       case EditorMode::Update: {
         $id = $this->getPathPart(2);
+        $lp->securityRedirect = $lp->forIssue($id);
         $issue = $this->ds->getById($id, new \Spit\IssueFields($this->app));        
         if (!$this->userCanEdit($issue)) {
           return;
@@ -112,7 +116,7 @@ class IssuesController extends Controller {
   }
   
   public function userCanCreate($passive = false) {
-    return $this->auth(\Spit\UserType::Member, $passive);
+    return $this->auth($this->app->newIssueUserType, $passive);
   }
   
   public function userCanEdit($issue, $passive = false) {
@@ -132,15 +136,32 @@ class IssuesController extends Controller {
   }
   
   private function runDetails() {
-    $this->useMarkdown = true;
     
     if ($this->isJsonPost()) {
       exit($this->getJson($this->commentPost()));
     }
     
+    $id = $this->getPathPart(2);
+    
+    if (isset($_GET["comment"])) {
+      if (!$this->auth(\Spit\UserType::Newbie)) {
+        return;
+      }
+      else {
+        // this effectively removes the ?comment arg, and redirects
+        // the user to a url which doesn't redirect them back to the
+        // login page.
+        $lp = $this->app->linkProvider;
+        $lp->securityRedirect = $lp->forIssue($id);
+        $this->useMarkdown = true;
+      }
+    }
+    else if ($this->auth(\Spit\UserType::Newbie, true)) {
+      $this->useMarkdown = true;
+    }
+    
     $this->issueFields = new \Spit\IssueFields($this->app);
     
-    $id = $this->getPathPart(2);
     $issue = $this->ds->getById($id, $this->issueFields);
     
     if ($issue == null) {

@@ -93,7 +93,7 @@ class Security {
       }
       
       $this->setUserId($user->id);
-      $this->redirectFromLogin();
+      $this->redirectFrom();
       return true;
     }
     return false;
@@ -106,22 +106,15 @@ class Security {
   public function logout() {
     // php bug #19586 can stop this from working on some machines.
     unset($_SESSION[self::SESSION_KEY]);
-    $this->redirectFromLogout();
+    $this->redirectFrom();
   }
   
-  private function redirectFromLogin() {
-    $from = isset($_GET["from"]) ? $_GET["from"] : "";
-    header(sprintf("Location: %s%s",
-      $this->app->getProjectRoot(), $from));
-  }
-  
-  private function redirectFromLogout() {
-    header("Location: " . $this->app->getProjectRoot());
+  private function redirectFrom() {
+    header(sprintf("Location: %s", isset($_GET["from"]) ? urldecode($_GET["from"]) : ""));
   }
   
   public function redirectToLogin() {
-    header(sprintf("Location: %slogin/?from=%s",
-      $this->app->getProjectRoot(), $this->app->path->pathString));
+    header(sprintf("Location: %s", $this->app->linkProvider->forLogin()));
   }
   
   public function userIsType($checkFlag) {

@@ -130,6 +130,11 @@ function loadIssues(page, results) {
         
         compact = field.compact ? " compact" : "";
         td.attr("class", field.name + compact);
+        
+        // grow column if not compact.
+        if (!compact) {
+          td.css("width", "50%");
+        }
       });
     });
     

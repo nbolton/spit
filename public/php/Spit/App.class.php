@@ -95,6 +95,8 @@ class App {
     // links that can be accessed even if there is no project.
     $this->globalLinks = array(null, "login", "logout", "admin", "Sitemap.xml");
     $this->links = array();
+    
+    $this->newIssueUserType = UserType::Newbie;
   }
   
   public function run() {
@@ -127,7 +129,7 @@ class App {
     }
     
     if (!$this->security->isLoggedIn()) {
-      $this->addLink(new Link(T_("Login"), "login/"));
+      $this->addLink(new Link(T_("Login"), $this->linkProvider->forLogin()));
     }
     else {
       if ($this->security->userIsType(\Spit\UserType::Admin)) {
@@ -202,11 +204,12 @@ class App {
   }
   
   public function getProjectRoot($trailingSlash = true) {
-    $root = $this->getRoot($trailingSlash);
     if ($this->isSingleProject() || ($this->project == null)) {
-      return $root;
+      return $this->getRoot($trailingSlash);
     }
-    return $root . $this->project->name . "/";
+    else {
+      return $this->getRoot() . $this->project->name . ($trailingSlash ? "/" : "");
+    }
   }
   
   public function getThemeRoot() {
