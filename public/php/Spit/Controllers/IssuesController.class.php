@@ -201,8 +201,10 @@ class IssuesController extends Controller {
   }
   
   private function commentPost() {
+    $issueId = $this->getPathPart(2);
+    
     $change = new \Spit\Models\Change;
-    $change->issueId = $this->getPathPart(2);
+    $change->issueId = $issueId;
     $change->creatorId = $this->app->security->user->id;
     $change->type = \Spit\Models\ChangeType::Comment;
     $change->data = $_POST["content"];
@@ -213,6 +215,8 @@ class IssuesController extends Controller {
     // values needed for "get info" functions.
     $change->created = new DateTime();
     $change->creator = $this->app->security->user->name;
+    
+    $this->ds->updateLastComment($issueId);
     
     return array(
       "info" => $this->getChangeInfo($change),
@@ -403,7 +407,7 @@ class IssuesController extends Controller {
       new TableField("priority", T_("Priority")),
       new TableField("title", T_("Title"), false, true),
       new TableField("assignee", T_("Assignee")),
-      new TableField("updated", T_("Updated")),
+      new TableField("activity", T_("Activity")),
       new TableField("votes", T_("Votes")),
     );
   }
