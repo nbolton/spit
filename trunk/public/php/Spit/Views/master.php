@@ -74,10 +74,10 @@
               <?php if ($app->security->isLoggedIn()): ?>
               <p>
                 Logged in: <a href="<?=sprintf("%susers/details/%d/", $app->getProjectRoot(), $app->security->user->id)?>">
-                  <?=$app->security->user->name?></a> (<a href="<?=$app->getProjectRoot() . "logout/"?>">logout</a>).
+                  <?=$app->security->user->name?></a> (<a href="<?=$app->linkProvider->forLogout()?>">logout</a>).
               </p>
               <?php else: ?>
-              <p>Not logged in (<a href="<?=$app->getProjectRoot() . "login/"?>">login</a>).</p>
+              <p>Not logged in (<a href="<?=$app->linkProvider->forLogin()?>">login</a>).</p>
               <?php endif ?>
             </div>
             <div class="language">
