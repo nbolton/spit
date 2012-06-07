@@ -115,6 +115,18 @@ class IssuesController extends Controller {
     $this->showView("issues/editor", $title, $data);
   }
   
+  public function userCanSeeCreateLink() {
+    // if newbies can create issues, always show the link so that they
+    // can click new and then be redirected to login.
+    if ($this->app->newIssueUserType == \Spit\UserType::Newbie) {
+      return true;
+    }
+    
+    // otherwise, if a higher level is required, only show the link if
+    // they can actually use it.
+    return $this->userCanCreate(true);
+  }
+  
   public function userCanCreate($passive = false) {
     return $this->auth($this->app->newIssueUserType, $passive);
   }

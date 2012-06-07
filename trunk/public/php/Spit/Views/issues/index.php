@@ -19,7 +19,7 @@
 
 <h2><?=$title?></h2>
 
-<?php if ($self->userCanCreate(true)): ?>
+<?php if ($self->userCanSeeCreateLink()): ?>
 <p><a href="new/"><?=T_("New issue")?></a></p>
 <?php endif ?>
 
