@@ -151,7 +151,7 @@ class App {
     
     $issue = new \stdClass;
     $issue->find = "/(issue|bug|feature|task) #(\d+)/";
-    $issue->replace = sprintf("$1 [#$2](%s/issue/details/$2/)", $this->getProjectRoot(false));
+    $issue->replace = sprintf("$1 [#$2](%s/issues/details/$2/)", $this->getProjectRoot(false));
     array_push($this->textRegex, $issue);
   }
   
