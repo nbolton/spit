@@ -42,7 +42,7 @@ function main($argv, $argc) {
     $total += $count;
   }
   
-  echo "\nreplace total: $total";
+  echo "\nreplace total: $total\n";
   
   return 0;
 }
