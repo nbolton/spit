@@ -150,7 +150,7 @@ class App {
     array_push($this->textRegex, $comment);
     
     $issue = new \stdClass;
-    $issue->find = "/(issue|bug|feature|task) #(\d+)/";
+    $issue->find = "/(issue|bug|feature|task) #(\d+)/i";
     $issue->replace = sprintf("$1 [#$2](%s/issues/details/$2/)", $this->getProjectRoot(false));
     array_push($this->textRegex, $issue);
   }
