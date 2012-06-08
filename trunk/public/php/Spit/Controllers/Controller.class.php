@@ -50,13 +50,12 @@ class Controller {
     }
     
     $content = $this->viewDir . $view . ".php";
-    $master = self::MASTER_VIEW;
     
-    if (!file_exists(sprintf("%s/%s", $_SERVER["DOCUMENT_ROOT"], $content))) {
+    if (!file_exists($content)) {
       throw new Exception("view not found at: " . $content);
     }
     
-    require self::DEFAULT_VIEW_DIR . $master . ".php";
+    require self::DEFAULT_VIEW_DIR . self::MASTER_VIEW . ".php";
   }
   
   protected function showError($number) {
