@@ -82,6 +82,7 @@ class App {
   
   public function __construct() {
     self::$instance = $this;
+    
     $this->start = microtime(true);
     $this->settings = new Settings;
     $this->locale = new Locale;
@@ -94,9 +95,12 @@ class App {
     
     // links that can be accessed even if there is no project.
     $this->globalLinks = array(null, "login", "logout", "admin", "Sitemap.xml");
-    $this->links = array();
     
+    // default user level needed to create new issues.
     $this->newIssueUserType = UserType::Newbie;
+    
+    $this->links = array();
+    $this->textRegex = array();
   }
   
   public function run() {
@@ -108,6 +112,7 @@ class App {
     }
     
     $this->initLinks();
+    $this->initTextRegex();
     
     $this->plugins->load();
     
@@ -136,6 +141,18 @@ class App {
         $this->addLink(new Link(T_("Admin"), "admin/"));
       }
     }
+  }
+  
+  private function initTextRegex() {
+    $comment = new \stdClass;
+    $comment->find = "/comment #(\d+)/";
+    $comment->replace = sprintf("comment [#$1](#c$1)", $this->getProjectRoot(false));
+    array_push($this->textRegex, $comment);
+    
+    $issue = new \stdClass;
+    $issue->find = "/issue #(\d+)/";
+    $issue->replace = sprintf("issue [#$1](%s/issue/details/$1/)", $this->getProjectRoot(false));
+    array_push($this->textRegex, $issue);
   }
   
   private function initProject() {
