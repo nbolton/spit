@@ -30,7 +30,7 @@ a {
 
 h1, h2, h3 {
   padding: 0px;
-  margin: 0px 0px 3px 0px;
+  margin: 3px 0px 6px 0px;
 }
 
 p {
@@ -51,8 +51,7 @@ h3 {
 }
 
 ul, ol {
-  margin: 0px;
-  margin-left: 1em;
+  margin: 9px 0px 12px 1.5em;
   padding: 0px 0px 0px .5em;
 }
 
@@ -75,6 +74,10 @@ div.layout div.footer {
   width: 100%;
   clear: both;
   background-color: #ddd;
+}
+
+div.layout div.header h1 {
+  margin: 0px;
 }
 
 div.layout div.header p,
