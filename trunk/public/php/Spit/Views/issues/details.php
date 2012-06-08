@@ -40,7 +40,7 @@
   <?php if (trim($issue->details) != ""): ?>
   <hr />
   <span class="details">
-    <?=Markdown($issue->details)?>
+    <?=$this->markdown($issue->details)?>
   </span>
   <?php endif ?>
   
@@ -66,10 +66,16 @@
   </span>
   <?php endif ?>
   
+  <?php $i = 0; ?>
   <div class="changes">
     <?php foreach($changes as $change): ?>
     <div class="change">
       <hr />
+      <a name="c<?=$i?>"></a>
+      <?php if ($change->type == \Spit\Models\ChangeType::Comment): ?>
+      <div class="anchor">#<?=$i;?></div>
+      <?php $i++ ?>
+      <?php endif ?>
       <span class="info"><?=$self->getChangeInfo($change)?></span>
       <span class="content"><?=$self->getChangeContent($change)?></span>
     </div>

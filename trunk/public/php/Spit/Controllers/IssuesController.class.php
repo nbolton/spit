@@ -489,7 +489,7 @@ class IssuesController extends Controller {
   
   public function getChangeContent($change) {
     if ($change->type == \Spit\Models\ChangeType::Comment) {
-        return Markdown($change->data);
+        return $this->markdown($change->data);
     }
     
     $html = "";
@@ -589,6 +589,13 @@ class IssuesController extends Controller {
   
   public function userCanEditAdvanced() {
     return $this->app->security->userIsType(\Spit\UserType::Member);
+  }
+  
+  public function markdown($text) {
+    foreach ($this->app->textRegex as $regex) {
+      $text = preg_replace($regex->find, $regex->replace, $text);
+    }
+    return Markdown($text);
   }
 }
 

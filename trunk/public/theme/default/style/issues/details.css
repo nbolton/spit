@@ -66,7 +66,8 @@ div.changes span.remove {
   text-decoration: line-through;
 }
 
-div.change span.info {
+div.change span.info,
+div.change div.anchor {
   color: #aaa;
 }
 
@@ -93,4 +94,9 @@ span.attachments li {
   background-repeat: no-repeat;
   background-position: 0 4px;
   padding: 2px 0px 2px 17px;
+}
+
+div.change div.anchor {
+  float: right;
+  text-align: right;
 }
