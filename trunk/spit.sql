@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 06, 2012 at 05:09 PM
+-- Generation Time: Jun 08, 2012 at 09:18 PM
 -- Server version: 5.5.20
 -- PHP Version: 5.3.10
 
@@ -83,7 +83,7 @@ CREATE TABLE `custom` (
   `googleId` varchar(6) DEFAULT NULL,
   `redmineId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -110,6 +110,7 @@ CREATE TABLE `issue` (
   `closed` bit(1) NOT NULL,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL,
+  `lastComment` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -124,7 +125,7 @@ CREATE TABLE `member` (
   `projectId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -136,6 +137,7 @@ CREATE TABLE `priority` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(10) NOT NULL,
+  `isDefault` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -147,7 +149,6 @@ CREATE TABLE `priority` (
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `importId` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `title` varchar(50) NOT NULL,
   `description` varchar(250) NOT NULL,
@@ -180,6 +181,7 @@ CREATE TABLE `status` (
   `importId` int(11) DEFAULT NULL,
   `name` varchar(20) NOT NULL,
   `closed` tinyint(1) NOT NULL,
+  `isDefault` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
