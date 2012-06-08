@@ -496,7 +496,7 @@ class IssuesController extends Controller {
     
     if ($change->type == \Spit\Models\ChangeType::Upload) {
       $id = $change->data;
-      $html = sprintf(T_("File: <a href=\"?download=%d\">%d</a>"), $id, $id);
+      $html = sprintf(T_("File: %s"), sprintf("<a href=\"?download=%d\">%d</a>", $id, $id));
     }
     elseif ($change->name == "details") {
       $oldLen = strlen($change->oldValue);
