@@ -145,13 +145,13 @@ class App {
   
   private function initTextRegex() {
     $comment = new \stdClass;
-    $comment->find = "/comment #(\d+)/";
-    $comment->replace = sprintf("comment [#$1](#c$1)", $this->getProjectRoot(false));
+    $comment->find = "/(comment) #(\d+)/i";
+    $comment->replace = sprintf("$1 [#$2](#c$2)", $this->getProjectRoot(false));
     array_push($this->textRegex, $comment);
     
     $issue = new \stdClass;
-    $issue->find = "/issue #(\d+)/";
-    $issue->replace = sprintf("issue [#$1](%s/issue/details/$1/)", $this->getProjectRoot(false));
+    $issue->find = "/(issue|bug|feature|task) #(\d+)/";
+    $issue->replace = sprintf("$1 [#$2](%s/issue/details/$2/)", $this->getProjectRoot(false));
     array_push($this->textRegex, $issue);
   }
   
