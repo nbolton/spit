@@ -19,8 +19,9 @@
 
 <h2><?=T_("Download")?></h2>
 
-<h3>File</h3>
+<h3>Files</h3>
 <ul>
+  <li><a href="/files/spit-1.0.1-alpha.zip">spit-1.0.1-alpha.zip</a></li>
   <li><a href="/files/spit-1.0.0-alpha.zip">spit-1.0.0-alpha.zip</a></li>
 </ul>
 
