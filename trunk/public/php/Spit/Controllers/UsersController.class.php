@@ -22,6 +22,7 @@ namespace Spit\Controllers;
 class UsersController extends Controller {
   
   public function __construct() {
+    $this->siteWide = true;
     $this->ds = new \Spit\DataStores\IssueDataStore;
   }
   

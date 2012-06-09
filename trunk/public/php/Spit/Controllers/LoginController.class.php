@@ -21,6 +21,10 @@ namespace Spit\Controllers;
 
 class LoginController extends Controller {
   
+  public function __construct() {
+    $this->siteWide = true;
+  }
+  
   public function run() {
     switch ($this->getPathPart(1)) {
       case "": $this->runIndex(); break;

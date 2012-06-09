@@ -21,6 +21,10 @@ namespace Spit\Controllers;
 
 class SitemapController extends Controller {
   
+  public function __construct() {
+    $this->siteWide = true;
+  }
+  
   public function run() {
     $dataStore = new \Spit\DataStores\IssueDataStore;
     $issues = $dataStore->getPublicIds();

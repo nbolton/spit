@@ -30,6 +30,7 @@ class Controller {
   public $app;
   public $viewDir = self::DEFAULT_VIEW_DIR;
   public $useMarkdown = false;
+  public $siteWide = false;
   
   protected function showView($view, $title = "", $data = array(), $titleMode = TitleMode::Prefix) {
     foreach ($data as $k => $v) {
@@ -71,16 +72,20 @@ class Controller {
   }
   
   public function getViewStyle($view) {
-    $path = sprintf("%s/style/%s.css", $this->app->getThemeRoot(), $view);
-    if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {
-      return sprintf("<link rel=\"stylesheet\" type=\"text/css\" href=\"%s\" />\n", $path);
+    $path = sprintf("%s/style/%s.css", $this->app->getThemeDir(), $view);
+    if (file_exists($path)) {
+      return sprintf(
+        "<link rel=\"stylesheet\" type=\"text/css\" href=\"%s/%s\" />\n",
+        $this->app->getRoot(), $path);
     }
   }
   
   public function getViewScript($view) {
-    $path = sprintf("%sjs/%s.js", $this->app->getRoot(), $view);
-    if (file_exists($_SERVER["DOCUMENT_ROOT"] . $path)) {
-      return sprintf("<script type=\"text/javascript\" src=\"%s\"></script>\n", $path);
+    $path = sprintf("js/%s.js", $view);
+    if (file_exists($path)) {
+      return sprintf(
+        "<script type=\"text/javascript\" src=\"%s/%s\"></script>\n",
+        $this->app->getRoot(), $path);
     }
   }
   

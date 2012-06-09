@@ -19,11 +19,17 @@
 
 namespace Spit;
 
+class LinkType {
+  const Site = 1;
+  const Project = 2;
+  const External = 3;
+}
+
 class Link {
-  public function __construct($name, $href, $external = false) {
+  public function __construct($name, $href, $type) {
     $this->name = $name;
     $this->href = $href;
-    $this->external = $external;
+    $this->type = $type;
   }
 }
 

@@ -20,8 +20,8 @@
 <h3><?=$title?></h3>
 <div class="box">
   <?php if($self->userCanEdit($issue, true)): ?>
-  <a href="<?=$app->getProjectRoot()?>issues/edit/<?=$issue->id?>/">
-    <img src="<?=$app->getImagePath("edit.png")?>"/>Edit
+  <a href="<?=$app->linkProvider->forIssueEdit($issue->id)?>">
+    <img src="<?=$app->getImage("edit.png")?>"/>Edit
   </a>
   
   <hr />
@@ -88,7 +88,7 @@
 <div class="comment">
   <p>
     <a id="writeComment" href="javascript:void(0)">
-      <img src="<?=$app->getImagePath("edit.png")?>"/><?=T_("Write comment")?>
+      <img src="<?=$app->getImage("edit.png")?>"/><?=T_("Write comment")?>
     </a>
   </p>
   <form>
@@ -100,7 +100,7 @@
     </div>
   </form>
   <div class="loading">
-    <img src="<?=$app->getImagePath("loading.gif")?>" />
+    <img src="<?=$app->getImage("loading.gif")?>" />
   </div>
 </div>
 
@@ -113,7 +113,7 @@ showCommentsBox();
 <?php else: ?>
 
 <div class="comment">
-  <p><a href="?comment"><img src="<?=$app->getImagePath("edit.png")?>"/><?=T_("Write comment")?></a></p>
+  <p><a href="?comment"><img src="<?=$app->getImage("edit.png")?>"/><?=T_("Write comment")?></a></p>
 </div>
 
 <?php endif ?>

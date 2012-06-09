@@ -45,7 +45,7 @@
     </div>
     <div id="dynamicFields">
       <div class="loading">
-        <img src="<?=$app->getImagePath("loading.gif")?>" />
+        <img src="<?=$app->getImage("loading.gif")?>" />
       </div>
       <div class="column" id="column1"></div>
       <div class="column" id="column2"></div>
