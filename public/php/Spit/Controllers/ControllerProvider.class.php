@@ -53,6 +53,14 @@ class ControllerProvider {
     }
     return null;
   }
+  
+  public function isSiteWide($name) {
+    $controller = $this->find($name);
+    if ($controller != null) {
+      return $controller->siteWide;
+    }
+    return false;
+  }
 }
 
 ?>

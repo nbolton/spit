@@ -26,7 +26,7 @@
 <div id="issues">
   <div class="box">
     <div class="loading">
-      <span><img src="<?=$app->getImagePath("loading.gif")?>" /></span>
+      <span><img src="<?=$app->getImage("loading.gif")?>" /></span>
     </div>
     <table></table>
   </div>

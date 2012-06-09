@@ -21,6 +21,10 @@ namespace Spit\Controllers;
 
 class LogoutController extends Controller {
   
+  public function __construct() {
+    $this->siteWide = true;
+  }
+  
   public function run() {
     $this->app->security->logout();
   }

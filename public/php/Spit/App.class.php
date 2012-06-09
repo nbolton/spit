@@ -93,9 +93,6 @@ class App {
     $this->path = new Path;
     $this->linkProvider = new LinkProvider($this);
     
-    // links that can be accessed even if there is no project.
-    $this->globalLinks = array(null, "login", "logout", "admin", "Sitemap.xml");
-    
     // default user level needed to create new issues.
     $this->newIssueUserType = UserType::Newbie;
     
@@ -127,18 +124,18 @@ class App {
   }
   
   private function initLinks() {
-    $this->addLink(new Link(T_("Home"), null));
+    $this->addLink(new Link(T_("Home"), null, \Spit\LinkType::Project));
     
     if ($this->project != null) {
-      $this->addLink(new Link(T_("Issues"), "issues/"));
+      $this->addLink(new Link(T_("Issues"), "issues/", \Spit\LinkType::Project));
     }
     
     if (!$this->security->isLoggedIn()) {
-      $this->addLink(new Link(T_("Login"), $this->linkProvider->forLogin(false)));
+      $this->addLink(new Link(T_("Login"), $this->linkProvider->forLogin(false), \Spit\LinkType::Site));
     }
     else {
       if ($this->security->userIsType(\Spit\UserType::Admin)) {
-        $this->addLink(new Link(T_("Admin"), "admin/"));
+        $this->addLink(new Link(T_("Admin"), "admin/", \Spit\LinkType::Site));
       }
     }
   }
@@ -146,12 +143,12 @@ class App {
   private function initTextRegex() {
     $comment = new \stdClass;
     $comment->find = "/(comment) #(\d+)/i";
-    $comment->replace = sprintf("$1 [#$2](#c$2)", $this->getProjectRoot(false));
+    $comment->replace = sprintf("$1 [#$2](#c$2)", $this->getProjectRoot());
     array_push($this->textRegex, $comment);
     
     $issue = new \stdClass;
     $issue->find = "/(issue|bug|feature|task) #(\d+)/i";
-    $issue->replace = sprintf("$1 [#$2](%s/issues/details/$2/)", $this->getProjectRoot(false));
+    $issue->replace = sprintf("$1 [#$2](%s/issues/details/$2/)", $this->getProjectRoot());
     array_push($this->textRegex, $issue);
   }
   
@@ -159,15 +156,16 @@ class App {
     $dataStore = new DataStores\ProjectDataStore;
     
     if (!$this->isSingleProject()) {
-      if (in_array($this->path->get(0), $this->globalLinks)) {
-        // if no project is set, the index controller will
-        // just show project links.
+      $this->addLink(new Link(T_("Projects"), null, \Spit\LinkType::Site));
+      
+      if ($this->controllers->isSiteWide($this->path->get(0))) {
+        // if the first part of the url is the name of a controller
+        // which is site-wide, then don't bother looking for a project
+        // of that name -- just use the controller.
         return true;
       }
       
       $this->project = $dataStore->getByName($this->path->get(0));
-      
-      $this->addLink(new Link(T_("Projects"), $this->getRoot(), true));
       
       // offset the path so that pages wanting index 1 get 2,
       // since the part at 0 is now the project name.
@@ -211,26 +209,31 @@ class App {
     $this->error->show($code);
   }
   
-  public function getRoot($trailingSlash = true) {
+  public function getRoot() {
     $scriptName = $_SERVER['SCRIPT_NAME'];
-    $pos = strrpos($scriptName, "/");
-    if (!$trailingSlash && substr($scriptName, 0, 1) == "/") {
-      return substr($scriptName, 1, $pos);
-    }
-    return substr($scriptName, 0, $pos + 1);
+    $lastSlash = strrpos($scriptName, "/");
+    return substr($scriptName, 0, $lastSlash);
   }
   
-  public function getProjectRoot($trailingSlash = true) {
+  public function getProjectRoot() {
     if ($this->isSingleProject() || ($this->project == null)) {
-      return $this->getRoot($trailingSlash);
+      return $this->getRoot();
     }
     else {
-      return $this->getRoot() . $this->project->name . ($trailingSlash ? "/" : "");
+      return sprintf("%s/%s", $this->getRoot(), $this->project->name);
     }
   }
   
-  public function getThemeRoot() {
-    return $this->getRoot() . "theme/default";
+  public function getThemeDir() {
+    return "theme/default";
+  }
+  
+  public function getThemeFile($file) {
+    return sprintf("%s/%s/%s", $this->getRoot(), $this->getThemeDir(), $file);
+  }
+  
+  public function getImage($image) {
+    return $this->getThemeFile("image/" . $image);
   }
   
   public function isSingleProject() {
@@ -246,14 +249,12 @@ class App {
   }
   
   public function getFullLink($link) {
-    if ($link->external) {
-      return $link->href;
+    switch ($link->type) {
+      case \Spit\LinkType::External: return $link->href;
+      case \Spit\LinkType::Site: return sprintf("%s/%s", $this->getRoot(), $link->href);
+      case \Spit\LinkType::Project: return sprintf("%s/%s", $this->getProjectRoot(), $link->href);
+      default: return null;
     }
-    return $this->getProjectRoot() . $link->href;
-  }
-  
-  public function getImagePath($name) {
-    return sprintf("%s/image/%s", $this->getThemeRoot(), $name);
   }
   
   public function getSiteTitle() {
@@ -288,6 +289,21 @@ class App {
     if ($old != "") array_push($diff, "-" . $old);
     if ($new != "") array_push($diff, "+" . $new);
     return implode("\n", $diff);
+  }
+  
+  public function getLinks() {
+    $result = array();
+    foreach ($this->links as $link) {
+      if ($this->project != null) {
+        // if in project, show all links.
+        array_push($result, $link);
+      }
+      elseif ($link->type != \Spit\LinkType::Project) {
+        // if no project, hide project links.
+        array_push($result, $link);
+      }
+    }
+    return $result;
   }
 }
 

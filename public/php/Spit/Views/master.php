@@ -25,18 +25,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta name="description" content="<?=$app->getSiteDescription()?>" />
     
-    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/main.css" />
+    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeFile("style/main.css")?>" />
     <?=$app->controller->getViewStyle($view);?>
     <?php if ($self->useMarkdown): ?>
-    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeRoot()?>/style/pagedown.css" />
+    <link rel="stylesheet" type="text/css" href="<?=$app->getThemeFile("style/pagedown.css")?>" />
     <?php endif ?>
     
-    <script type="text/javascript" src="<?=$app->getRoot()?>js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="<?=$app->getRoot()?>js/common.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>/js/common.js"></script>
     <?php if ($self->useMarkdown): ?>
-    <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Converter.js"></script>
-    <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Sanitizer.js"></script>
-    <script type="text/javascript" src="<?=$app->getRoot()?>js/pagedown/Markdown.Editor.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>/js/pagedown/Markdown.Converter.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>/js/pagedown/Markdown.Sanitizer.js"></script>
+    <script type="text/javascript" src="<?=$app->getRoot()?>/js/pagedown/Markdown.Editor.js"></script>
     <?php endif ?>
     <?=$app->controller->getViewScript($view);?>
     
@@ -64,9 +64,14 @@
             <h1><?=$app->getSiteTitle()?></h1>
             <p><?=$app->getSiteDescription()?></p>
             <div class="links">
-            <?php foreach ($app->links as $k => $l): ?>
-              <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($app->links)) ? "," : "")?>
-            <?php endforeach ?>
+            <?php
+              $links = $app->getLinks();
+              foreach ($links as $k => $l):
+            ?>
+              <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($links)) ? "," : "")?>
+            <?php
+              endforeach
+            ?>
             </div>
           </div>
           <div class="column">
@@ -83,7 +88,7 @@
             <div class="language">
               <button id="language">
                 <span class="text"><?=T_("Language:")?> <?=$app->locale->getCurrent()->name?></span>
-                <img src="<?=$app->getImagePath("pixel.gif")?>" class="arrow" />
+                <img src="<?=$app->getImage("pixel.gif")?>" class="arrow" />
               </button>
               <div class="menu">
                 <?php foreach ($app->locale->getLanguages() as $l): ?>

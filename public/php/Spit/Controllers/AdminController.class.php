@@ -20,6 +20,10 @@
 namespace Spit\Controllers;
 
 class AdminController extends Controller {
+  
+  public function __construct() {
+    $this->siteWide = true;
+  }
 
   public function run() {
     if (!$this->auth(\Spit\UserType::Admin)) {

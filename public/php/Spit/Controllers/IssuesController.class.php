@@ -352,9 +352,7 @@ class IssuesController extends Controller {
         case "assignee": $id = $issue->assigneeId; break;
       }
       if ($v != null) {
-        return sprintf(
-          "<a href=\"%susers/details/%d/\">%s</a>",
-          $this->app->getProjectRoot(), $id, $v);
+        return sprintf("<a href=\"%s\">%s</a>", $this->app->linkProvider->forUser($id), $v);
       }
     }
     

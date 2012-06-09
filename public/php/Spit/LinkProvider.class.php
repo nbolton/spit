@@ -29,11 +29,11 @@ class LinkProvider {
   }
   
   public function forIssue($id) {
-    return sprintf("%s/issues/details/%d/", $this->getProjectRoot(), $id);
+    return sprintf("%s/issues/details/%d/", $this->app->getProjectRoot(), $id);
   }
   
   public function forIssueIndex() {
-    return sprintf("%s/issues/", $this->getProjectRoot());
+    return sprintf("%s/issues/", $this->app->getProjectRoot());
   }
   
   public function forAttachment($attachment) {
@@ -42,7 +42,7 @@ class LinkProvider {
   
   public function forLogin($prefixRoot = true) {
     if ($prefixRoot) {
-      return sprintf("%s/login/?from=%s", $this->getRoot(), $this->getFrom());
+      return sprintf("%s/login/?from=%s", $this->app->getRoot(), $this->getFrom());
     }
     else {
       return sprintf("login/?from=%s", $this->getFrom());
@@ -50,19 +50,19 @@ class LinkProvider {
   }
   
   public function forLogout() {
-    return sprintf("%s/logout/?from=%s", $this->getRoot(), $this->getFrom());
+    return sprintf("%s/logout/?from=%s", $this->app->getRoot(), $this->getFrom());
+  }
+  
+  public function forUser($id) {
+    return sprintf("%s/users/details/%d/", $this->app->getRoot(), $id);
+  }
+  
+  public function forIssueEdit($id) {
+    return sprintf("%s/issues/edit/%d/", $this->app->getProjectRoot(), $id);
   }
   
   public function excludeArg($arg) {
     array_push($this->exclude, $arg);
-  }
-  
-  private function getProjectRoot() {
-    return $this->app->getProjectRoot(false);
-  }
-  
-  private function getRoot() {
-    return $this->app->getRoot(false);
   }
   
   private function getFrom() {

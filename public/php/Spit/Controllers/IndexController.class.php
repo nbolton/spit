@@ -21,6 +21,10 @@ namespace Spit\Controllers;
 
 class IndexController extends Controller {
   
+  public function __construct() {
+    $this->siteWide = true;
+  }
+  
   public function run() {
     if (isset($this->app->project)) {
       $this->showView("index");
