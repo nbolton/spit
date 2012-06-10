@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,21 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-require "DownloadController.class.php";
-require "ContactController.class.php";
-
-class Pages {
-  
-  public function __construct($spit) {
-    $spit->addLink(new Spit\Link(T_("Download"), "download/", \Spit\LinkType::Site));
-    $spit->addLink(new Spit\Link(T_("Contact"), "contact/", \Spit\LinkType::Site));
-    $spit->addLink(new Spit\Link(T_("Code"), "/code/", \Spit\LinkType::External));
-    $spit->addLink(new Spit\Link(T_("Wiki"), "/wiki/", \Spit\LinkType::External));
-    
-    $spit->addController("download", new DownloadController($this))
-    $spit->addController("contact", new ContactController($this));
-  }
-}
-
 ?>
+
+<h2><?=T_("Contact")?></h2>
+
+<h3><?=T_("Mailing list")?></h3>
+<p><?=T_("Please join our mailing list to get in touch.")?></p>

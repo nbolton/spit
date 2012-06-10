@@ -17,19 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "DownloadController.class.php";
-require "ContactController.class.php";
-
-class Pages {
+class DownloadController extends Spit\Controllers\Controller {
   
-  public function __construct($spit) {
-    $spit->addLink(new Spit\Link(T_("Download"), "download/", \Spit\LinkType::Site));
-    $spit->addLink(new Spit\Link(T_("Contact"), "contact/", \Spit\LinkType::Site));
-    $spit->addLink(new Spit\Link(T_("Code"), "/code/", \Spit\LinkType::External));
-    $spit->addLink(new Spit\Link(T_("Wiki"), "/wiki/", \Spit\LinkType::External));
-    
-    $spit->addController("download", new DownloadController($this))
-    $spit->addController("contact", new ContactController($this));
+  public function __construct() {
+    $this->viewDir = "php/plugins/Pages/views/";
+  }
+  
+  public function run() {
+    $this->showView("download");
   }
 }
 
