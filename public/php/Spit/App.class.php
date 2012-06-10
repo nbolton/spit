@@ -19,8 +19,6 @@
 
 namespace Spit;
 
-session_start();
-
 require "Settings.class.php";
 require "Locale.class.php";
 require "Plugins.class.php";
@@ -101,6 +99,11 @@ class App {
   }
   
   public function run() {
+  
+    if (!$this->userIsBot()) {
+      session_start();
+    }
+
     $this->locale->run();
     $this->security->run();
     
@@ -304,6 +307,10 @@ class App {
       }
     }
     return $result;
+  }
+  
+  public function userIsBot() {
+    return preg_match("/(bot|spider|zilla)/", $_SERVER["HTTP_USER_AGENT"]) != 0;
   }
 }
 
