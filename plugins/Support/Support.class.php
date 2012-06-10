@@ -22,7 +22,7 @@ require "SupportController.class.php";
 class Support {
   
   public function __construct($spit) {
-    $spit->addLink(new Spit\Link(T_("Support"), "support/"));
+    $spit->addLink(new Spit\Link(T_("Support"), "support/", \Spit\LinkType::Project));
     $spit->addController("support", new SupportController($this));
     $spit->newIssueUserType = \Spit\UserType::Member;
   }
