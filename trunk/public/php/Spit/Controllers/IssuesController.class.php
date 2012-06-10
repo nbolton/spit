@@ -73,7 +73,7 @@ class IssuesController extends Controller {
       case EditorMode::Update: {
         $id = $this->getPathPart(2);
         $lp->securityRedirect = $lp->forIssue($id);
-        $issue = $this->ds->getById($id, new \Spit\IssueFields($this->app));        
+        $issue = $this->ds->getById($id, $this->app->project->id, new \Spit\IssueFields($this->app));        
         if (!$this->userCanEdit($issue)) {
           return;
         }
@@ -171,7 +171,7 @@ class IssuesController extends Controller {
     
     $this->issueFields = new \Spit\IssueFields($this->app);
     
-    $issue = $this->ds->getById($id, $this->issueFields);
+    $issue = $this->ds->getById($id, $this->app->project->id, $this->issueFields);
     
     if ($issue == null) {
       $this->showError(404);
@@ -188,7 +188,8 @@ class IssuesController extends Controller {
     $data["relations"] = $rds->getForIssue($id);
     
     $ads = new \Spit\DataStores\AttachmentDataStore;
-    $data["attachments"] = $ads->getForIssue($id);
+    $this->attachments = $ads->getForIssue($id);
+    $data["attachments"] = $this->attachments;
     
     $this->showView("issues/details", $this->getIssueTitle($issue), $data, \Spit\TitleMode::Affix);
   }
@@ -485,6 +486,15 @@ class IssuesController extends Controller {
     return $issueFields->filter($fields, $trackerId, true);
   }
   
+  private function findAttachment($id) {
+    foreach ($this->attachments as $attachment) {
+      if ($attachment->id == $id) {
+        return $attachment;
+      }
+    }
+    return null;
+  }
+  
   public function getChangeContent($change) {
     if ($change->type == \Spit\Models\ChangeType::Comment) {
         return $this->markdown($change->data);
@@ -493,8 +503,10 @@ class IssuesController extends Controller {
     $html = "";
     
     if ($change->type == \Spit\Models\ChangeType::Upload) {
-      $id = $change->data;
-      $html = sprintf(T_("File: %s"), sprintf("<a href=\"?download=%d\">%d</a>", $id, $id));
+      $attachment = $this->findAttachment((int)$change->data);
+      if ($attachment != null) {
+        $html = $this->getAttachmentInfo($attachment); 
+      }
     }
     elseif ($change->name == "details") {
       $oldLen = strlen($change->oldValue);
@@ -581,7 +593,7 @@ class IssuesController extends Controller {
   }
   
   public function getAttachmentInfo($attachment) {
-    $link = $this->app->linkProvider->forAttachment($attachment);
+    $link = $this->app->linkProvider->forAttachment($attachment->physicalName);
     return sprintf("<a href=\"%s\">%s</a>", $link, $attachment->originalName);
   }
   

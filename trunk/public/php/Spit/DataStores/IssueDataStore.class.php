@@ -71,7 +71,7 @@ class IssueDataStore extends DataStore {
     return $this->fromResult($result);
   }
 
-  public function getById($id, $custom) {
+  public function getById($id, $projectId, $custom) {
     $result = $this->query(
       "select i.id, i.trackerId, i.statusId, i.priorityId, i.categoryId, " .
       "i.targetId, i.foundId, i.assigneeId, i.creatorId, i.updaterId, " .
@@ -92,8 +92,9 @@ class IssueDataStore extends DataStore {
       "left join custom on custom.issueId = i.id " .
       "left join version as vt on vt.id = i.targetId " .
       "left join version as vf on vf.id = i.foundId " .
-      "where i.id = %d",
-      (int)$id
+      "where i.id = %d and i.projectId = %d",
+      (int)$id,
+      (int)$projectId
     );
     
     return $this->fromResultSingle($result);

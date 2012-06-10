@@ -43,11 +43,17 @@ class RedmineDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
+  public function getJournals() {
+    $result = $this->query("select * from journals where journalized_type = 'Issue'");
+    return $this->fromResult($result);
+  }
+  
   public function getJournalDetails() {
     $result = $this->query(
-      "select j.*, jd.* from journals as j " .
-      "left join journal_details as jd on jd.journal_id = j.id " .
-      "where j.journalized_type = 'Issue'"
+      "select jd.*, j.* " .
+      "from journal_details as jd " .
+      "inner join journals as j on j.id = jd.journal_id " .
+      "where journalized_type = 'Issue'"
     );
     return $this->fromResult($result);
   }

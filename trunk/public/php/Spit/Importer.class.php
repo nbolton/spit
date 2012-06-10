@@ -79,12 +79,12 @@ class Importer {
     $this->loadRelations($context);
     $this->loadAttachments($context);
     
-    $this->projectDataStore->insertMany($context->projects);
-    $context->projectIdMap = $this->getProjectIdMap();
-    
     $this->loadCustomFieldValues($context);
     $context->customFields = $this->getCustomFieldMap($context->redmine);
     $context->customValues = $this->getCustomValueMap($context->redmine);
+    
+    $this->projectDataStore->insertMany($context->projects);
+    $context->projectIdMap = $this->getProjectIdMap();
     
     $this->trackerDataStore->insertMany($context->trackers);
     $context->trackerIdMap = $this->getTrackerIdMap();
@@ -110,14 +110,15 @@ class Importer {
     
     $this->insertCustomValues($context);
     
+    $this->resolveAttachmentFields($context);
+    $this->attachmentDataStore->insertMany($context->attachments);
+    $context->attachmentIdMap = $this->getAttachmentIdMap();
+    
     $this->resolveChangeFields($context);
     $this->changeDataStore->insertMany($context->changes);
     
     $this->resolveRelationFields($context);
     $this->relationDataStore->insertMany($context->relations);
-    
-    $this->resolveAttachmentFields($context);
-    $this->attachmentDataStore->insertMany($context->attachments);
   }
   
   private function insertCustomValues($context) {
@@ -232,26 +233,44 @@ class Importer {
   
   private function loadChanges($context) {
     $context->changes = array();
+    
+    // "journals" contains comments and rows to group changes.
+    foreach ($context->redmine->getJournals() as $rmj) {
+      
+      // ignore grouping rows.
+      if ($rmj->notes == "") {
+        continue;
+      }
+      
+      $change = new \Spit\Models\Change;
+      $change->issueId = (int)$rmj->journalized_id;
+      $change->creatorId = (int)$rmj->user_id;
+      $change->created = $rmj->created_on;
+      $change->type = \Spit\Models\ChangeType::Comment;
+      $change->data = self::toMarkdown($rmj->notes);
+      
+      array_push($context->changes, $change);
+    }
+    
+    // "journal_details" contains actual changes.
+    // ignore notes here, since they're added from journals.
     foreach ($context->redmine->getJournalDetails() as $rmjd) {
       $change = new \Spit\Models\Change;
       $change->issueId = (int)$rmjd->journalized_id;
       $change->creatorId = (int)$rmjd->user_id;
       $change->created = $rmjd->created_on;
       
-      if ($rmjd->notes != "") {
-        $change->type = \Spit\Models\ChangeType::Comment;
-        $change->data = self::toMarkdown($rmjd->notes);
-      }
-      else if ($rmjd->property == "attachment") {
+      if ($rmjd->property == "attachment") {
         $change->type = \Spit\Models\ChangeType::Upload;
         $change->data = $rmjd->prop_key;
       }
       else {
         $change->type = \Spit\Models\ChangeType::Edit;
         $change->name = $this->mapFieldName($rmjd->property, $rmjd->prop_key);
-        $change->oldValue = $rmjd->old_value;
-        $change->newValue = $rmjd->value;
       }
+      
+      $change->oldValue = $rmjd->old_value;
+      $change->newValue = $rmjd->value;
       
       array_push($context->changes, $change);
     }
@@ -387,6 +406,7 @@ class Importer {
     
     foreach ($context->redmine->getAttachments() as $rma) {
       $attachment = new \stdClass;
+      $attachment->importId = (int)$rma->id;
       $attachment->issueId = $rma->container_id;
       $attachment->creatorId = $rma->author_id;
       $attachment->originalName = $rma->filename;
@@ -483,6 +503,11 @@ class Importer {
     return $this->getImportIdMap($ids);
   }
   
+  private function getAttachmentIdMap() {
+    $ids = $this->attachmentDataStore->getImportIds();
+    return $this->getImportIdMap($ids);
+  }
+  
   private function getCustomFieldMap($redmine) {
     $map = array();
     foreach ($redmine->getCustomFields() as $cf) {
@@ -551,6 +576,10 @@ class Importer {
       $change->issueId = $this->getMapValue($context->issueIdMap, $change->issueId);
       
       $this->resolveChangeValues($change, $context);
+      
+      if ($change->type == \Spit\Models\ChangeType::Upload) {
+        $change->data = $this->getMapValue($context->attachmentIdMap, $change->data);
+      }
       
       // resolve custom field names.
       if (substr($change->name, 0, 2) == "cf") {
