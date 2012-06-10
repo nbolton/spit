@@ -36,8 +36,12 @@ class LinkProvider {
     return sprintf("%s/issues/", $this->app->getProjectRoot());
   }
   
-  public function forAttachment($attachment) {
-    return sprintf("%s/files/%s", $this->getRoot(), $attachment->physicalName);
+  public function forAttachment($physicalName) {
+    return sprintf("%s/files/%s", $this->app->getRoot(), $physicalName);
+  }
+  
+  public function forAttachmentById($id) {
+    return sprintf("%s/issues/file/%d/", $this->app->getProjectRoot(), $id);
   }
   
   public function forLogin($prefixRoot = true) {

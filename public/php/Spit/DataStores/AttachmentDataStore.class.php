@@ -33,10 +33,15 @@ class AttachmentDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
+  public function getImportIds() {
+    $result = $this->query("select id, importId from attachment");
+    return $this->fromResult($result);
+  }
+  
   public function insertMany($attachments) {
     $base =
       "insert into attachment " .
-      "(issueId, creatorId, originalName, physicalName, size, contentType, created) values ";
+      "(importId, issueId, creatorId, originalName, physicalName, size, contentType, created) values ";
     
     for ($j = 0; $j < count($attachments) / self::BULK_INSERT_MAX; $j++) {
       
@@ -47,7 +52,8 @@ class AttachmentDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $attachment = $slice[$i];
         $values .= $this->format(
-          "(%d, %s, %s, %s, %d, %s, %s)",
+          "(%s, %d, %s, %s, %s, %d, %s, %s)",
+          self::nullInt($attachment->importId),
           (int)$attachment->issueId,
           self::nullInt($attachment->creatorId),
           $attachment->originalName,

@@ -32,7 +32,7 @@ class ChangeDataStore extends DataStore {
       "from `change` as c " .
       "left join user as u on u.id = c.creatorId " .
       "where c.issueId = %d " .
-      "order by c.id asc",
+      "order by c.created asc",
       (int)$issueId
     );
     
