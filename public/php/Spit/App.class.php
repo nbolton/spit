@@ -310,7 +310,7 @@ class App {
   }
   
   public function userIsBot() {
-    return preg_match("/(bot|spider|zilla)/", $_SERVER["HTTP_USER_AGENT"]) != 0;
+    return preg_match("/(bot|spider)/", $_SERVER["HTTP_USER_AGENT"]) != 0;
   }
 }
 
