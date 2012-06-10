@@ -36,7 +36,6 @@ class Importer {
     $this->relationDataStore = new \Spit\DataStores\RelationDataStore;
     $this->attachmentDataStore = new \Spit\DataStores\AttachmentDataStore;
     $this->projectDataStore = new \Spit\DataStores\ProjectDataStore;
-    $this->issueFields = new \Spit\IssueFields($app);
   }
   
   public function redmineImport($options) {
@@ -122,9 +121,17 @@ class Importer {
   }
   
   private function insertCustomValues($context) {
+    
     $fields = array();
-    foreach ($this->issueFields->getCustomFieldMap() as $k => $v) {
-      array_push($fields, $k);
+    
+    foreach ($context->projects as $project) {
+      $issueFields = new \Spit\IssueFields($project->name);
+      foreach ($issueFields->getCustomFieldMap() as $k => $v) {
+        // only add field names once.
+        if (!in_array($k, $fields)) {
+          array_push($fields, $k);
+        }
+      }
     }
     
     $valueLists = array();
@@ -200,9 +207,14 @@ class Importer {
     $context->customFieldValues = array();
     foreach ($context->options->customMap as $redmineId => $spitId) {
       $valueMap = array();
-      foreach ($this->issueFields->getCustomFieldValues($spitId) as $id => $value) {
-        // used to map values to ids.
-        $valueMap[$value] = $id;
+      
+      foreach ($context->projects as $project) {
+        $issueFields = new \Spit\IssueFields($project->name);
+        
+        foreach ($issueFields->getCustomFieldValues($spitId) as $id => $value) {
+          // used to map values to ids.
+          $valueMap[$value] = $id;
+        }
       }
       $context->customFieldValues[$spitId] = $valueMap;
     }
@@ -615,18 +627,22 @@ class Importer {
     }
     
     if (isset($map)) {
-      if (array_key_exists($change->oldValue, $map)) {
-        $change->oldValue = $map[$change->oldValue];
-      }
-      else {
-        $change->oldValue = "?";
+      if ($change->oldValue != null) {
+        if (array_key_exists($change->oldValue, $map)) {
+          $change->oldValue = $map[$change->oldValue];
+        }
+        else {
+          $change->oldValue = "?";
+        }
       }
       
-      if (array_key_exists($change->newValue, $map)) {
-        $change->newValue = $map[$change->newValue];
-      }
-      else {
-        $change->newValue = "?";
+      if ($change->newValue != null) {
+        if (array_key_exists($change->newValue, $map)) {
+          $change->newValue = $map[$change->newValue];
+        }
+        else {
+          $change->newValue = "?";
+        }
       }
     }
   }
