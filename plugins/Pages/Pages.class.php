@@ -22,9 +22,9 @@ require "DownloadController.class.php";
 class Pages {
   
   public function __construct($spit) {
-    $spit->addLink(new Spit\Link(T_("Download"), "download/"));
-    $spit->addLink(new Spit\Link(T_("Code"), "/code/", true));
-    $spit->addLink(new Spit\Link(T_("Wiki"), "/wiki/", true));
+    $spit->addLink(new Spit\Link(T_("Download"), "download/", \Spit\LinkType::Site));
+    $spit->addLink(new Spit\Link(T_("Code"), "/code/", \Spit\LinkType::External));
+    $spit->addLink(new Spit\Link(T_("Wiki"), "/wiki/", \Spit\LinkType::External));
     
     $spit->addController("download", new DownloadController($this));
   }
