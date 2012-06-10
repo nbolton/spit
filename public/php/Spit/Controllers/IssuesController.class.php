@@ -418,7 +418,13 @@ class IssuesController extends Controller {
   
   private function fillSelectField($select, $data, $default) {
     foreach ($data as $item) {
-      $selected = $item->id == $default || (isset($item->isDefault) && $item->isDefault);
+      // only use item default if no default specified in args.
+      if ($default != null) {
+        $selected = $item->id == $default;
+      }
+      else {
+        $selected = isset($item->isDefault) && $item->isDefault;
+      }
       $select->add($item->id, T_($item->name), $selected);
     }
   }
