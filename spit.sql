@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 08, 2012 at 09:18 PM
+-- Generation Time: Jun 10, 2012 at 01:50 AM
 -- Server version: 5.5.20
 -- PHP Version: 5.3.10
 
@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `attachment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `importId` int(11) DEFAULT NULL,
   `issueId` int(11) NOT NULL,
   `creatorId` int(11) DEFAULT NULL,
   `originalName` varchar(255) NOT NULL,
@@ -83,7 +84,7 @@ CREATE TABLE `custom` (
   `googleId` varchar(6) DEFAULT NULL,
   `redmineId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -149,6 +150,7 @@ CREATE TABLE `priority` (
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `importId` int(11) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   `title` varchar(50) NOT NULL,
   `description` varchar(250) NOT NULL,
