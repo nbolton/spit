@@ -106,6 +106,7 @@ class App {
 
     $this->locale->run();
     $this->security->run();
+    $this->plugins->load();
     
     if (!$this->initProject()) {
       return;
@@ -113,8 +114,6 @@ class App {
     
     $this->initLinks();
     $this->initTextRegex();
-    
-    $this->plugins->load();
     
     $this->controller = $this->controllers->find($this->path->get(0));
     if ($this->controller == null) {
