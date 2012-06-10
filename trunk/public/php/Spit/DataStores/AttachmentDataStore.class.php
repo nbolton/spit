@@ -30,7 +30,7 @@ class AttachmentDataStore extends DataStore {
 
   public function getForIssue($issueId) {
     $result = $this->query(
-      "select *, u.name as creator from attachment as a " .
+      "select a.*, u.name as creator from attachment as a " .
       "left join user as u on u.id = a.creatorId " .
       "where issueId = %d",
       (int)$issueId
