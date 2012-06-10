@@ -73,7 +73,8 @@ class IssuesController extends Controller {
       case EditorMode::Update: {
         $id = $this->getPathPart(2);
         $lp->securityRedirect = $lp->forIssue($id);
-        $issue = $this->ds->getById($id, $this->app->project->id, new \Spit\IssueFields($this->app));        
+        $issueFields = new \Spit\IssueFields($this->app->project->name);
+        $issue = $this->ds->getById($id, $this->app->project->id, $issueFields);
         if (!$this->userCanEdit($issue)) {
           return;
         }
@@ -169,7 +170,7 @@ class IssuesController extends Controller {
       $this->useMarkdown = true;
     }
     
-    $this->issueFields = new \Spit\IssueFields($this->app);
+    $this->issueFields = new \Spit\IssueFields($this->app->project->name);
     
     $issue = $this->ds->getById($id, $this->app->project->id, $this->issueFields);
     
@@ -227,7 +228,7 @@ class IssuesController extends Controller {
     $issue->creatorId = $this->app->security->user->id;
     $issue->id = $this->ds->insert($issue);
     
-    $issueFields = new \Spit\IssueFields($this->app);
+    $issueFields = new \Spit\IssueFields($this->app->project->name);
     $this->updateCustom($issue, $diff, $issueFields);
   }
   
@@ -237,7 +238,7 @@ class IssuesController extends Controller {
     $issue->updaterId = $this->app->security->user->id;
     $this->ds->update($issue);
     
-    $issueFields = new \Spit\IssueFields($this->app);
+    $issueFields = new \Spit\IssueFields($this->app->project->name);
     $this->updateCustom($issue, $diff, $issueFields);
     
     $changeResolver = new \Spit\ChangeResolver($issueFields);
@@ -387,7 +388,7 @@ class IssuesController extends Controller {
       new DisplayField("updated", "updated", T_("Updated on:"))
     );
     
-    $issueFields = new \Spit\IssueFields($this->app);
+    $issueFields = new \Spit\IssueFields($this->app->project->name);
     foreach ($issueFields->getCustomFieldMap() as $k => $v) {
       array_push($fields, new DisplayField($k, $k, sprintf(T_("%s:"), $v)));
     }
@@ -460,7 +461,7 @@ class IssuesController extends Controller {
     $this->fillSelectField($assignee, $userDataStore->getMembers(), $issue->assigneeId);
     array_push($fields, $assignee);
     
-    $issueFields = new \Spit\IssueFields($this->app);    
+    $issueFields = new \Spit\IssueFields($this->app->project->name);
     foreach ($issueFields->getCustomFieldMap() as $name => $label) {
     
       $values = $issueFields->getCustomFieldValues($name);
@@ -537,7 +538,7 @@ class IssuesController extends Controller {
     $date = sprintf("<i>%s</i>", $this->formatDate($change->created));
     switch($change->type) {
       case ChangeType::Edit:
-        return sprintf(T_("%s: %s edited %s."), $date, $change->creator, $this->getFieldLabel($change->name));
+        return sprintf(T_("%s: %s changed %s."), $date, $change->creator, $this->getFieldLabel($change->name));
       
       case ChangeType::Comment:
         return sprintf(T_("%s: %s wrote a comment."), $date, $change->creator);
@@ -588,13 +589,21 @@ class IssuesController extends Controller {
     
     $issue = $this->ds->getTitleById($id);
     $link = $this->app->linkProvider->forIssue($issue->id);
-    $issueInfo = sprintf("<a href=\"%s\">#%d</a> - %s", $link, $issue->id, $issue->title);
+    $issueInfo = sprintf("<a href=\"%s\">#%d</a> <span class=\"creator\">- %s</a>", $link, $issue->id, $issue->title);
     return sprintf($format, $issueInfo);
   }
   
   public function getAttachmentInfo($attachment) {
     $link = $this->app->linkProvider->forAttachment($attachment->physicalName);
-    return sprintf("<a href=\"%s\">%s</a>", $link, $attachment->originalName);
+    
+    $creator = "";
+    if ($attachment->creator != null) {
+      $creator .= $attachment->creator . " ";
+    }
+    $creator .= $this->formatDate($attachment->created);
+    
+    return sprintf("<a href=\"%s\">%s</a> - %s",
+      $link, $attachment->originalName, $creator);
   }
   
   public function userCanEditAdvanced() {

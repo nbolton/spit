@@ -29,7 +29,12 @@ class AttachmentDataStore extends DataStore {
   }
 
   public function getForIssue($issueId) {
-    $result = $this->query("select * from attachment where issueId = %d", (int)$issueId);
+    $result = $this->query(
+      "select *, u.name as creator from attachment as a " .
+      "left join user as u on u.id = a.creatorId " .
+      "where issueId = %d",
+      (int)$issueId
+    );
     return $this->fromResult($result);
   }
   
@@ -70,6 +75,15 @@ class AttachmentDataStore extends DataStore {
   
   public function truncate() {
     $this->query("truncate table attachment");
+  }
+  
+  protected function parseField($k, $v) {
+    if ($k == "created") {
+      return $v != "" ? new \DateTime($v) : null;
+    }
+    else {
+      return parent::parseField($k, $v);
+    }
   }
 }
 

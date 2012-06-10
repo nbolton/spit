@@ -22,56 +22,52 @@ namespace Spit;
 class IssueFields {
   public $mappings;
 
-  public function __construct($app) {
-    $this->app = $app;
+  public function __construct($projectName) {
+    
     $this->mappings = array();
     if (isset(Settings::$instance->fields)) {
       foreach (Settings::$instance->fields as $k => $v) {
         $this->mappings[$k] = $this->getCustomMappings($v);
       }
     }
+    
+    $this->customId = $this->getCustomId($projectName);
   }
   
-  private function getCustomId() {
-    if ($this->app->project == null) {
-      return null;
-    }
-    
+  private function getCustomId($projectName) {
     if (!isset($this->mappings["projects"])) {
       return null;
     }
     
     $projectMap = $this->mappings["projects"];
     if (count($projectMap) == 0) {
-      return array();
+      return null;
     }
     
-    return $projectMap[$this->app->project->name];
+    if (array_key_exists($projectName, $projectMap)) {
+      return $projectMap[$projectName];
+    }
+    
+    return null;
   }
   
   public function getCustomFieldMap() {
-    $id = $this->getCustomId();
-    if ($id == null) {
+    if ($this->customId == null) {
       return array();
     }
     
-    return $this->mappings["fields" . $id];
+    return $this->mappings["fields" . $this->customId];
   }
   
   public function filter($fields, $trackerId = null, $forEditor = false) {
+    // do not filter if there are no settings for this project.
     // if no tracker specified, we can't filter out ignored fields.
-    if ($trackerId == null) {
-      return $fields;
-    }
-    
-    $id = $this->getCustomId();
-    if ($id == null) {
-      // do not filter if there are no settings for this project.
+    if ($this->customId == null || $trackerId == null) {
       return $fields;
     }
   
-    $excludeMap = $this->mappings["exclude" . $id];
-    $readOnlyMap = $this->mappings["readOnly" . $id];
+    $excludeMap = $this->mappings["exclude" . $this->customId];
+    $readOnlyMap = $this->mappings["readOnly" . $this->customId];
     
     if (array_key_exists("*", $readOnlyMap)) {
       $readOnly = explode(";", $readOnlyMap["*"]);
@@ -106,12 +102,11 @@ class IssueFields {
   }
   
   public function getCustomFieldValues($field) {
-    $id = $this->getCustomId();
-    if ($id == null) {
+    if ($this->customId == null) {
       return array();
     }
     
-    $keyMap = $this->mappings["keys" . $id];
+    $keyMap = $this->mappings["keys" . $this->customId];
     
     if (!array_key_exists($field, $keyMap)) {
       return array();
