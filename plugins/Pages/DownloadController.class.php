@@ -20,6 +20,7 @@
 class DownloadController extends Spit\Controllers\Controller {
   
   public function __construct() {
+    $this->siteWide = true;
     $this->viewDir = "php/plugins/Pages/views/";
   }
   

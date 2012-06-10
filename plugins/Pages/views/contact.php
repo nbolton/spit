@@ -20,4 +20,7 @@
 <h2><?=T_("Contact")?></h2>
 
 <h3><?=T_("Mailing list")?></h3>
-<p><?=T_("Please join our mailing list to get in touch.")?></p>
+<p>
+<?=T_("Please join our <a href=\"%s\">mailing list</a> to get in touch.",
+  "https://groups.google.com/forum/?fromgroups#!forum/spit-project")?>
+</p>

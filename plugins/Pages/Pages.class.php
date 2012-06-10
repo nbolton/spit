@@ -28,7 +28,7 @@ class Pages {
     $spit->addLink(new Spit\Link(T_("Code"), "/code/", \Spit\LinkType::External));
     $spit->addLink(new Spit\Link(T_("Wiki"), "/wiki/", \Spit\LinkType::External));
     
-    $spit->addController("download", new DownloadController($this))
+    $spit->addController("download", new DownloadController($this));
     $spit->addController("contact", new ContactController($this));
   }
 }

@@ -17,14 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DownloadController extends Spit\Controllers\Controller {
+class ContactController extends Spit\Controllers\Controller {
   
   public function __construct() {
+    $this->siteWide = true;
     $this->viewDir = "php/plugins/Pages/views/";
   }
   
   public function run() {
-    $this->showView("download");
+    $this->showView("contact");
   }
 }
 
