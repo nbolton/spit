@@ -112,6 +112,19 @@ class Controller {
         $old = isset($object->$k) && $object->$k != "" ? (string)$object->$k : null;
         $new = $v != "" ? (string)$v : null;
         
+        // windows browsers tend to normalize newlines to windows (\r\n).
+        // so normalize new and old to use linux newlines (\n). normalize
+        // both new and old before the diff so we don't record newline
+        // differences as an actual change.
+        if (is_string($old)) {
+          $old = str_replace("\r\n", "\n", $old);
+        }
+        if (is_string($new)) {
+          $new = str_replace("\r\n", "\n", $new);
+        }
+        
+        $equal = $old != $new;
+        
         if ($old != $new) {
           $diff = new \stdClass;
           $diff->oldValue = $old;
