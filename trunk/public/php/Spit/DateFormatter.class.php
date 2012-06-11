@@ -17,27 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\Models;
+namespace Spit;
 
-class Issue {
-  public $id;
-  public $title;
-  public $details;
-  public $trackerId;
-  public $assigneeId;
-  public $statusId;
-  public $priorityId;
-  public $foundId;
-  public $targetId;
-  public $categoryId;
-  public $closed;
+class DateFormatter {
+  public function __construct($settings) {
+    $this->settings = $settings;
+  }
   
-  public function getHtmlInfo($linkProvider) {
-    $aClassAttr = $this->closed ? " class=\"closed\"" : "";
-    return sprintf(
-      "<a href=\"%s\"%s>%s #%d</a> <span class=\"creator\">- %s</a>",
-      $linkProvider->forIssue($this->id),
-      $aClassAttr, $this->tracker, $this->id, $this->title);
+  public function format($date) {
+    if ($date->format("H:i") == "00:00") {
+    return $date->format($this->settings->site->dateFormat);
+    }
+    return $date->format($this->settings->site->dateTimeFormat);
   }
 }
 

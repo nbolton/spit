@@ -37,21 +37,21 @@
   </div>
   <?php endforeach ?>
   
+  <?php if (count($relations) != 0): ?>
+  <hr />
+  <span class="relations">
+    <ul class="issues">
+    <?php foreach($relations as $relation): ?>
+      <li><?=$relation->getHtmlInfo($self->app->linkProvider, $issue->id)?></li>
+    <?php endforeach ?>
+    </ul>
+  </span>
+  <?php endif ?>
+  
   <?php if (trim($issue->details) != ""): ?>
   <hr />
   <span class="details">
     <?=$this->markdown($issue->details)?>
-  </span>
-  <?php endif ?>
-  
-  <?php if (count($relations) != 0): ?>
-  <hr />
-  <span class="relations">
-    <ul>
-    <?php foreach($relations as $relation): ?>
-      <li><?=$self->getRelationInfo($relation, $issue->id)?></li>
-    <?php endforeach ?>
-    </ul>
   </span>
   <?php endif ?>
   
@@ -66,14 +66,14 @@
   </span>
   <?php endif ?>
   
-  <?php $i = 0; ?>
+  <?php $i = 1; ?>
   <div class="changes">
     <?php foreach($changes as $change): ?>
     <div class="change">
       <hr />
       <a name="c<?=$i?>"></a>
       <?php if ($change->type == \Spit\Models\ChangeType::Comment): ?>
-      <div class="anchor">#<?=$i;?></div>
+      <div class="anchor"><p>#<?=$i;?></p></div>
       <?php $i++ ?>
       <?php endif ?>
       <span class="info"><?=$self->getChangeInfo($change)?></span>

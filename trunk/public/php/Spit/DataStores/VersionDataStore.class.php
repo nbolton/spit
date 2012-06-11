@@ -36,7 +36,7 @@ class VersionDataStore extends DataStore {
   public function insertMany($version) {
     $base = 
       "insert into version " .
-      "(importId, name) values ";
+      "(importId, name, releaseDate, released) values ";
     
     for ($j = 0; $j < count($version) / self::BULK_INSERT_MAX; $j++) {
       
@@ -47,9 +47,11 @@ class VersionDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $version = $slice[$i];
         $values .= $this->format(
-          "(%s, %s)",
+          "(%s, %s, %s, %d)",
           self::nullInt($version->importId),
-          $version->name)
+          $version->name,
+          $version->releaseDate,
+          $version->released)
           .($i < $count - 1 ? ", " : "");
       }
       

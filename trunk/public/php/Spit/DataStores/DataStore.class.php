@@ -116,14 +116,14 @@ abstract class DataStore {
     }
   }
   
-  protected function fromResult($result) {
+  protected function fromResult($result, $parser = null) {
     $data = array();
     if ($result == null || $result->num_rows == 0) {
       return $data;
     }
     
     while ($row = $result->fetch_object()) {
-      array_push($data, $this->fromRow($row));
+      array_push($data, $this->fromRow($row, $parser));
     }
     
     return $data;
@@ -137,10 +137,14 @@ abstract class DataStore {
     return $this->fromRow($result->fetch_object());
   }
   
-  protected function fromRow($row) {
+  protected function fromRow($row, $parser = null) {
     $data = $this->newModel();
     foreach ($row as $k => $v) {
-      $data->$k = $this->parseField($k, $v);
+      $parsed = $this->parseField($k, $v);
+      if ($parser != null) {
+        $parsed = $parser($k, $v);
+      }
+      $data->$k = $parsed;
     }
     return $data;
   }

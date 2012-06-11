@@ -36,7 +36,7 @@ class TrackerDataStore extends DataStore {
   public function insertMany($tracker) {
     $base = 
       "insert into tracker " .
-      "(importId, name) values ";
+      "(importId, name, `order`) values ";
     
     for ($j = 0; $j < count($tracker) / self::BULK_INSERT_MAX; $j++) {
       
@@ -47,9 +47,10 @@ class TrackerDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $tracker = $slice[$i];
         $values .= $this->format(
-          "(%s, %s)",
+          "(%s, %s, %d)",
           self::nullInt($tracker->importId),
-          $tracker->name)
+          $tracker->name,
+          (int)$tracker->order)
           .($i < $count - 1 ? ", " : "");
       }
       

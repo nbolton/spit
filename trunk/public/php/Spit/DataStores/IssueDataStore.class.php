@@ -109,6 +109,31 @@ class IssueDataStore extends DataStore {
     return $this->fromResultSingle($result);
   }
   
+  public function getForRoadmap($projectId) {
+    $result = $this->query(
+      "select i.id, i.title, i.closed, " .
+      "v.id as versionId, v.name as version, " .
+      "v.releaseDate as versionDate, t.name as tracker " .
+      "from issue as i " .
+      "inner join version as v on v.id = i.targetId " .
+      "inner join tracker as t on t.id = i.trackerId " .
+      "inner join priority as p on p.id = i.priorityId " .
+      "inner join status as s on s.id = i.statusId " .
+      "where v.released != 1 and i.projectId = %d " .
+      "order by v.releaseDate, v.id, t.order, p.order, s.order",
+      (int)$projectId
+    );
+    
+    $parser = function($k, $v) {
+      if ($k == "versionDate") {
+        return new \DateTime($v);
+      }
+      return $v;
+    };
+    
+    return $this->fromResult($result, $parser);
+  }
+  
   public function insert($issue) {
     $this->query(
       "insert into issue " .

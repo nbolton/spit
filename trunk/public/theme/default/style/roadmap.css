@@ -1,5 +1,3 @@
-<?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -17,28 +15,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Spit\Models;
-
-class Issue {
-  public $id;
-  public $title;
-  public $details;
-  public $trackerId;
-  public $assigneeId;
-  public $statusId;
-  public $priorityId;
-  public $foundId;
-  public $targetId;
-  public $categoryId;
-  public $closed;
-  
-  public function getHtmlInfo($linkProvider) {
-    $aClassAttr = $this->closed ? " class=\"closed\"" : "";
-    return sprintf(
-      "<a href=\"%s\"%s>%s #%d</a> <span class=\"creator\">- %s</a>",
-      $linkProvider->forIssue($this->id),
-      $aClassAttr, $this->tracker, $this->id, $this->title);
-  }
+div.version h3 {
+  margin: 8px 0px 0px 8px;
 }
 
-?>
+div.version p {
+  margin: 2px 0px 0px 8px;
+}
+
+div.version p.date {
+  color: #aaa;
+}
+
+div.progress {
+  width: 100%;
+  margin: 8px 0px 0px 8px;
+}
+
+div.progress,
+div.progress div.bar,
+div.progress div.bar div.complete,
+div.progress div.label {
+  height: 20px;
+}
+
+div.progress div.bar, 
+div.progress div.label {
+  float: left;
+}
+
+div.progress div.label p {
+  margin: 0px;
+  padding: 3px 0px 0px 8px;
+}
+
+div.progress div.bar {
+  width: 500px;
+  background-color: #ededed;
+}
+
+div.progress div.bar div.complete {
+  background-color: #bae0ba;
+}
