@@ -24,7 +24,7 @@ class StatusDataStore extends DataStore {
   const BULK_INSERT_MAX = 500;
   
   public function get() {
-    $result = $this->query("select * from status");
+    $result = $this->query("select * from status order by `order`");
     return $this->fromResult($result);
   }
   
@@ -36,7 +36,7 @@ class StatusDataStore extends DataStore {
   public function insertMany($statuses) {
     $base = 
       "insert into status " .
-      "(importId, name, closed, `order`) values ";
+      "(importId, name, closed, `order`, isDefault) values ";
     
     for ($j = 0; $j < count($statuses) / self::BULK_INSERT_MAX; $j++) {
       
@@ -47,11 +47,12 @@ class StatusDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $status = $slice[$i];
         $values .= $this->format(
-          "(%s, %s, %d, %d)",
+          "(%s, %s, %d, %d, %d)",
           self::nullInt($status->importId),
           $status->name,
           (int)$status->closed,
-          (int)$status->order)
+          (int)$status->order,
+          (int)$status->isDefault)
           .($i < $count - 1 ? ", " : "");
       }
       

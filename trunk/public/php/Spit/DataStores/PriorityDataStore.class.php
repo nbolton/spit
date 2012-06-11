@@ -24,7 +24,7 @@ class PriorityDataStore extends DataStore {
   const BULK_INSERT_MAX = 500;
   
   public function get() {
-    $result = $this->query("select * from priority");
+    $result = $this->query("select * from priority order by `order`");
     return $this->fromResult($result);
   }
   
@@ -33,24 +33,25 @@ class PriorityDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
-  public function insertMany($priority) {
+  public function insertMany($priorities) {
     $base = 
       "insert into priority " .
-      "(importId, name, `order`) values ";
+      "(importId, name, `order`, isDefault) values ";
     
-    for ($j = 0; $j < count($priority) / self::BULK_INSERT_MAX; $j++) {
+    for ($j = 0; $j < count($priorities) / self::BULK_INSERT_MAX; $j++) {
       
-      $slice = array_slice($priority, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $slice = array_slice($priorities, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
       $count = count($slice);
       $values = "";
       
       for ($i = 0; $i < $count; $i++) {
-        $change = $slice[$i];
+        $priority = $slice[$i];
         $values .= $this->format(
-          "(%s, %s, %d)",
-          self::nullInt($change->importId),
-          $change->name,
-          (int)$change->order)
+          "(%s, %s, %d, %d)",
+          self::nullInt($priority->importId),
+          $priority->name,
+          (int)$priority->order,
+          (int)$priority->isDefault)
           .($i < $count - 1 ? ", " : "");
       }
       

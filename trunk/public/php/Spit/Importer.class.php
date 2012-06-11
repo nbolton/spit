@@ -321,6 +321,7 @@ class Importer {
       $priority->importId = (int)$rmp->id;
       $priority->name = $rmp->name;
       $priority->order = $rmp->position;
+      $priority->isDefault = $rmp->is_default;
       
       array_push($context->priorities, $priority);
       $context->priorityMap[$rmp->id] = $rmp->name;
@@ -338,6 +339,7 @@ class Importer {
       $status->name = $rms->name;
       $status->closed = (bool)$rms->is_closed;
       $status->order = $rms->position;
+      $status->isDefault = $rms->is_default;
       
       array_push($context->statuses, $status);
       $context->statusMap[$rms->id] = $rms->name;
