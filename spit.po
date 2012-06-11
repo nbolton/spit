@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-08 22:55-0000\n"
+"POT-Creation-Date: 2012-06-11 20:35-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -10,31 +10,101 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: C:\\Projects\\spit\\\n"
-"X-Poedit-KeywordsList: T_\n"
+"X-Poedit-KeywordsList: T_;T_ngettext:1,2\n"
 "X-Poedit-SearchPath-0: trunk\\public\n"
 "X-Poedit-SearchPath-1: plugins\n"
 
-#: trunk\public/php/Spit/App.class.php:130
+#: trunk\public/php/plugins/Pages/Pages.class.php:26
+#: trunk\public/php/plugins/Pages/views/download.php:20
+msgid "Download"
+msgstr ""
+
+#: trunk\public/php/plugins/Pages/Pages.class.php:27
+#: trunk\public/php/plugins/Pages/views/contact.php:20
+msgid "Contact"
+msgstr ""
+
+#: trunk\public/php/plugins/Pages/Pages.class.php:28
+msgid "Code"
+msgstr ""
+
+#: trunk\public/php/plugins/Pages/Pages.class.php:29
+msgid "Wiki"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/Support.class.php:25
+msgid "Support"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:42
+msgid "Report bug"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:47
+msgid "One or more fields were empty."
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:51
+msgid "Summary"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:56
+msgid "Steps to reproduce bug"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:57
+msgid "Complete the numbered steps needed to reproduce the problem."
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:69
+msgid "Versions and operating systems"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:70
+msgid "What version of software and operating systems are you using? Example: v1.0 on Windows 7"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:75
+msgid "Temporary workarounds"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:76
+msgid "Were you able to temporarily fix your problem? e.g.: by restarting your computer."
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:81
+msgid "Additional comments"
+msgstr ""
+
+#: trunk\public/php/plugins/Support/views/support.php:82
+msgid "If you have any more information to provide, please enter it here."
+msgstr ""
+
+#: trunk\public/php/Spit/App.class.php:131
 msgid "Home"
 msgstr ""
 
-#: trunk\public/php/Spit/App.class.php:133
+#: trunk\public/php/Spit/App.class.php:132
 msgid "Issues"
 msgstr ""
 
-#: trunk\public/php/Spit/App.class.php:137
+#: trunk\public/php/Spit/App.class.php:133
+msgid "Roadmap"
+msgstr ""
+
+#: trunk\public/php/Spit/App.class.php:136
 msgid "Login"
 msgstr ""
 
-#: trunk\public/php/Spit/App.class.php:141
+#: trunk\public/php/Spit/App.class.php:140
 msgid "Admin"
 msgstr ""
 
-#: trunk\public/php/Spit/App.class.php:170
+#: trunk\public/php/Spit/App.class.php:161
 msgid "Projects"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/AdminController.class.php:63
+#: trunk\public/php/Spit/Controllers/AdminController.class.php:67
 msgid "Import"
 msgstr ""
 
@@ -46,182 +116,194 @@ msgstr ""
 msgid "Forbidden"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:111
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:115
 msgid "New Issue"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:111
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:115
 msgid "Edit Issue"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:378
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:381
 msgid "Status:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:379
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:382
 msgid "Priority:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:380
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:383
 msgid "Assignee:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:381
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:384
 msgid "Category:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:382
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:385
 msgid "Target:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:383
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:386
 msgid "Found:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:384
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:387
 msgid "Votes:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:385
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:388
 msgid "Created by:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:386
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:389
 msgid "Created on:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:387
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:390
 msgid "Updated by:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:388
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:391
 msgid "Updated on:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:393
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:396
 #, php-format
 msgid "%s:"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:402
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:413
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:544
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:405
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:416
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:564
 msgid "Tracker"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:403
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:436
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:547
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:406
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:445
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:567
 msgid "Status"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:404
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:440
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:548
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:407
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:449
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:568
 msgid "Priority"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:405
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:545
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:408
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:565
 msgid "Title"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:406
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:459
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:552
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:409
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:468
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:572
 msgid "Assignee"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:407
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:410
 msgid "Activity"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:408
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:411
 msgid "Votes"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:444
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:549
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:453
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:569
 msgid "Category"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:449
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:550
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:458
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:570
 msgid "Found"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:454
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:551
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:463
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:571
 msgid "Target"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:499
-#, php-format
-msgid "File: %s"
-msgstr ""
-
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:505
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:525
 #, php-format
 msgid "Removed %d character(s)."
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:508
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:528
 #, php-format
 msgid "Added %d character(s)."
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:530
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:550
 #, php-format
-msgid "%s: %s edited %s."
+msgid "%s: %s changed %s."
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:533
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:553
 #, php-format
 msgid "%s: %s wrote a comment."
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:536
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:556
 #, php-format
 msgid "%s: %s uploaded a file."
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:546
+#: trunk\public/php/Spit/Controllers/IssuesController.class.php:566
 msgid "Details"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:559
+#: trunk\public/php/Spit/Models/Relation.class.php:34
 #, php-format
 msgid "Related to: %s"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:565
+#: trunk\public/php/Spit/Models/Relation.class.php:45
 #, php-format
 msgid "Duplicates: %s"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:566
+#: trunk\public/php/Spit/Models/Relation.class.php:46
 #, php-format
 msgid "Blocks: %s"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:567
+#: trunk\public/php/Spit/Models/Relation.class.php:47
 #, php-format
 msgid "Follows: %s"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:573
+#: trunk\public/php/Spit/Models/Relation.class.php:57
 #, php-format
 msgid "Duplicated by: %s"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:574
+#: trunk\public/php/Spit/Models/Relation.class.php:58
 #, php-format
 msgid "Blocked by: %s"
 msgstr ""
 
-#: trunk\public/php/Spit/Controllers/IssuesController.class.php:575
+#: trunk\public/php/Spit/Models/Relation.class.php:59
 #, php-format
 msgid "Followed by: %s"
+msgstr ""
+
+#: trunk\public/php/Spit/Models/Version.class.php:45
+#, php-format
+msgid "Due on %s (today)"
+msgstr ""
+
+#: trunk\public/php/Spit/Models/Version.class.php:48
+#: trunk\public/php/Spit/Models/Version.class.php:53
+#: trunk\public/php/Spit/Models/Version.class.php:54
+#, php-format
+msgid "Due on %s (in %d day)"
+msgstr ""
+
+#: trunk\public/php/Spit/Models/Version.class.php:49
+#, php-format
+msgid "Due on %s (in %d days)"
 msgstr ""
 
 #: trunk\public/php/Spit/Views/index.php:20
@@ -245,11 +327,11 @@ msgstr ""
 msgid "Login failed."
 msgstr ""
 
-#: trunk\public/php/Spit/Views/master.php:85
+#: trunk\public/php/Spit/Views/master.php:90
 msgid "Language:"
 msgstr ""
 
-#: trunk\public/php/Spit/Views/master.php:106
+#: trunk\public/php/Spit/Views/master.php:111
 #, php-format
 msgid "Powered by %s. Copyright &copy; %s 2012. Load time: %s ms. SQL queries: %s."
 msgstr ""
@@ -337,64 +419,11 @@ msgstr ""
 msgid "Next &raquo;"
 msgstr ""
 
-#: plugins/Pages/Pages.class.php:25
-#: plugins/Pages/views/download.php:20
-msgid "Download"
+#: plugins/Pages/views/contact.php:22
+msgid "Mailing list"
 msgstr ""
 
-#: plugins/Pages/Pages.class.php:26
-msgid "Code"
-msgstr ""
-
-#: plugins/Pages/Pages.class.php:27
-msgid "Wiki"
-msgstr ""
-
-#: plugins/Support/Support.class.php:25
-msgid "Support"
-msgstr ""
-
-#: plugins/Support/views/support.php:42
-msgid "Report bug"
-msgstr ""
-
-#: plugins/Support/views/support.php:47
-msgid "One or more fields were empty."
-msgstr ""
-
-#: plugins/Support/views/support.php:51
-msgid "Summary"
-msgstr ""
-
-#: plugins/Support/views/support.php:56
-msgid "Steps to reproduce bug"
-msgstr ""
-
-#: plugins/Support/views/support.php:57
-msgid "Complete the numbered steps needed to reproduce the problem."
-msgstr ""
-
-#: plugins/Support/views/support.php:69
-msgid "Versions and operating systems"
-msgstr ""
-
-#: plugins/Support/views/support.php:70
-msgid "What version of software and operating systems are you using? Example: v1.0 on Windows 7"
-msgstr ""
-
-#: plugins/Support/views/support.php:75
-msgid "Temporary workarounds"
-msgstr ""
-
-#: plugins/Support/views/support.php:76
-msgid "Were you able to temporarily fix your problem? e.g.: by restarting your computer."
-msgstr ""
-
-#: plugins/Support/views/support.php:81
-msgid "Additional comments"
-msgstr ""
-
-#: plugins/Support/views/support.php:82
-msgid "If you have any more information to provide, please enter it here."
+#: plugins/Pages/views/contact.php:23
+msgid "Please join our mailing list to get in touch."
 msgstr ""
 

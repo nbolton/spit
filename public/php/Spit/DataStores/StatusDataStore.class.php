@@ -36,7 +36,7 @@ class StatusDataStore extends DataStore {
   public function insertMany($statuses) {
     $base = 
       "insert into status " .
-      "(importId, name, closed) values ";
+      "(importId, name, closed, `order`) values ";
     
     for ($j = 0; $j < count($statuses) / self::BULK_INSERT_MAX; $j++) {
       
@@ -47,10 +47,11 @@ class StatusDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $status = $slice[$i];
         $values .= $this->format(
-          "(%s, %s, %d)",
+          "(%s, %s, %d, %d)",
           self::nullInt($status->importId),
           $status->name,
-          (int)$status->closed)
+          (int)$status->closed,
+          (int)$status->order)
           .($i < $count - 1 ? ", " : "");
       }
       

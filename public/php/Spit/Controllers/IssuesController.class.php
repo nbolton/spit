@@ -31,6 +31,9 @@ use \Spit\EditorMode as EditorMode;
 use \Spit\Models\ChangeType as ChangeType;
 use \Spit\Models\RelationType as RelationType;
 
+// TODO: this class has become bloated;
+// favour fat models and skinny controllers.
+
 class IssuesController extends Controller {
   
   public function __construct() {
@@ -569,34 +572,6 @@ class IssuesController extends Controller {
       case "assignee": return T_("Assignee");
       default: return $name;
     }
-  }
-  
-  public function getRelationInfo($relation, $issueId) {
-    if ($relation->type == RelationType::Generic) {
-      $format = T_("Related to: %s");
-    }
-    
-    if ($relation->leftId == $issueId) {
-      $id = $relation->rightId;
-      switch ($relation->type) {
-        case RelationType::Duplicates: $format = T_("Duplicates: %s"); break;
-        case RelationType::Blocks: $format = T_("Blocks: %s"); break;
-        case RelationType::Follows: $format = T_("Follows: %s"); break;
-      }
-    }
-    else {
-      $id = $relation->leftId;
-      switch ($relation->type) {
-        case RelationType::Duplicates: $format = T_("Duplicated by: %s"); break;
-        case RelationType::Blocks: $format = T_("Blocked by: %s"); break;
-        case RelationType::Follows: $format = T_("Followed by: %s"); break;
-      }
-    }
-    
-    $issue = $this->ds->getTitleById($id);
-    $link = $this->app->linkProvider->forIssue($issue->id);
-    $issueInfo = sprintf("<a href=\"%s\">#%d</a> <span class=\"creator\">- %s</a>", $link, $issue->id, $issue->title);
-    return sprintf($format, $issueInfo);
   }
   
   public function getAttachmentInfo($attachment) {

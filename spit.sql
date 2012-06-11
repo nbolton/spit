@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jun 10, 2012 at 01:50 AM
+-- Generation Time: Jun 11, 2012 at 07:21 PM
 -- Server version: 5.5.20
 -- PHP Version: 5.3.10
 
@@ -84,7 +84,7 @@ CREATE TABLE `custom` (
   `googleId` varchar(6) DEFAULT NULL,
   `redmineId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -139,6 +139,7 @@ CREATE TABLE `priority` (
   `importId` int(11) DEFAULT NULL,
   `name` varchar(10) NOT NULL,
   `isDefault` tinyint(1) NOT NULL,
+  `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -184,6 +185,7 @@ CREATE TABLE `status` (
   `name` varchar(20) NOT NULL,
   `closed` tinyint(1) NOT NULL,
   `isDefault` tinyint(1) NOT NULL,
+  `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -197,6 +199,7 @@ CREATE TABLE `tracker` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(20) NOT NULL,
+  `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -225,6 +228,8 @@ CREATE TABLE `version` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(10) NOT NULL,
+  `releaseDate` date DEFAULT NULL,
+  `released` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 

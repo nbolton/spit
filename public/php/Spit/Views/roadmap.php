@@ -1,5 +1,4 @@
 <?php
-
 /*
  * SPIT: Simple PHP Issue Tracker
  * Copyright (C) 2012 Nick Bolton
@@ -16,29 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ ?>
 
-namespace Spit\Models;
+<h2><?=$title?></h2>
 
-class Issue {
-  public $id;
-  public $title;
-  public $details;
-  public $trackerId;
-  public $assigneeId;
-  public $statusId;
-  public $priorityId;
-  public $foundId;
-  public $targetId;
-  public $categoryId;
-  public $closed;
-  
-  public function getHtmlInfo($linkProvider) {
-    $aClassAttr = $this->closed ? " class=\"closed\"" : "";
-    return sprintf(
-      "<a href=\"%s\"%s>%s #%d</a> <span class=\"creator\">- %s</a>",
-      $linkProvider->forIssue($this->id),
-      $aClassAttr, $this->tracker, $this->id, $this->title);
-  }
-}
-
-?>
+<?php foreach($versions as $version): ?>
+<div class="version box">
+  <h3><?=$version->name?></h3>
+  <p class="date"><?=$version->getDateInfo($self->app->dateFormatter)?></p>
+  <div class="progress">
+    <div class="bar">
+      <div class="complete" style="width: <?=$version->getProgressPercent()?>%"></div>
+    </div>
+    <div class="label">
+      <p><?=$version->getProgressPercent()?>%</p>
+    </div>
+  </div>
+  <ul class="issues">
+    <?php foreach($version->issues as $issue): ?>
+    <li><?=$issue->getHtmlInfo($app->linkProvider)?></li>
+    <?php endforeach ?>
+  </ul>
+</div>
+<?php endforeach ?>

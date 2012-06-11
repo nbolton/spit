@@ -36,7 +36,7 @@ class PriorityDataStore extends DataStore {
   public function insertMany($priority) {
     $base = 
       "insert into priority " .
-      "(importId, name) values ";
+      "(importId, name, `order`) values ";
     
     for ($j = 0; $j < count($priority) / self::BULK_INSERT_MAX; $j++) {
       
@@ -47,9 +47,10 @@ class PriorityDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $change = $slice[$i];
         $values .= $this->format(
-          "(%s, %s)",
+          "(%s, %s, %d)",
           self::nullInt($change->importId),
-          $change->name)
+          $change->name,
+          (int)$change->order)
           .($i < $count - 1 ? ", " : "");
       }
       

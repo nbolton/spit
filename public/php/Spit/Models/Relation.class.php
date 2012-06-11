@@ -28,6 +28,39 @@ class RelationType {
 
 class Relation {
   public $id;
+  
+  public function getHtmlInfo($linkProvder, $issueId) {
+    if ($this->type == RelationType::Generic) {
+      $format = T_("Related to: %s");
+    }
+    
+    $issue = new \Spit\Models\Issue;
+    if ($this->leftId == $issueId) {
+      $issue->id = $this->rightId;
+      $issue->title = $this->rightTitle;
+      $issue->tracker = $this->rightTracker;
+      $issue->closed = $this->rightClosed;
+      
+      switch ($this->type) {
+        case RelationType::Duplicates: $format = T_("Duplicates: %s"); break;
+        case RelationType::Blocks: $format = T_("Blocks: %s"); break;
+        case RelationType::Follows: $format = T_("Follows: %s"); break;
+      }
+    }
+    else {
+      $issue->id = $this->leftId;
+      $issue->title = $this->leftTitle;
+      $issue->tracker = $this->leftTracker;
+      $issue->closed = $this->leftClosed;
+      
+      switch ($this->type) {
+        case RelationType::Duplicates: $format = T_("Duplicated by: %s"); break;
+        case RelationType::Blocks: $format = T_("Blocked by: %s"); break;
+        case RelationType::Follows: $format = T_("Followed by: %s"); break;
+      }
+    }    
+    return sprintf($format, $issue->getHtmlInfo($linkProvder));
+  }
 }
 
 ?>

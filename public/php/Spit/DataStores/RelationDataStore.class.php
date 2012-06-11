@@ -25,7 +25,14 @@ class RelationDataStore extends DataStore {
   
   public function getForIssue($issueId) {
     $result = $this->query(
-      "select * from relation " .
+      "select r.*, " .
+      "li.title as leftTitle, li.closed as leftClosed, lt.name as leftTracker, " .
+      "ri.title as rightTitle, ri.closed as rightClosed, rt.name as rightTracker " .
+      "from relation as r " .
+      "left join issue as li on li.id = r.leftId " .
+      "left join issue as ri on ri.id = r.rightId " .
+      "left join tracker as lt on lt.id = li.trackerId " .
+      "left join tracker as rt on rt.id = ri.trackerId " .
       "where leftId = %d or rightId = %d " .
       "order by type, leftId, rightId",
       (int)$issueId, (int)$issueId);

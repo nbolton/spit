@@ -71,6 +71,11 @@ div.change div.anchor {
   color: #aaa;
 }
 
+div.change div.anchor p {
+  margin: 0px;
+  padding: 0px;
+}
+
 div.comment form {
   display: none;
 }

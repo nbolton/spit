@@ -21,6 +21,43 @@ namespace Spit\Models;
 
 class Version {
   public $id;
+  
+  public function getProgress() {
+    return $this->complete / count($this->issues);
+  }
+  
+  public function getProgressPercent() {
+    return round($this->getProgress() * 100, 0);
+  }
+  
+  public function getProgressBarWidth($max) {
+    return $max * $this->getProgress();
+  }
+  
+  public function getDateInfo($dateFormatter) {
+    $now = new \DateTime();
+    $diff = $this->releaseDate->diff($now);
+    $days = $diff->days;
+    
+    // it would be nice to use T_ngettext here, but poedit doesn't
+    // seem to support it even with the keyword "T_ngettext:1,2"
+    if ($days == 0) {
+      $format = T_("Due on %s (today)");
+    }
+    else if ($diff->invert) {
+      $s = T_("Due on %s (in %d day)");
+      $p = T_("Due on %s (in %d days)");
+      $format = $days == 1 ? $s : $p;
+    }
+    else {
+      $s = T_("Due on %s (%d day ago)");
+      $p = T_("Due on %s (%d days ago)");
+      $format = $days == 1 ? $s : $p;
+    }
+    
+    return sprintf(
+      $format, $dateFormatter->format($this->releaseDate), $days);
+  }
 }
 
 ?>

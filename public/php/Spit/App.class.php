@@ -32,6 +32,7 @@ require "HttpCode.class.php";
 require "Importer.class.php";
 require "ChangeResolver.class.php";
 require "LinkProvider.class.php";
+require "DateFormatter.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";
@@ -90,6 +91,7 @@ class App {
     $this->error = new Controllers\ErrorController($this);
     $this->path = new Path;
     $this->linkProvider = new LinkProvider($this);
+    $this->dateFormatter = new DateFormatter($this->settings);
     
     // default user level needed to create new issues.
     $this->newIssueUserType = UserType::Newbie;
@@ -127,10 +129,8 @@ class App {
   
   private function initLinks() {
     $this->addLink(new Link(T_("Home"), null, \Spit\LinkType::Project));
-    
-    if ($this->project != null) {
-      $this->addLink(new Link(T_("Issues"), "issues/", \Spit\LinkType::Project));
-    }
+    $this->addLink(new Link(T_("Issues"), "issues/", \Spit\LinkType::Project));
+    $this->addLink(new Link(T_("Roadmap"), "roadmap/", \Spit\LinkType::Project));
     
     if (!$this->security->isLoggedIn()) {
       $this->addLink(new Link(T_("Login"), $this->linkProvider->forLogin(false), \Spit\LinkType::Site));

@@ -320,6 +320,7 @@ class Importer {
       $priority = new \Spit\Models\Priority;
       $priority->importId = (int)$rmp->id;
       $priority->name = $rmp->name;
+      $priority->order = $rmp->position;
       
       array_push($context->priorities, $priority);
       $context->priorityMap[$rmp->id] = $rmp->name;
@@ -336,6 +337,7 @@ class Importer {
       $status->importId = (int)$rms->id;
       $status->name = $rms->name;
       $status->closed = (bool)$rms->is_closed;
+      $status->order = $rms->position;
       
       array_push($context->statuses, $status);
       $context->statusMap[$rms->id] = $rms->name;
@@ -364,6 +366,7 @@ class Importer {
       $tracker = new \Spit\Models\Tracker;
       $tracker->importId = $rmt->id;
       $tracker->name = $rmt->name;
+      $tracker->order = $rmt->position;
       
       array_push($context->trackers, $tracker);
       $context->trackerMap[$rmt->id] = $rmt->name;
@@ -379,6 +382,8 @@ class Importer {
       $version = new \Spit\Models\Version;
       $version->importId = $rmv->id;
       $version->name = $rmv->name;
+      $version->releaseDate = $rmv->effective_date;
+      $version->released = $rmv->status == "closed";
       
       array_push($context->versions, $version);
       $context->versionMap[$rmv->id] = $rmv->name;
