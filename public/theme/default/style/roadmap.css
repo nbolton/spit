@@ -27,6 +27,14 @@ div.version p.date {
   color: #aaa;
 }
 
+div.version {
+  margin-top: 12px;
+}
+
+div.version:first-of-type {
+  margin-top: 8px;
+}
+
 div.progress {
   width: 100%;
   margin: 8px 0px 0px 8px;
@@ -57,3 +65,5 @@ div.progress div.bar {
 div.progress div.bar div.complete {
   background-color: #bae0ba;
 }
+
+
