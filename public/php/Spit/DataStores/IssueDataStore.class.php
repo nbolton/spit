@@ -120,12 +120,13 @@ class IssueDataStore extends DataStore {
       "inner join priority as p on p.id = i.priorityId " .
       "inner join status as s on s.id = i.statusId " .
       "where v.released != 1 and i.projectId = %d " .
-      "order by v.releaseDate, v.id, t.order, p.order, s.order",
+      "order by isnull(v.releaseDate), v.name, t.order asc, " .
+      "p.order desc, s.order, i.created",
       (int)$projectId
     );
     
     $parser = function($k, $v) {
-      if ($k == "versionDate") {
+      if ($v != null && $k == "versionDate") {
         return new \DateTime($v);
       }
       return $v;
