@@ -65,7 +65,7 @@ class RedmineDataStore extends DataStore {
 
   public function getPriorities() {
     $result = $this->query(
-      "select id, name, position from enumerations " .
+      "select id, name, position, is_default from enumerations " .
       "where type = 'IssuePriority'"
     );
     return $this->fromResult($result);

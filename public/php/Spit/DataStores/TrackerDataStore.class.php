@@ -24,7 +24,7 @@ class TrackerDataStore extends DataStore {
   const BULK_INSERT_MAX = 500;
 
   public function get() {
-    $result = $this->query("select * from tracker");
+    $result = $this->query("select * from tracker order by `order`");
     return $this->fromResult($result);
   }
   
