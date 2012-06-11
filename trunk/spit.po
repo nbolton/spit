@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-11 20:35-0000\n"
+"POT-Creation-Date: 2012-06-11 22:09-0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nick Bolton <nick.bolton.uk@gmail.com>\n"
 "Language-Team: \n"
@@ -295,8 +295,6 @@ msgid "Due on %s (today)"
 msgstr ""
 
 #: trunk\public/php/Spit/Models/Version.class.php:48
-#: trunk\public/php/Spit/Models/Version.class.php:53
-#: trunk\public/php/Spit/Models/Version.class.php:54
 #, php-format
 msgid "Due on %s (in %d day)"
 msgstr ""
@@ -304,6 +302,16 @@ msgstr ""
 #: trunk\public/php/Spit/Models/Version.class.php:49
 #, php-format
 msgid "Due on %s (in %d days)"
+msgstr ""
+
+#: trunk\public/php/Spit/Models/Version.class.php:53
+#, php-format
+msgid "Due on %s (%d day ago)"
+msgstr ""
+
+#: trunk\public/php/Spit/Models/Version.class.php:54
+#, php-format
+msgid "Due on %s (%d days ago)"
 msgstr ""
 
 #: trunk\public/php/Spit/Views/index.php:20
