@@ -288,8 +288,7 @@ class IssuesController extends Controller {
       if ($duplicateStatus != null) {
         $duplicateId = $isLeft ? $fromId : $toId;
         $oldStatus = $statusDataStore->getForIssue($duplicateId);
-        
-        $this->ds->updateStatus($duplicateId, $duplicateStatus->id);
+        $this->ds->updateStatus($duplicateId, $duplicateStatus->id, true);
         
         $issueFields = new \Spit\IssueFields($this->app->project->name);
         $changeResolver = new \Spit\ChangeResolver($issueFields);
