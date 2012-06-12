@@ -39,6 +39,7 @@
   
   <hr />
   <span class="relations">
+    <?php if ($self->canCreateRelation()): ?>
     <div class="add">
       <p><a class="add" href="javascript:void(0)"><?=T_("Add relation")?></a></p>
       <div class="form">
@@ -59,6 +60,7 @@
         <img src="<?=$app->getImage("loading.gif")?>" />
       </div>
     </div>
+    <?php endif ?>
     <ul class="issues">
     <?php foreach($relations as $relation): ?>
       <li><?=$relation->getHtmlInfo($self, $issue->id)?></li>
