@@ -28,8 +28,10 @@ class RelationType {
 
 class Relation {
   public $id;
+  public $creatorId;
+  public $created;
   
-  public function getHtmlInfo($linkProvder, $issueId) {
+  public function getHtmlInfo($controller, $issueId) {
     if ($this->type == RelationType::Generic) {
       $format = T_("Related to: %s");
     }
@@ -58,8 +60,23 @@ class Relation {
         case RelationType::Blocks: $format = T_("Blocked by: %s"); break;
         case RelationType::Follows: $format = T_("Followed by: %s"); break;
       }
-    }    
-    return sprintf($format, $issue->getHtmlInfo($linkProvder));
+    }
+    
+    $linkProvider = $controller->app->linkProvider;
+    
+    if ($controller->userCanDeleteRelation($this)) {
+      $removeHtml = sprintf(
+        "<input type=\"hidden\" value=\"%d\" />".
+        "<a class=\"delete\" href=\"javascript:void(0)\">".
+        "<img src=\"%s\" class=\"remove\" /></a>",
+        $this->id, $linkProvider->forImage("link_break.png")
+      );
+    }
+    else {
+      $removeHtml = null;
+    }
+    
+    return sprintf($format, $issue->getHtmlInfo($linkProvider) . $removeHtml);
   }
 }
 

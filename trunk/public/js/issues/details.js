@@ -16,6 +16,92 @@
  */
 
 function viewLoad() {
+  initRelationsForm();
+  initCommentsForm();
+}
+
+function initRelationsForm() {
+  var form = $("span.relations div.form");
+  
+  var issues = $("span.relations ul.issues");
+  if (issues.find("li").length == 0) {
+    issues.hide();
+  }
+  
+  var idField = form.find("input[name='issueId']");
+  
+  $("span.relations a.add").click(function() {
+    $(this).hide();
+    $("span.relations div.form").fadeIn();
+    idField.focus();
+  });
+  
+  var add = $("span.relations input[name='add']");
+  
+  idField.keyup(function(event){
+    // click add when user presses enter.
+    if (event.keyCode == 13) {
+      add.click();
+    }
+  });
+  
+  add.click(function() {
+    
+    var issueId = idField.val();
+    var type = form.find("select[name='type'] option:selected").val();
+    log("adding relation: type=" + type + ", issueId=" + issueId);
+    
+    form.hide();
+    $("span.relations div.loading").fadeIn();
+    
+    $.post("?createRelation", {
+      format: "json",
+      issueId: issueId,
+      type: type
+    },
+    function(message) {
+      updateLoadStats(message["stats"]);
+      var data = message["data"];
+      
+      $("span.relations a.add").show();
+      $("span.relations div.loading").hide();
+      
+      if (data.error) {
+        form.show();
+        alert(data.error);
+      }
+      else {
+        // only reset id textbox, leave type as is in case user wants to 
+        // add another of the same type.
+        form.find("input[name='issueId']").val("");
+        
+        $("span.relations ul.issues").show().append($("<li>" + data + "</li>"));
+      }
+    },
+    "json")
+    .error(log("error"));
+  });
+  
+  $("span.relations a.delete").click(function() {
+    var idField = $(this).parent().find("input[type='hidden']");
+    var id = idField.val();
+    
+    log("deleting relation: id=" + id);
+    idField.parent().remove();
+    
+    $.getJSON("?deleteRelation", {
+      format: "json",
+      id: id
+    },
+    function(message) {
+      updateLoadStats(message["stats"]);
+      data = message["data"];
+      
+    });
+  });
+}
+
+function initCommentsForm() {
   form = $("div.comment form");
   
   // if user isn't logged in, then there is no form.
@@ -52,7 +138,7 @@ function viewLoad() {
     $("div.comment div.loading").fadeIn();
     scrollDown();
     
-    $.post("", {
+    $.post("?comment", {
       format: "json",
       content: content
     },

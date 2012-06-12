@@ -151,7 +151,17 @@ class IssuesController extends Controller {
   private function runDetails() {
     
     if ($this->isJsonPost()) {
-      exit($this->getJson($this->commentPost()));
+      if (isset($_GET["comment"])) {
+        exit($this->getJson($this->commentPost()));
+      }
+      if (isset($_GET["createRelation"])) {
+        exit($this->getJson($this->createRelation()));
+      }
+      exit;
+    }
+    
+    if ($this->isJsonGet() && isset($_GET["deleteRelation"])) {
+      exit($this->getJson($this->deleteRelation()));
     }
     
     $id = $this->getPathPart(2);
@@ -198,11 +208,85 @@ class IssuesController extends Controller {
     $this->showView("issues/details", $this->getIssueTitle($issue), $data, \Spit\TitleMode::Affix);
   }
   
+  private function deleteRelation() {
+    $rds = new \Spit\DataStores\RelationDataStore;
+    $relation = $rds->getCreatorById($_GET["id"]);
+    
+    if (!$this->userCanDeleteRelation($relation)) {
+      return null;
+    }
+    
+    $rds->delete($_GET["id"]);
+    return null;
+  }
+  
+  public function userCanDeleteRelation($relation) {
+    // only allow original creator or manager to delete relations.
+    return ($this->auth(\Spit\UserType::Manager, true) ||
+      ($this->app->security->isLoggedIn(true) && $relation->creatorId == $this->app->security->user->id));
+  }
+  
+  private function createRelation() {
+    if (!$this->auth(\Spit\UserType::Member, true)) {
+      return null;
+    }
+    
+    $relation = new \Spit\Models\Relation;
+    
+    $toId = (int)$_POST["issueId"];
+    $toIssue = $this->ds->getById($toId, $this->app->project->id);
+    if ($toIssue == null) {
+      return array("error" => sprintf(T_("Issue does not exist: #%d"), $toId));
+    }
+    
+    $typeSplit = explode(":", $_POST["type"]);
+    $relation->type = $typeSplit[0];
+    
+    // the original issue we are adding the relation from.
+    $fromId = $this->getPathPart(2);
+    
+    // make sure the user doesn't add duplicates.
+    $rds = new \Spit\DataStores\RelationDataStore;
+    foreach ($rds->getForIssue($fromId) as $existing) {
+      if (($existing->leftId == $fromId && $existing->rightId == $toId) ||
+        ($existing->leftId == $fromId && $existing->rightId == $toId)) {
+        return array("error" => sprintf(
+          T_("Relationship already exists between #%d and #%d."), $toId, $fromId));
+      }
+    }
+    
+    if (count($typeSplit) > 1 && $typeSplit[1] == "l") {
+      $relation->leftId = $fromId;
+      $relation->rightId = $toId;
+      $relation->rightTitle = $toIssue->title;
+      $relation->rightTracker = $toIssue->tracker;
+      $relation->rightClosed = $toIssue->closed;
+    }
+    else {
+      $relation->rightId = $fromId;
+      $relation->leftId = $toId;
+      $relation->leftTitle = $toIssue->title;
+      $relation->leftTracker = $toIssue->tracker;
+      $relation->leftClosed = $toIssue->closed;
+    }
+    
+    $relation->type = (int)$_POST["type"];
+    $relation->creatorId = $this->app->security->user->id;
+    
+    $rds->insert($relation);
+    
+    return $relation->getHtmlInfo($this, $fromId);
+  }
+  
   private function getIssueTitle($issue) {
     return sprintf("%s #%d - %s", $issue->tracker, $issue->id, $issue->title);
   }
   
   private function commentPost() {
+    if (!$this->app->security->isLoggedIn()) {
+      return null;
+    }
+    
     $issueId = $this->getPathPart(2);
     
     $change = new \Spit\Models\Change;
