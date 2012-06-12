@@ -28,6 +28,21 @@ class StatusDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
+  public function getByName($name) {
+    $result = $this->query("select * from status where name = %s", $name);
+    return $this->fromResultSingle($result);
+  }
+  
+  public function getForIssue($issueId) {
+    $result = $this->query(
+      "select s.* from status as s " .
+      "inner join issue as i on i.statusId = s.id " .
+      "where i.id = %d",
+      (int)$issueId
+    );
+    return $this->fromResultSingle($result);
+  }
+  
   public function getImportIds() {
     $result = $this->query("select id, importId from status");
     return $this->fromResult($result);

@@ -29,7 +29,7 @@
   <?php foreach($columns as $column): ?>
   <div class="column">
     <?php foreach($column as $field): ?>
-      <div class="row">
+      <div class="row" id="<?=$field->name?>">
         <div class="label"><?=$field->label?></div>
         <div class="value"><?=$field->value?></div>
       </div>
