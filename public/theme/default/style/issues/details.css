@@ -105,3 +105,27 @@ div.change div.anchor {
   float: right;
   text-align: right;
 }
+
+span.relations div.form {
+  display: none;
+}
+
+span.relations select[name='type'] {
+  margin: 0px;
+}
+
+span.relations input[name='issueId'] {
+  width: 4em;
+}
+
+span.relations ul {
+  margin-bottom: 0px;
+}
+
+span.relations div.form  p {
+  display: inline;
+}
+
+span.relations ul.issues li img {
+  margin: 0px 0px -2px 4px;
+}

@@ -19,6 +19,7 @@
 
 namespace Spit;
 
+// TODO: rename to UrlProvider.
 class LinkProvider {
   public $app;
   public $securityRedirect;
@@ -26,6 +27,10 @@ class LinkProvider {
   public function __construct($app) {
     $this->app = $app;
     $this->exclude = array();
+  }
+  
+  public function forImage($name) {
+    return $this->app->getImage($name);
   }
   
   public function forIssue($id) {

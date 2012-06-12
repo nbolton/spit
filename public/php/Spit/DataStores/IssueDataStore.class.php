@@ -71,7 +71,7 @@ class IssueDataStore extends DataStore {
     return $this->fromResult($result);
   }
 
-  public function getById($id, $projectId, $custom) {
+  public function getById($id, $projectId, $custom = null) {
     $result = $this->query(
       "select i.id, i.trackerId, i.statusId, i.priorityId, i.categoryId, " .
       "i.targetId, i.foundId, i.assigneeId, i.creatorId, i.updaterId, " .
@@ -80,7 +80,7 @@ class IssueDataStore extends DataStore {
       "ua.name as assignee, uu.name as updater, uc.name as creator, " .
       "vt.name as target, vf.name as found, cat.name as category, " .
       "custom.id as customId " .
-      $this->getCustomSelect($custom, "custom.") .
+      ($custom != null ? $this->getCustomSelect($custom, "custom.") : null) .
       "from issue as i " .
       "inner join tracker as t on t.id = i.trackerId " .
       "inner join status as s on s.id = i.statusId " .

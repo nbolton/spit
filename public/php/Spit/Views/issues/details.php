@@ -37,16 +37,34 @@
   </div>
   <?php endforeach ?>
   
-  <?php if (count($relations) != 0): ?>
   <hr />
   <span class="relations">
+    <div class="add">
+      <p><a class="add" href="javascript:void(0)"><?=T_("Add relation")?></a></p>
+      <div class="form">
+        <select name="type">
+          <option value="<?=\Spit\Models\RelationType::Generic?>"><?=T_("Related to")?></option>
+          <option value="<?=\Spit\Models\RelationType::Duplicates?>:l"><?=T_("Duplicates")?></option>
+          <option value="<?=\Spit\Models\RelationType::Duplicates?>:r"><?=T_("Duplicated by")?></option>
+          <option value="<?=\Spit\Models\RelationType::Blocks?>:l"><?=T_("Blocks")?></option>
+          <option value="<?=\Spit\Models\RelationType::Blocks?>:r"><?=T_("Blocked by")?></option>
+          <option value="<?=\Spit\Models\RelationType::Follows?>:l"><?=T_("Follows")?></option>
+          <option value="<?=\Spit\Models\RelationType::Follows?>:r"><?=T_("Followed by")?></option>
+        </select>
+        <input type="text" name="issueId" />
+        <input type="button" name="add" value="<?=T_("Add")?>" />
+        <p><a class="cancel" href="javascript:void(0)"><?=T_("Cancel")?></a></p>
+      </div>
+      <div class="loading">
+        <img src="<?=$app->getImage("loading.gif")?>" />
+      </div>
+    </div>
     <ul class="issues">
     <?php foreach($relations as $relation): ?>
-      <li><?=$relation->getHtmlInfo($self->app->linkProvider, $issue->id)?></li>
+      <li><?=$relation->getHtmlInfo($self, $issue->id)?></li>
     <?php endforeach ?>
     </ul>
   </span>
-  <?php endif ?>
   
   <?php if (trim($issue->details) != ""): ?>
   <hr />

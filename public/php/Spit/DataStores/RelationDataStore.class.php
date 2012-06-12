@@ -40,6 +40,24 @@ class RelationDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
+  public function getCreatorById($id) {
+    $result = $this->query(
+      "select creatorId from relation where id = %d",
+      (int)$id);
+    
+    return $this->fromResultSingle($result);
+  }
+  
+  public function insert($relation) {
+    $this->query(
+      "insert into relation (leftId, rightId, type, creatorId, created) " .
+      "values (%d, %d, %d, %d, now())",
+      (int)$relation->leftId,
+      (int)$relation->rightId,
+      (int)$relation->type,
+      (int)$relation->creatorId);
+  }
+  
   public function insertMany($relations) {
     $base = 
       "insert into relation " .
@@ -54,15 +72,22 @@ class RelationDataStore extends DataStore {
       for ($i = 0; $i < $count; $i++) {
         $relation = $slice[$i];
         $values .= $this->format(
-          "(%d, %d, %d)",
+          "(%d, %d, %d, %s, %s)",
           (int)$relation->leftId,
           (int)$relation->rightId,
-          (int)$relation->type)
+          (int)$relation->type,
+          self::nullInt($relation->creatorId),
+          $relation->created)
           .($i < $count - 1 ? ", " : "");
       }
       
       $this->query($base . $values);
     }
+  }
+  
+  public function delete($id) {
+    $this->query(
+      "delete from relation where id = %d", (int)$id);
   }
   
   public function truncate() {

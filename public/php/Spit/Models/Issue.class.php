@@ -35,7 +35,7 @@ class Issue {
   public function getHtmlInfo($linkProvider) {
     $aClassAttr = $this->closed ? " class=\"closed\"" : "";
     return sprintf(
-      "<a href=\"%s\"%s>%s #%d</a> <span class=\"creator\">- %s</a>",
+      "<a href=\"%s\"%s>%s #%d</a> - %s</a>",
       $linkProvider->forIssue($this->id),
       $aClassAttr, $this->tracker, $this->id, $this->title);
   }
