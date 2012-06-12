@@ -277,7 +277,7 @@ class IssuesController extends Controller {
     $relation->type = (int)$_POST["type"];
     $relation->creatorId = $this->app->security->user->id;
     
-    $rds->insert($relation);
+    $relation->id = $rds->insert($relation);
     
     return $relation->getHtmlInfo($this, $fromId);
   }

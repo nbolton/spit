@@ -45,6 +45,28 @@ function initRelationsForm() {
     }
   });
   
+  $("span.relations a.cancel").click(function() {
+    hideRelationForm();
+  });
+  
+  var deleteFunc = function() {
+    var idField = $(this).parent().find("input[type='hidden']");
+    var id = idField.val();
+    
+    log("deleting relation: id=" + id);
+    idField.parent().remove();
+    
+    $.getJSON("?deleteRelation", {
+      format: "json",
+      id: id
+    },
+    function(message) {
+      updateLoadStats(message["stats"]);
+      data = message["data"];
+      
+    });
+  }
+  
   add.click(function() {
     
     var issueId = idField.val();
@@ -63,8 +85,7 @@ function initRelationsForm() {
       updateLoadStats(message["stats"]);
       var data = message["data"];
       
-      $("span.relations a.add").show();
-      $("span.relations div.loading").hide();
+      hideRelationForm();
       
       if (data.error) {
         form.show();
@@ -75,30 +96,22 @@ function initRelationsForm() {
         // add another of the same type.
         form.find("input[name='issueId']").val("");
         
-        $("span.relations ul.issues").show().append($("<li>" + data + "</li>"));
+        var info = $("<li>" + data + "</li>");
+        info.find("a.delete").click(deleteFunc);
+        $("span.relations ul.issues").show().append(info);
       }
     },
     "json")
     .error(log("error"));
   });
   
-  $("span.relations a.delete").click(function() {
-    var idField = $(this).parent().find("input[type='hidden']");
-    var id = idField.val();
-    
-    log("deleting relation: id=" + id);
-    idField.parent().remove();
-    
-    $.getJSON("?deleteRelation", {
-      format: "json",
-      id: id
-    },
-    function(message) {
-      updateLoadStats(message["stats"]);
-      data = message["data"];
-      
-    });
-  });
+  $("span.relations a.delete").click(deleteFunc);
+}
+
+function hideRelationForm() {
+  $("span.relations div.loading").hide();
+  $("span.relations div.form").hide();
+  $("span.relations a.add").show();
 }
 
 function initCommentsForm() {
