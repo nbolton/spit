@@ -253,13 +253,14 @@ class IssuesController extends Controller {
     $rds = new \Spit\DataStores\RelationDataStore;
     foreach ($rds->getForIssue($fromId) as $existing) {
       if (($existing->leftId == $fromId && $existing->rightId == $toId) ||
-        ($existing->leftId == $fromId && $existing->rightId == $toId)) {
+        ($existing->rightId == $fromId && $existing->leftId == $toId)) {
         return array("error" => sprintf(
           T_("Relationship already exists between #%d and #%d."), $toId, $fromId));
       }
     }
     
-    if (count($typeSplit) > 1 && $typeSplit[1] == "l") {
+    $isLeft = count($typeSplit) > 1 && $typeSplit[1] == "l";
+    if ($isLeft) {
       $relation->leftId = $fromId;
       $relation->rightId = $toId;
       $relation->rightTitle = $toIssue->title;
@@ -277,9 +278,33 @@ class IssuesController extends Controller {
     $relation->type = (int)$_POST["type"];
     $relation->creatorId = $this->app->security->user->id;
     
+    $result = array();
+    
+    // if duplicate, set the issue's status to duplicate
+    // and add a change record for the status.
+    if ($relation->type == RelationType::Duplicates) {
+      $statusDataStore = new \Spit\DataStores\StatusDataStore;
+      $duplicateStatus = $statusDataStore->getByName("Duplicate");
+      if ($duplicateStatus != null) {
+        $duplicateId = $isLeft ? $fromId : $toId;
+        $oldStatus = $statusDataStore->getForIssue($duplicateId);
+        
+        $this->ds->updateStatus($duplicateId, $duplicateStatus->id);
+        
+        $issueFields = new \Spit\IssueFields($this->app->project->name);
+        $changeResolver = new \Spit\ChangeResolver($issueFields);
+        $this->createEditChange(
+          $changeResolver, $duplicateId, "statusId",
+          $oldStatus->id, $duplicateStatus->id);
+        
+        $result["newStatus"] = $duplicateStatus->name;
+      }
+    }
+    
     $relation->id = $rds->insert($relation);
     
-    return $relation->getHtmlInfo($this, $fromId);
+    $result["info"] = $relation->getHtmlInfo($this, $fromId);
+    return $result;
   }
   
   private function getIssueTitle($issue) {
@@ -334,17 +359,21 @@ class IssuesController extends Controller {
     
     $changeResolver = new \Spit\ChangeResolver($issueFields);
     foreach ($diff as $k => $v) {
-      $change = new \Spit\Models\Change;
-      $change->issueId = $issue->id;
-      $change->creatorId = $this->app->security->user->id;
-      $change->type = \Spit\Models\ChangeType::Edit;
-      $change->name = $k;
-      $change->oldValue = $v->oldValue;
-      $change->newValue = $v->newValue;
-      $changeResolver->resolve($change);
-      $cds = new \Spit\DataStores\ChangeDataStore;
-      $cds->insert($change);
+      $this->createEditChange($changeResolver, $issue->id, $k, $v->oldValue, $v->newValue);
     }
+  }
+  
+  private function createEditChange($changeResolver, $issueId, $name, $oldValue, $newValue) {
+    $change = new \Spit\Models\Change;
+    $change->issueId = $issueId;
+    $change->creatorId = $this->app->security->user->id;
+    $change->type = \Spit\Models\ChangeType::Edit;
+    $change->name = $name;
+    $change->oldValue = $oldValue;
+    $change->newValue = $newValue;
+    $changeResolver->resolve($change);
+    $cds = new \Spit\DataStores\ChangeDataStore;
+    $cds->insert($change);
   }
   
   private function statusIsClosed($statusId) {

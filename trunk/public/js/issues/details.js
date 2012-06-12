@@ -63,7 +63,6 @@ function initRelationsForm() {
     function(message) {
       updateLoadStats(message["stats"]);
       data = message["data"];
-      
     });
   }
   
@@ -76,33 +75,46 @@ function initRelationsForm() {
     form.hide();
     $("span.relations div.loading").fadeIn();
     
-    $.post("?createRelation", {
-      format: "json",
-      issueId: issueId,
-      type: type
-    },
-    function(message) {
-      updateLoadStats(message["stats"]);
-      var data = message["data"];
-      
-      hideRelationForm();
-      
-      if (data.error) {
-        form.show();
-        alert(data.error);
-      }
-      else {
-        // only reset id textbox, leave type as is in case user wants to 
-        // add another of the same type.
-        form.find("input[name='issueId']").val("");
+    $.ajax({
+      dataType: "json",
+      type: "post",
+      url: "?createRelation",
+      data: {
+        format: "json",
+        issueId: issueId,
+        type: type
+      },
+      success: function(message) {
+        updateLoadStats(message["stats"]);
+        var data = message["data"];
         
-        var info = $("<li>" + data + "</li>");
-        info.find("a.delete").click(deleteFunc);
-        $("span.relations ul.issues").show().append(info);
+        hideRelationForm();
+        
+        if (data.error) {
+          form.show();
+          alert(data.error);
+        }
+        else {
+          // only reset id textbox, leave type as is in case user wants to 
+          // add another of the same type.
+          form.find("input[name='issueId']").val("");
+          
+          var info = $("<li>" + data.info + "</li>");
+          info.find("a.delete").click(deleteFunc);
+          $("span.relations ul.issues").show().append(info);
+          
+          if (data.newStatus) {
+            log("new status: " + data.newStatus);
+            $("div#statusId div.value").html(data.newStatus);
+          }
+        }
+      },
+      error: function(xhr, textStatus, error) {
+        log(xhr.statusText);
+        log(textStatus);
+        log(error);
       }
-    },
-    "json")
-    .error(log("error"));
+    });
   });
   
   $("span.relations a.delete").click(deleteFunc);
