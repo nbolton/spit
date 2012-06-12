@@ -219,10 +219,12 @@ class IssueDataStore extends DataStore {
       (int)$issue->id);
   }
   
-  public function updateStatus($id, $statusId) {
+  public function updateStatus($id, $statusId, $closed) {
     $this->query(
-      "update issue set statusId = %d where id = %d",
-      (int)$statusId, (int)$id
+      "update issue set " .
+      "statusId = %d, closed = %d, updated = now() " .
+      "where id = %d",
+      (int)$statusId, (int)$closed, (int)$id
     );
   }
   
