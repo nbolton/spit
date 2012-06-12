@@ -226,8 +226,12 @@ class IssuesController extends Controller {
       ($this->app->security->isLoggedIn(true) && $relation->creatorId == $this->app->security->user->id));
   }
   
+  public function canCreateRelation() {
+    return $this->auth(\Spit\UserType::Member, true);
+  }
+  
   private function createRelation() {
-    if (!$this->auth(\Spit\UserType::Member, true)) {
+    if (!$this->canCreateRelation()) {
       return null;
     }
     
