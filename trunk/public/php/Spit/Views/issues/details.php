@@ -37,6 +37,7 @@
   </div>
   <?php endforeach ?>
   
+  <?php if ($self->canCreateRelation() || count($relations) > 0): ?>
   <hr />
   <span class="relations">
     <?php if ($self->canCreateRelation()): ?>
@@ -67,6 +68,7 @@
     <?php endforeach ?>
     </ul>
   </span>
+  <?php endif ?>
   
   <?php if (trim($issue->details) != ""): ?>
   <hr />
