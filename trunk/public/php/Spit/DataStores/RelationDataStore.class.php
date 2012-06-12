@@ -56,6 +56,8 @@ class RelationDataStore extends DataStore {
       (int)$relation->rightId,
       (int)$relation->type,
       (int)$relation->creatorId);
+    
+    return $this->sql->insert_id;
   }
   
   public function insertMany($relations) {
