@@ -518,11 +518,11 @@ class IssuesController extends Controller {
   private function getTableFields() {
     
     return array(
+      new TableField("id", "#", true, true),
       new TableField("tracker", T_("Tracker")),
       new TableField("status", T_("Status")),
       new TableField("priority", T_("Priority")),
       new TableField("title", T_("Title"), false, true),
-      new TableField("assignee", T_("Assignee")),
       new TableField("activity", T_("Activity")),
       new TableField("votes", T_("Votes")),
     );
