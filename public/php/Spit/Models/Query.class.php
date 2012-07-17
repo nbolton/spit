@@ -34,6 +34,9 @@ class Query {
     $this->orders = array();
     $this->orders["activity"] = "activity";
     $this->orders["votes"] = "i.votes";
+    $this->orders["tracker"] = "t.order";
+    $this->orders["status"] = "s.order";
+    $this->orders["priority"] = "p.order";
   }
   
   public function getFilterEncoded() {
