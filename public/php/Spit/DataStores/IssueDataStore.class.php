@@ -25,11 +25,12 @@ class IssueDataStore extends DataStore {
 
   const BULK_INSERT_MAX = 500;
   
-  public function get($projectId, $start, $limit, $order = null) {
-    if ($order == null) {
-      // sort by updated, or if null, created.
-      $order = "activity desc";
+  public function get($projectId, $start, $limit, $query = null) {
+    
+    if ($query == null) {
+      $query = new \Spit\Models\Query;
     }
+    
     $results = $this->multiQuery(
       "select SQL_CALC_FOUND_ROWS " .
       "i.id, i.assigneeId, i.title, i.votes, t.name as tracker, " .
@@ -40,11 +41,12 @@ class IssueDataStore extends DataStore {
       "inner join status as s on s.id = i.statusId " .
       "inner join priority as p on p.id = i.priorityId " .
       "left join user as u on u.id = i.assigneeId " .
-      "where i.projectId = %d and i.closed = 0 " .
+      "where i.projectId = %d %s" .
       "order by %s limit %d, %d; " .
       "select FOUND_ROWS()",
       (int)$projectId,
-      $this->literal($order),
+      $this->literal($query->getFilterSql($this)),
+      $this->literal($query->getOrderSql($this)),
       (int)$start, (int)$limit
     );
     

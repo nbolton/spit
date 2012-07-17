@@ -33,8 +33,12 @@ class LinkProvider {
     return $this->app->getImage($name);
   }
   
-  public function forIssue($id) {
-    return sprintf("%s/issues/details/%d/", $this->app->getProjectRoot(), $id);
+  public function forIssue($id, $query = null) {
+    $link = sprintf("%s/issues/details/%d/", $this->app->getProjectRoot(), $id);
+    if ($query != null) {
+      $link .= "?query=" . $query;
+    }
+    return $link;
   }
   
   public function forIssueIndex() {
@@ -66,8 +70,16 @@ class LinkProvider {
     return sprintf("%s/users/details/%d/", $this->app->getRoot(), $id);
   }
   
-  public function forIssueEdit($id) {
-    return sprintf("%s/issues/edit/%d/", $this->app->getProjectRoot(), $id);
+  public function forIssueEdit($id, $query = null) {
+    $link = sprintf("%s/issues/edit/%d/", $this->app->getProjectRoot(), $id);
+    if ($query != null) {
+      $link .= "?query=" . $query;
+    }
+    return $link;
+  }
+  
+  public function forQuery($name) {
+    return sprintf("%s/issues/%s/", $this->app->getProjectRoot(), $name);
   }
   
   public function excludeArg($arg) {

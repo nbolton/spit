@@ -99,7 +99,7 @@ abstract class DataStore {
     return $args;
   }
   
-  protected function cleanArg($v) {
+  public function cleanArg($v) {
     if ($v == null || $v == "") {
       return "NULL";
     }

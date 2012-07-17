@@ -19,9 +19,28 @@
 
 <h2><?=$title?></h2>
 
+<div id="query" style="<?=($self->userCanSeequeryLink() && $query != null ? "display: inherit" : "")?>">
+  <span>
+    <form action="./" method="post">
+      <input name="name" type="text" value="<?=($query != null ? $query->name : "query1")?>" />
+      <input name="filter" type="text" value="<?=($query != null ? $query->getFilterEncoded() : "")?>" />
+      <input name="order" type="text" value="<?=($query != null ? $query->getOrderEncoded() : "")?>" />
+      <input name="query" type="submit" value="Save" />
+    </form>
+  </span>
+</div>
+
+<p>
 <?php if ($self->userCanSeeCreateLink()): ?>
-<p><a href="new/"><?=T_("New issue")?></a></p>
+<a href="<?=sprintf("%s/issues/new/", $self->app->getProjectRoot())?>"><?=T_("New issue")?></a>
 <?php endif ?>
+<?php if ($self->userCanSeequeryLink() && $query == null): ?>
+<a id="showQuery" href="javascript:void(0)"><?=T_("New query")?></a>
+<?php endif ?>
+<?php foreach ($queries as $q): ?>
+<a href="<?=$self->app->linkProvider->forQuery($q->name)?>"><?=$q->name?></a>
+<?php endforeach ?>
+</p>
 
 <div id="issues">
   <div class="box">

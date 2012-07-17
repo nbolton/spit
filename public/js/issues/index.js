@@ -23,7 +23,7 @@ function viewLoad() {
   
   results = getParam("results");
   if (results == null) {
-    results = 15;
+    results = 25;
   }
   
   showLoading(false, 100);
@@ -42,6 +42,15 @@ function viewLoad() {
       loadIssues(--page, results);
     }
   });
+  
+  $("a#showQuery").click(function() {
+    showQuery();
+  });
+}
+
+function showQuery() {
+  $("a#showQuery").hide();
+  $("div#query").fadeIn();
 }
 
 function showLoading(absolute, timeout) {
@@ -122,7 +131,7 @@ function loadIssues(page, results) {
           td.append(a);
           
           a.text(value);
-          a.attr("href", "details/{0}/".format(issue.id));
+          a.attr("href", issue.link);
         }
         else {
           td.text(value);
