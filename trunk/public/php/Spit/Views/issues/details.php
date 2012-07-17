@@ -18,9 +18,14 @@
 ?>
 
 <h3><?=$title?></h3>
+
+<?php if ($query != null): ?>
+<p><a href="<?=$self->app->linkProvider->forQuery($query)?>"><?=$query?></a></p>
+<?php endif ?>
+
 <div class="box">
   <?php if($self->userCanEdit($issue, true)): ?>
-  <a href="<?=$app->linkProvider->forIssueEdit($issue->id)?>">
+  <a href="<?=$app->linkProvider->forIssueEdit($issue->id, $query)?>">
     <img src="<?=$app->getImage("edit.png")?>"/>Edit
   </a>
   

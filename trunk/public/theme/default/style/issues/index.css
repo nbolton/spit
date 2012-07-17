@@ -41,3 +41,32 @@ div.loading img {
   padding: 10px;
   border: 1px solid #ddd;
 }
+
+div#query {
+  display: none;
+}
+
+div#query span {
+  font-size: .9em;
+  padding: 4px;
+  margin-right: 8px;
+  box-shadow: 0px 0px 5px #aaa;
+  background-color: #fdf8db;
+  border-radius: 5px;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+div#query input[name="name"] {
+  width: 7em;
+  margin-left: .2em;
+  margin-right: .2em;
+}
+
+div#query input[name="filter"] {
+  width: 25em;
+}
+
+div#query input[name="order"] {
+  width: 10em;
+}

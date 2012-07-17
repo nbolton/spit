@@ -30,6 +30,7 @@ use \Spit\Models\Fields\DisplayField as DisplayField;
 use \Spit\EditorMode as EditorMode;
 use \Spit\Models\ChangeType as ChangeType;
 use \Spit\Models\RelationType as RelationType;
+use \Spit\Models\Query as Query;
 
 // TODO: this class has become bloated;
 // favour fat models and skinny controllers.
@@ -38,24 +39,46 @@ class IssuesController extends Controller {
   
   public function __construct() {
     $this->ds = new \Spit\DataStores\IssueDataStore;
+    $this->qds = new \Spit\DataStores\QueryDataStore;
   }
   
   public function run() {
-    switch ($this->getPathPart(1)) {
+    $part = $this->getPathPart(1);
+    switch ($part) {
       case "": $this->runIndex(); break;
       case "new": $this->runEditor(EditorMode::Create); break;
       case "edit": $this->runEditor(EditorMode::Update); break;
       case "details": $this->runDetails(); break;
-      default: $this->showError(404); break;
+      default: {
+        $query = $this->qds->getByName($part, $this->app->project->id);
+        if ($query != null) {
+          $this->runIndex($query);
+        }
+        else {
+          $this->showError(404);
+        }
+        break;
+      }
     }
   }
   
-  private function runIndex() {
+  private function runIndex($query = null) {
+    $data["query"] = $query;
+    
     if ($this->isJsonGet()) {
-      exit($this->getJson($this->getTableData($_GET["page"], $_GET["results"])));
+      exit($this->getJson($this->getTableData($_GET["page"], $_GET["results"], $query)));
     }
     
-    $this->showView("issues/index", T_("Issues"));
+    if ($this->isPost()) {
+      if (isset($_POST["query"])) {
+        $this->handleQueryPost();
+        return;
+      }
+    }
+    
+    $data["queries"] = $this->qds->get($this->app->project->id);
+    
+    $this->showView("issues/index", T_("Issues"), $data);
   }
   
   private function runEditor($mode) {
@@ -108,44 +131,13 @@ class IssuesController extends Controller {
           break;
       }
       
-      header("Location: " . $this->app->linkProvider->forIssue($issue->id));
+      $query = isset($_GET["query"]) ? $_GET["query"] : null;
+      header("Location: " . $this->app->linkProvider->forIssue($issue->id, $query));
       exit;
     }
     
     $title = ($mode == EditorMode::Create) ? T_("New Issue") : T_("Edit Issue");
     $this->showView("issues/editor", $title, $data);
-  }
-  
-  public function userCanSeeCreateLink() {
-    // if newbies can create issues, always show the link so that they
-    // can click new and then be redirected to login.
-    if ($this->app->newIssueUserType == \Spit\UserType::Newbie) {
-      return true;
-    }
-    
-    // otherwise, if a higher level is required, only show the link if
-    // they can actually use it.
-    return $this->userCanCreate(true);
-  }
-  
-  public function userCanCreate($passive = false) {
-    return $this->auth($this->app->newIssueUserType, $passive);
-  }
-  
-  public function userCanEdit($issue, $passive = false) {
-    
-    // allow the original author to edit their issue.
-    $user = $this->app->security->isLoggedIn() ? $this->app->security->user : null;
-    if ($user != null && $issue->creatorId == $user->id) {
-      return true;
-    }
-    
-    // only allow managers to edit issues raised by others.
-    if ($this->auth(\Spit\UserType::Manager, $passive)) {
-      return true;
-    }
-    
-    return false;
   }
   
   private function runDetails() {
@@ -204,6 +196,8 @@ class IssuesController extends Controller {
     $ads = new \Spit\DataStores\AttachmentDataStore;
     $this->attachments = $ads->getForIssue($id);
     $data["attachments"] = $this->attachments;
+    
+    $data["query"] = isset($_GET["query"]) ? $_GET["query"] : null;
     
     $this->showView("issues/details", $this->getIssueTitle($issue), $data, \Spit\TitleMode::Affix);
   }
@@ -409,11 +403,17 @@ class IssuesController extends Controller {
     }
   }
   
-  private function getTableData($page, $limit) {
+  private function getTableData($page, $limit, $query = null) {
     $start = ($page - 1) * $limit;
-    $results = $this->ds->get($this->app->project->id, $start, $limit);
+    $results = $this->ds->get($this->app->project->id, $start, $limit, $query);
+    
+    $queryName = $query != null ? $query->name : null;
     
     $issues = $results[0];
+    foreach ($issues as $issue) {
+      $issue->link = $this->app->linkProvider->forIssue($issue->id, $queryName);
+    }
+    
     $this->replaceWithPublicValues($issues);
     
     return array(
@@ -712,6 +712,67 @@ class IssuesController extends Controller {
       $text = preg_replace($regex->find, $regex->replace, $text);
     }
     return Markdown($text);
+  }
+  
+  public function userCanSeeCreateLink() {
+    // if newbies can create issues, always show the link so that they
+    // can click new and then be redirected to login.
+    if ($this->app->newIssueUserType == \Spit\UserType::Newbie) {
+      return true;
+    }
+    
+    // otherwise, if a higher level is required, only show the link if
+    // they can actually use it.
+    return $this->userCanCreate(true);
+  }
+  
+  public function userCanSeequeryLink() {
+    return $this->userCanEditquery(true);
+  }
+  
+  public function userCanEditquery($passive) {
+    return $this->auth(\Spit\UserType::Admin, $passive);
+  }
+  
+  public function userCanCreate($passive = false) {
+    return $this->auth($this->app->newIssueUserType, $passive);
+  }
+  
+  public function userCanEdit($issue, $passive = false) {
+    
+    // allow the original author to edit their issue.
+    $user = $this->app->security->isLoggedIn() ? $this->app->security->user : null;
+    if ($user != null && $issue->creatorId == $user->id) {
+      return true;
+    }
+    
+    // only allow managers to edit issues raised by others.
+    if ($this->auth(\Spit\UserType::Manager, $passive)) {
+      return true;
+    }
+    
+    return false;
+  }
+  
+  private function handleQueryPost() {
+    if (!$this->userCanEditquery(true)) {
+      return;
+    }
+    
+    $existing = $this->qds->getByName($_POST["name"], $this->app->project->id);
+    
+    $query = query::fromPost($_POST);
+    $query->projectId = $this->app->project->id;
+    
+    if ($existing != null) {
+      $this->qds->update($query);
+    }
+    else {
+      $this->qds->insert($query);
+    }
+    
+    header(sprintf("Location: %s/issues/%s/", $this->app->getProjectRoot(), $query->name));
+    exit;
   }
 }
 

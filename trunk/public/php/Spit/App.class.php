@@ -52,6 +52,7 @@ require "DataStores/CategoryDataStore.class.php";
 require "DataStores/RelationDataStore.class.php";
 require "DataStores/AttachmentDataStore.class.php";
 require "DataStores/MemberDataStore.class.php";
+require "DataStores/QueryDataStore.class.php";
 
 require "Models/Link.class.php";
 require "Models/Issue.class.php";
@@ -64,6 +65,7 @@ require "Models/Tracker.class.php";
 require "Models/Version.class.php";
 require "Models/Category.class.php";
 require "Models/Relation.class.php";
+require "Models/Query.class.php";
 
 require "Models/Fields/SelectField.class.php";
 require "Models/Fields/TableField.class.php";
