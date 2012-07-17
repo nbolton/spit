@@ -25,7 +25,8 @@ class QueryDataStore extends DataStore {
 
   public function get($projectId) {
     $result = $this->query(
-      "select name, filter, `order` from query where projectId = %d", (int)$projectId
+      "select name, filter, `order` from query where projectId = %d",
+      (int)$projectId
     );
     
     return $this->fromResult($result);
@@ -42,8 +43,8 @@ class QueryDataStore extends DataStore {
   
   public function insert($query) {
     $this->query(
-      "insert into query (name, filter, `order`, projectId) values (%s, %s, %s)",
-      $query->name, $query->filter, $query->order, $query->projectId);
+      "insert into query (name, filter, `order`, projectId) values (%s, %s, %s, %d)",
+      $query->name, $query->filter, $query->order, (int)$query->projectId);
     
     return $this->sql->insert_id;
   }
