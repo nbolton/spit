@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 17, 2012 at 03:24 PM
+-- Generation Time: Jul 17, 2012 at 04:18 PM
 -- Server version: 5.5.20
 -- PHP Version: 5.3.10
 
@@ -169,10 +169,10 @@ CREATE TABLE `query` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projectId` int(11) NOT NULL,
   `name` varchar(20) NOT NULL,
-  `filter` varchar(500) NOT NULL,
-  `order` varchar(200) NOT NULL,
+  `filter` varchar(500) DEFAULT NULL,
+  `order` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
