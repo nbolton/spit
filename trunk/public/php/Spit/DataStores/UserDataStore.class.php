@@ -64,6 +64,13 @@ class UserDataStore extends DataStore {
     return $this->sql->insert_id;
   }
   
+  public function update($user) {
+    $this->query(
+      "update user set name = %s where id = %d",
+      $user->name,
+      (int)$user->id);
+  }
+  
   public function insertMany($users) {
     $base = 
       "insert into user " .
