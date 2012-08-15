@@ -33,6 +33,7 @@ require "Importer.class.php";
 require "ChangeResolver.class.php";
 require "LinkProvider.class.php";
 require "DateFormatter.class.php";
+require "SessionManager.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";
@@ -94,6 +95,7 @@ class App {
     $this->path = new Path;
     $this->linkProvider = new LinkProvider($this);
     $this->dateFormatter = new DateFormatter($this->settings);
+    $this->sessionManager = new SessionManager($this->settings);
     
     // default user level needed to create new issues.
     $this->newIssueUserType = UserType::Newbie;
@@ -105,7 +107,7 @@ class App {
   public function run() {
   
     if (!$this->userIsBot()) {
-      session_start();
+      $this->sessionManager->start();
     }
 
     $this->locale->run();
