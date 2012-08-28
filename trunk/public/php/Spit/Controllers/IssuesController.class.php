@@ -500,7 +500,6 @@ class IssuesController extends Controller {
       new DisplayField("categoryId", "category", T_("Category:")),
       new DisplayField("targetId", "target", T_("Target:")),
       new DisplayField("foundId", "found", T_("Found:")),
-      new DisplayField("votes", "votes", T_("Votes:")),
       new DisplayField("creatorId", "creator", T_("Created by:")),
       new DisplayField("created", "created", T_("Created on:")),
       new DisplayField("updaterId", "updater", T_("Updated by:")),
@@ -524,7 +523,6 @@ class IssuesController extends Controller {
       new TableField("priority", T_("Priority")),
       new TableField("title", T_("Title"), false, true),
       new TableField("activity", T_("Activity")),
-      new TableField("votes", T_("Votes")),
     );
   }
   
