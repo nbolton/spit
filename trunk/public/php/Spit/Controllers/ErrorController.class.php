@@ -30,6 +30,7 @@ class ErrorController extends Controller {
     switch ($code) {
       case \Spit\HttpCode::NotFound: $title = T_("Not Found"); break;
       case \Spit\HttpCode::Forbidden: $title = T_("Forbidden"); break;
+      case \Spit\HttpCode::Error: $title = T_("Error"); break;
     }
     
     header(sprintf("HTTP/1.0 %d %s", $code, $title));
