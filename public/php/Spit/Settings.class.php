@@ -24,11 +24,12 @@ class SettingsSection { }
 class Settings {
   
   public static $instance;
+  public static $filename = "settings.ini";
   
   public function __construct() {
     self::$instance = $this;
     
-    $ini = parse_ini_file("settings.ini", true);
+    $ini = parse_ini_file(self::$filename, true);
     foreach ($ini as $section => $values) {
       $this->$section = new SettingsSection;
       foreach ($values as $k => $v) {

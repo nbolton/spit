@@ -86,14 +86,26 @@ class App {
     self::$instance = $this;
     
     $this->start = microtime(true);
-    $this->settings = new Settings;
+    $this->loadSettings();
+    
+    try {
+      $this->init();
+    }
+    catch (\Exception $ex) {
+      $this->showBasicMessage("Fatal error: <code>" . $ex->getMessage() . "</code>");
+      exit;
+    }
+  }
+  
+  private function init() {
+  
+    $this->controllers = new Controllers\ControllerProvider;
     $this->locale = new Locale;
     $this->plugins = new Plugins($this);
-    $this->controllers = new Controllers\ControllerProvider;
     $this->security = new Security($this);
     $this->error = new Controllers\ErrorController($this);
     $this->path = new Path;
-    $this->linkProvider = new LinkProvider($this);
+    $this->linkProvider = new LinkProvider($this);    
     $this->dateFormatter = new DateFormatter($this->settings);
     $this->sessionManager = new SessionManager($this->settings);
     
@@ -129,6 +141,20 @@ class App {
     
     $this->controller->app = $this;
     $this->controller->run();
+  }
+  
+  private function loadSettings() {  
+    if (!file_exists(Settings::$filename)) {
+      $this->showBasicMessage(
+        "Please copy <code>settings.ini.example</code> to <code>settings.ini</code>");
+      exit;
+    }
+    
+    $this->settings = new Settings;
+  }
+  
+  public function showBasicMessage($text) {
+    echo "<style>code { color: blue; }</style><p>$text</p>";
   }
   
   private function initLinks() {

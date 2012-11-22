@@ -65,7 +65,7 @@ class SessionManager {
       time()
     ));
     if ($result == null) {
-      throw new Exception($mysql->error);
+      throw new \Exception($mysql->error);
     }
     
     $data = "";

@@ -64,8 +64,10 @@ class Locale {
   }
 
   function parseHeaderLocale($header) {
-    $first = reset(explode(";", $header));
-    $first = reset(explode(",", $first));
+    $semiColonSplit = explode(";", $header);
+    $first = reset($semiColonSplit);
+    $commaSplit = explode(",", $first);
+    $first = reset($commaSplit);
     $itef = str_replace("_", "-", $first);
     $lower = strtolower($itef);
     if ($lower != "") {
