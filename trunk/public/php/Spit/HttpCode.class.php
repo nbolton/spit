@@ -22,6 +22,7 @@ namespace Spit;
 class HttpCode {
   const NotFound = 404;
   const Forbidden = 403;
+  const Error = 500;
 }
 
 ?>

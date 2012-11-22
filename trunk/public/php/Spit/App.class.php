@@ -86,7 +86,7 @@ class App {
     self::$instance = $this;
     
     $this->start = microtime(true);
-    $this->loadSettings();
+    $this->checkFiles();
     
     try {
       $this->init();
@@ -99,6 +99,7 @@ class App {
   
   private function init() {
   
+    $this->settings = new Settings;
     $this->controllers = new Controllers\ControllerProvider;
     $this->locale = new Locale;
     $this->plugins = new Plugins($this);
@@ -135,7 +136,7 @@ class App {
     
     $this->controller = $this->controllers->find($this->path->get(0));
     if ($this->controller == null) {
-      $this->showError(404);
+      $this->showError(HttpCode::NotFound);
       return;
     }
     
@@ -143,14 +144,18 @@ class App {
     $this->controller->run();
   }
   
-  private function loadSettings() {  
+  private function checkFiles() {  
     if (!file_exists(Settings::$filename)) {
       $this->showBasicMessage(
         "Please copy <code>settings.ini.example</code> to <code>settings.ini</code>");
       exit;
     }
     
-    $this->settings = new Settings;
+    if (!file_exists(".htaccess")) {
+      $this->showBasicMessage(
+        "Please copy <code>.htaccess.example</code> to <code>.htaccess</code>");
+      exit;
+    }
   }
   
   public function showBasicMessage($text) {
@@ -208,7 +213,7 @@ class App {
     }
     
     if ($this->project == null) {
-      $this->showError(HttpCode::NotFound);
+      $this->showErrorMessage(sprintf(T_("Project does not exist: %s"), $this->settings->site->singleProject));
       return false;
     }
     
@@ -238,7 +243,12 @@ class App {
   
   public function showError($code) {
     $this->controller = $this->error;
-    $this->error->show($code);
+    $this->error->showCode($code);
+  }
+  
+  public function showErrorMessage($message) {
+    $this->controller = $this->error;
+    $this->error->showMessage($message);
   }
   
   public function getRoot() {
