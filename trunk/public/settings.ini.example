@@ -13,3 +13,6 @@ dateTimeFormat = "j M Y H:i"
 
 [fields]
 projects = "spit=1"
+
+[session]
+lifetime = 2592000
