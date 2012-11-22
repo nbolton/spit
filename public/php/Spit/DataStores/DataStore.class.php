@@ -71,6 +71,7 @@ abstract class DataStore {
   }
   
   public function multiQuery($format) {
+    
     $args = $this->getCleanArgs(func_get_args());
     
     \Spit\App::$instance->queryCount++;
@@ -80,13 +81,14 @@ abstract class DataStore {
     
     $results = array();
     do {
+      $this->sql->next_result();
       $result = $this->sql->store_result();
       if ($result == null) {
         throw new Exception($this->sql->error);
       }
       array_push($results, $result);
     }
-    while ($this->sql->next_result());
+    while ($this->sql->more_results());
     
     return $results;
   }

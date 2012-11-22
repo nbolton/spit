@@ -93,6 +93,12 @@ function loadIssues(page, results) {
     updateLoadStats(message["stats"]);
     data = message["data"];
     log(data);
+    
+    if (data["error"]) {
+      alert("A server error occurred.");
+      return;
+    }
+    
     pageCount = data.pageCount;
     $("div.paging span.page").text(page);
     $("div.paging span.pageCount").text(pageCount);
@@ -146,10 +152,15 @@ function loadIssues(page, results) {
         }
       });
     });
-    
+  })
+  .complete(function() {
     loadComplete = true;
     $("div.loading").hide();
     $("div.paging").fadeIn();
     table.fadeIn();
+  })
+  .error(function(error) {
+    log(error);
+    $("body").append(error.responseText);
   });
 }
