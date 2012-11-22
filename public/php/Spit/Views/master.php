@@ -68,7 +68,7 @@
               $links = $app->getLinks();
               foreach ($links as $k => $l):
             ?>
-              <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end(array_keys($links)) ? "," : "")?>
+              <a href="<?=$app->getFullLink($l)?>"><?=$l->name?></a><?=($k != end((array_keys($links))) ? "," : "")?>
             <?php
               endforeach
             ?>

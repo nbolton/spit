@@ -60,7 +60,7 @@ class Controller {
   }
   
   protected function showError($number) {
-    $this->app->error->show($number);
+    $this->app->error->showCode($number);
   }
   
   protected function getPostValue($name) {
