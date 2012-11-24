@@ -27,7 +27,8 @@ class ProjectDataStore extends DataStore {
     $result = $this->query(
       "select count(*) from project"
     );
-    return $result->fetch_row()[0];
+    $row = $result->fetch_row();
+    return $row[0];
   }
 
   public function getForUser($userId) {
