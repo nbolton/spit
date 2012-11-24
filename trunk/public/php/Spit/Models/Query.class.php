@@ -40,11 +40,11 @@ class Query {
   }
   
   public function getFilterEncoded() {
-    return htmlentities($this->filter);
+    return htmlentities($this->filter, ENT_COMPAT, "UTF-8");
   }
   
   public function getOrderEncoded() {
-    return htmlentities($this->order);
+    return htmlentities($this->order, ENT_COMPAT, "UTF-8");
   }
   
   public function getFilterSql($ds) {
