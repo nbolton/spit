@@ -18,12 +18,10 @@
 ?>
 
 <h2><?=T_("Download")?></h2>
-
-<h3>Files</h3>
-<ul>
-  <li><a href="/files/spit-1.0.1-alpha.zip">spit-1.0.1-alpha.zip</a></li>
-  <li><a href="/files/spit-1.0.0-alpha.zip">spit-1.0.0-alpha.zip</a></li>
-</ul>
-
 <h3>SVN</h3>
+
+<p>Command line users can run the following svn command:</p>
 <p><pre>svn co http://svn.nbolton.net/spit/trunk spit</pre></p>
+
+<p>TortoiseSVN users can use the following URL:</p>
+<p><pre>http://svn.nbolton.net/spit/trunk</pre></p>
