@@ -219,12 +219,19 @@ class App {
       // since the part at 0 is now the project name.
       $this->path->setOffset(1);
     }
-    else {
+    else if (isset($this->settings->site->singleProject)) {
       $this->project = $dataStore->getByName($this->settings->site->singleProject);
     }
     
     if ($this->project == null) {
-      $this->showErrorMessage(sprintf(T_("Project does not exist: %s"), $this->settings->site->singleProject));
+      if (isset($this->settings->site->singleProject)) {
+        $this->showErrorMessage(
+          sprintf(T_("Project does not exist: %s"),
+          $this->settings->site->singleProject));
+      }
+      else {
+        $this->showErrorMessage(T_("No project selected and not in single project mode."));
+      }
       return false;
     }
     
