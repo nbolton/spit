@@ -21,6 +21,8 @@ namespace Spit\Models;
 
 class Tracker {
   public $id;
+  public $importId;
+  public $order;
 }
 
 ?>

@@ -23,6 +23,13 @@ class ProjectDataStore extends DataStore {
 
   const BULK_INSERT_MAX = 500;
 
+  public function getCount() {
+    $result = $this->query(
+      "select count(*) from project"
+    );
+    return $result->fetch_row()[0];
+  }
+
   public function getForUser($userId) {
     $result = $this->query(
       "select p.* from project as p ".

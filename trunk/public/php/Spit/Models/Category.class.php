@@ -21,6 +21,7 @@ namespace Spit\Models;
 
 class Category {
   public $id;
+  public $importId;
 }
 
 ?>

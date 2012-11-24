@@ -37,6 +37,7 @@ require "SessionManager.class.php";
 
 require "Controllers/ControllerProvider.class.php";
 require "Controllers/ErrorController.class.php";
+require "Controllers/SetupController.class.php";
 
 require "DataStores/DataStore.class.php";
 require "DataStores/IssueDataStore.class.php";
@@ -92,7 +93,7 @@ class App {
       $this->init();
     }
     catch (\Exception $ex) {
-      $this->showBasicMessage("Fatal error: <code>" . $ex->getMessage() . "</code>");
+      $this->showBasicMessage(sprintf(T_("Fatal error: <code>%s</code>"), $ex->getMessage()));
       exit;
     }
   }
@@ -105,6 +106,7 @@ class App {
     $this->plugins = new Plugins($this);
     $this->security = new Security($this);
     $this->error = new Controllers\ErrorController($this);
+    $this->setup = new Controllers\SetupController($this);
     $this->path = new Path;
     $this->linkProvider = new LinkProvider($this);    
     $this->dateFormatter = new DateFormatter($this->settings);
@@ -147,13 +149,13 @@ class App {
   private function checkFiles() {  
     if (!file_exists(Settings::$filename)) {
       $this->showBasicMessage(
-        "Please copy <code>settings.ini.example</code> to <code>settings.ini</code>");
+        T_("Please copy <code>settings.ini.example</code> to <code>settings.ini</code>"));
       exit;
     }
     
     if (!file_exists(".htaccess")) {
       $this->showBasicMessage(
-        "Please copy <code>.htaccess.example</code> to <code>.htaccess</code>");
+        T_("Please copy <code>.htaccess.example</code> to <code>.htaccess</code>"));
       exit;
     }
   }
@@ -192,7 +194,16 @@ class App {
   private function initProject() {
     $dataStore = new DataStores\ProjectDataStore;
     
+    // if there are no projects at all, assume the database is empty.
+    // only do this if the user isn't trying to login.
+    if (($dataStore->getCount() == 0) && ($this->path->get(0) != "login")) {
+      $this->controller = $this->setup;
+      $this->controller->run();
+      return;
+    }
+    
     if (!$this->isSingleProject()) {
+      
       $this->addLink(new Link(T_("Projects"), null, \Spit\LinkType::Site));
       
       if ($this->controllers->isSiteWide($this->path->get(0))) {

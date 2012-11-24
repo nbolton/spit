@@ -21,6 +21,8 @@ namespace Spit\Models;
 
 class Status {
   public $id;
+  public $importId;
+  public $order;
 }
 
 ?>

@@ -21,6 +21,8 @@ namespace Spit\Models;
 
 class Priority {
   public $id;
+  public $importId;
+  public $order;
 }
 
 ?>
