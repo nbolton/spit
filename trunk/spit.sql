@@ -1,30 +1,11 @@
--- phpMyAdmin SQL Dump
--- version 3.4.10.1
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Aug 15, 2012 at 04:28 PM
--- Server version: 5.5.20
--- PHP Version: 5.3.10
-
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
---
--- Database: `spit`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `attachment`
---
 
 CREATE TABLE `attachment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -37,26 +18,14 @@ CREATE TABLE `attachment` (
   `contentType` varchar(50) DEFAULT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `category`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `importId` int(11) DEFAULT NULL,
   `name` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `change`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `change` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -64,18 +33,12 @@ CREATE TABLE `change` (
   `creatorId` int(11) NOT NULL,
   `type` int(11) NOT NULL,
   `name` varchar(20) DEFAULT NULL,
-  `data` text,
-  `oldValue` text,
-  `newValue` text,
+  `data` mediumtext,
+  `oldValue` mediumtext,
+  `newValue` mediumtext,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `custom`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `custom` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -84,13 +47,7 @@ CREATE TABLE `custom` (
   `googleId` varchar(6) DEFAULT NULL,
   `redmineId` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `issue`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `issue` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -106,33 +63,21 @@ CREATE TABLE `issue` (
   `foundId` int(11) DEFAULT NULL,
   `importId` int(11) DEFAULT NULL,
   `title` varchar(250) NOT NULL,
-  `details` text NOT NULL,
+  `details` mediumtext NOT NULL,
   `votes` int(11) NOT NULL,
   `closed` bit(1) NOT NULL,
   `updated` datetime DEFAULT NULL,
   `created` datetime NOT NULL,
   `lastComment` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `member`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `projectId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `priority`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `priority` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -141,13 +86,7 @@ CREATE TABLE `priority` (
   `isDefault` tinyint(1) NOT NULL,
   `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `project`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -157,13 +96,7 @@ CREATE TABLE `project` (
   `description` varchar(250) NOT NULL,
   `isPublic` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `query`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `query` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -172,13 +105,7 @@ CREATE TABLE `query` (
   `filter` varchar(500) DEFAULT NULL,
   `order` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `relation`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -188,26 +115,14 @@ CREATE TABLE `relation` (
   `creatorId` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `session`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `session` (
   `id` varchar(100) NOT NULL,
-  `data` text NOT NULL,
+  `data` mediumtext NOT NULL,
   `expires` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `status`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -217,13 +132,7 @@ CREATE TABLE `status` (
   `isDefault` tinyint(1) NOT NULL,
   `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tracker`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tracker` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -231,13 +140,7 @@ CREATE TABLE `tracker` (
   `name` varchar(20) NOT NULL,
   `order` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -246,13 +149,7 @@ CREATE TABLE `user` (
   `email` varchar(250) NOT NULL,
   `name` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `version`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 CREATE TABLE `version` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -262,7 +159,7 @@ CREATE TABLE `version` (
   `releaseDate` date DEFAULT NULL,
   `released` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
