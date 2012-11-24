@@ -56,7 +56,11 @@ class IssueFields {
       return array();
     }
     
-    return $this->mappings["fields" . $this->customId];
+    $name = "fields" . $this->customId;
+    if (isset($this->mappings[$name])) {
+      return $this->mappings[$name];
+    }
+    return null;
   }
   
   public function filter($fields, $trackerId = null, $forEditor = false) {

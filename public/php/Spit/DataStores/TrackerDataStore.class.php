@@ -33,14 +33,14 @@ class TrackerDataStore extends DataStore {
     return $this->fromResult($result);
   }
   
-  public function insertMany($tracker) {
+  public function insertMany($trackers) {
     $base = 
       "insert into tracker " .
       "(importId, name, `order`) values ";
     
-    for ($j = 0; $j < count($tracker) / self::BULK_INSERT_MAX; $j++) {
+    for ($j = 0; $j < count($trackers) / self::BULK_INSERT_MAX; $j++) {
       
-      $slice = array_slice($tracker, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
+      $slice = array_slice($trackers, $j * self::BULK_INSERT_MAX, self::BULK_INSERT_MAX);
       $count = count($slice);
       $values = "";
       

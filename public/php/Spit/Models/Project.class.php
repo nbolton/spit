@@ -21,9 +21,11 @@ namespace Spit\Models;
 
 class Project {
   public $id;
+  public $importId;
   public $name;
   public $title;
   public $description;
+  public $isPublic;
 }
 
 ?>

@@ -235,6 +235,10 @@ form select {
   margin-bottom: 3px;
 }
 
+form input.long {
+  width: 100%;
+}
+
 form div.buttons {
   clear: both;
   margin-left: -3px;

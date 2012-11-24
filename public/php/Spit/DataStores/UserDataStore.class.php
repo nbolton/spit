@@ -66,8 +66,9 @@ class UserDataStore extends DataStore {
   
   public function update($user) {
     $this->query(
-      "update user set name = %s where id = %d",
+      "update user set name = %s, typeMask = %d where id = %d",
       $user->name,
+      $user->typeMask,
       (int)$user->id);
   }
   
