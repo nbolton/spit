@@ -63,6 +63,35 @@ class IssueFields {
     return null;
   }
   
+  public function validate($fields, $trackerId) {
+    // TODO: class file - ValidateResult
+    $r = new \stdClass;
+    $r->invalid = array();
+    
+    if ($this->customId == null) {
+      return $r;
+    }
+    
+    $requiredMap = $this->mappings["required" . $this->customId];
+    $required = array();
+    
+    if (array_key_exists("*", $requiredMap)) {
+      $required = array_merge($required, explode(";", $requiredMap["*"]));
+    }
+    
+    if (array_key_exists($trackerId, $requiredMap)) {
+      $required = array_merge($required, explode(";", $requiredMap[$trackerId]));
+    }
+    
+    foreach ($fields as $k => $v) {
+      if (in_array($k, $required) && $v == null) {
+        $r->invalid[$k] = T_("Required field.");
+      }
+    }
+    
+    return $r;
+  }
+  
   public function filter($fields, $trackerId = null, $forEditor = false) {
     // do not filter if there are no settings for this project.
     // if no tracker specified, we can't filter out ignored fields.
