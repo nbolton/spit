@@ -329,6 +329,33 @@ class IssueDataStore extends DataStore {
     
     return sprintf(", %s ", implode(", ", $sqlFields));
   }
+  
+  public function getBySearch($text) {
+    // TODO: use a token-based keyword search rather than shitty noob
+    // like query... this is shit is just temporary.
+    // advervs and preposition words make this method extremely
+    // ineffective -- this problem is solved naturally with a
+    // weighted keyword based index search.
+    
+    $keywords = preg_split("/\s/", $text, null, PREG_SPLIT_NO_EMPTY);
+    
+    $clauses = array();
+    foreach ($keywords as $keyword) {
+      array_push($clauses, "i.title like '%" . $this->sql->escape_string($keyword) . "%'");
+      array_push($clauses, "i.details like '%" . $this->sql->escape_string($keyword) . "%'");
+    }
+    
+    // TODO: order by keyword usage and relevance instead of votes
+    // while this is a good temporary solution, it probably isn't the
+    // most robust approach.
+    $result = $this->query(
+      "select i.id, i.title, t.name as tracker from issue as i " .
+      "inner join tracker as t on t.id = i.trackerId " .
+      "where (" . join($clauses, " or ") . ") and closed = 0 " .
+      "order by i.votes desc limit 0,10"
+    );
+    return $this->fromResult($result);
+  }
 }
 
 ?>

@@ -38,6 +38,14 @@
       <label for="title"><?=T_("Title")?>*</label>
       <input id="title" name="title" type="text" value="<?=htmlentities($issue->title, ENT_COMPAT, "UTF-8")?>" />
     </div>
+    
+    <div class="row">
+      <div class="box suggestions" style="display: none">
+        <p><?=T_("Check these suggestions first to make sure you don't create a duplicate.")?></p>
+        <ul></ul>
+      </div>
+    </div>
+    
     <div class="row">
       <label for="wmd-input"><?=T_("Details")?>*</label>
       <div id="wmd-button-bar" class="wmd-button-bar"></div>
