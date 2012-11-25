@@ -24,7 +24,7 @@
   <h3><?=$version->name?></h3>
   <?php if ($version->releaseDate != null): ?>
   <p class="date"><?=$version->getDateInfo($self->app->dateFormatter)?></p>
-  <? endif ?>
+  <?php endif ?>
   <div class="progress">
     <div class="bar">
       <div class="complete" style="width: <?=$version->getProgressPercent()?>%"></div>
