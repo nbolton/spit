@@ -15,6 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+var searching = false;
+var searchText = "";
+
 function viewLoad() {
   $("form#editor").submit(function() {
     title = $("input[name='title']");
@@ -54,6 +57,13 @@ function viewLoad() {
       $("div.preview").show();
     }
   });
+  
+  title = $("input[name='title']");
+  title.keyup(function() {
+    updateSearch($(this).val());
+  });
+  
+  updateSearch(title.val());
 }
 
 function loadDynamicFields(tracker) {
@@ -135,4 +145,42 @@ function addSelectRow(field, index, length) {
 function addRow(row, index, length) {
   column = $("form div#column" + ((index < Math.ceil(length / 2)) ? 1 : 2));
   column.append(row);
+}
+
+function updateSearch(text) {
+  log("search: text: " + text);
+  var suggestions = $("form#editor div.suggestions");
+  
+  if (text == "") {
+    suggestions.hide();
+    return;
+  }
+  
+  delay(function() {
+    
+    $.getJSON("", {
+      format: "json",
+      search: text
+    },
+    function(message) {
+      log("search: response: " + text);
+      suggestions.find("ul").empty();
+      
+      if (message.data.length) {
+        suggestions.show();
+      }
+      else {
+        suggestions.hide();
+        return;
+      }
+      
+      for (i in message.data) {
+        result = message.data[i];
+        log(result);
+        var li = $("<li><a href=\"{0}\">{1} #{2}</a> - {3}</li>"
+          .format(result.url, result.tracker, result.id, result.title));
+        suggestions.find("ul").append(li);
+      }
+    });
+  }, 500);
 }

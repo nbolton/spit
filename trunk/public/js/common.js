@@ -75,3 +75,11 @@ function scrollUp() {
 function scrollDown() {
   $('html, body').animate({scrollTop: $(document).height()}, 500);
 }
+
+var delay = (function(){
+  var timer = 0;
+  return function(callback, ms) {
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();

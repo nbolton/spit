@@ -109,7 +109,13 @@ class IssuesController extends Controller {
     }
     
     if ($this->isJsonGet()) {
-      exit($this->getJson($this->getEditorFields($_GET["tracker"], $issue)));
+      if (isset($_GET["tracker"])) {
+        exit($this->getJson($this->getEditorFields($_GET["tracker"], $issue)));
+      }
+      else if (isset($_GET["search"])) {
+        exit($this->getJson($this->search($_GET["search"])));
+      }
+      exit;
     }
     
     $data["mode"] = $mode;
@@ -776,6 +782,23 @@ class IssuesController extends Controller {
     
     header(sprintf("Location: %s/issues/%s/", $this->app->getProjectRoot(), $query->name));
     exit;
+  }
+  
+  private function search($text) {
+    $lp = $this->app->linkProvider;
+    $issues = $this->ds->getBySearch($text);
+    
+    $results = array();
+    foreach ($issues as $issue) {
+      $result = new \stdClass;
+      $result->id = $issue->id;
+      $result->title = $issue->title;
+      $result->tracker = $issue->tracker;
+      $result->url = $lp->forIssue($issue->id);
+      array_push($results, $result);
+    }
+    
+    return $results;
   }
 }
 
