@@ -119,14 +119,21 @@ class IssuesController extends Controller {
     if ($this->isPost()) {
       $diff = $this->applyFormValues($issue);
       
+      $issueFields = new \Spit\IssueFields($this->app->project->name);
+      $validateResult = $issueFields->validate($issue, $issue->trackerId);
+      if (count($validateResult->invalid) != 0) {
+        var_dump($validateResult);
+        exit;
+      }
+      
       switch ($mode) {
         case EditorMode::Create:
-          $this->insert($issue, $diff);
+          $this->insert($issue, $diff, $issueFields);
           break;
         
         case EditorMode::Update:
           if (count($diff) != 0) {
-            $this->update($issue, $diff);
+            $this->update($issue, $diff, $issueFields);
           }
           break;
       }
@@ -332,22 +339,20 @@ class IssuesController extends Controller {
     );
   }
   
-  private function insert($issue, $diff) {
+  private function insert($issue, $diff, $issueFields) {    
     $issue->projectId = $this->app->project->id;
     $issue->creatorId = $this->app->security->user->id;
     $issue->id = $this->ds->insert($issue);
     
-    $issueFields = new \Spit\IssueFields($this->app->project->name);
     $this->updateCustom($issue, $diff, $issueFields);
   }
   
-  private function update($issue, $diff) {
+  private function update($issue, $diff, $issueFields) {
     $issue->closed = $this->statusIsClosed($issue->statusId);
     
     $issue->updaterId = $this->app->security->user->id;
     $this->ds->update($issue);
     
-    $issueFields = new \Spit\IssueFields($this->app->project->name);
     $this->updateCustom($issue, $diff, $issueFields);
     
     $changeResolver = new \Spit\ChangeResolver($issueFields);
