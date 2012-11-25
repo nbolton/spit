@@ -89,6 +89,14 @@ class IssuesController extends Controller {
     switch ($mode) {
       case EditorMode::Create: {
         $issue = new \Spit\Models\Issue;
+        
+        // TODO: allow different template for each tracker.
+        $filename = "issue.txt";
+        $handle = fopen($filename, "r");
+        $contents = fread($handle, filesize($filename));
+        fclose($handle);
+        $issue->details = $contents;
+        
         if (!$this->userCanCreate()) {
           return;
         }
@@ -126,14 +134,28 @@ class IssuesController extends Controller {
       $diff = $this->applyFormValues($issue);
       
       $issueFields = new \Spit\IssueFields($this->app->project->name);
-      $validateResult = $issueFields->validate($issue, $issue->trackerId);
-      if (count($validateResult->invalid) != 0) {
-        var_dump($validateResult);
-        exit;
+      
+      // TODO: validation can only run if the user is an advanced editor,
+      // since only title and description is only available for basic edit,
+      // which is validated by the javascript.
+      if ($this->userCanEditAdvanced()) {
+        $validateResult = $issueFields->validate($issue, $issue->trackerId);
+        if (count($validateResult->invalid) != 0) {
+          var_dump($validateResult);
+          exit;
+        }
       }
       
       switch ($mode) {
         case EditorMode::Create:
+          // HACK: massive hack, hard coded database ids, ugh... this is very
+          // temporary and will definitely screw someone over. this must be
+          // corrected asap!!!
+          if (!$this->userCanEditAdvanced()) {
+            $issue->trackerId = 3; // support
+            $issue->statusId = 1; // new
+            $issue->priorityId = 2; // normal
+          }
           $this->insert($issue, $diff, $issueFields);
           break;
         
