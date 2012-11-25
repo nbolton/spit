@@ -92,10 +92,12 @@ class IssuesController extends Controller {
         
         // TODO: allow different template for each tracker.
         $filename = "issue.txt";
-        $handle = fopen($filename, "r");
-        $contents = fread($handle, filesize($filename));
-        fclose($handle);
-        $issue->details = $contents;
+        if (file_exists($filename)) {
+          $handle = fopen($filename, "r");
+          $contents = fread($handle, filesize($filename));
+          fclose($handle);
+          $issue->details = $contents;
+        }
         
         if (!$this->userCanCreate()) {
           return;
