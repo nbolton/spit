@@ -1,0 +1,14 @@
+[db]
+host = "localhost"
+user = "root"
+password = ""
+database = "spit"
+
+[site]
+defaultTitle = "SPIT"
+defaultDescription = "Simple PHP Issue Tracker"
+dateFormat = "j M Y"
+dateTimeFormat = "j M Y H:i"
+
+[session]
+lifetime = 2592000

@@ -1,0 +1,72 @@
+/*
+ * SPIT: Simple PHP Issue Tracker
+ * Copyright (C) 2012 Nick Bolton
+ * 
+ * This package is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * found in the file COPYING that should have accompanied this file.
+ * 
+ * This package is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+div#issues {
+  margin-top: 10px;
+  min-height: 350px;
+}
+ 
+div#issues table {
+  display: none;
+}
+
+div#issues table td {
+  vertical-align: top;
+}
+ 
+div.loading {
+  text-align: center;
+  width: 100%;
+  z-index: 10;
+  padding-top: 100px;
+  height: 150px;
+}
+
+div.loading img {
+  background-color: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+div#query {
+  display: none;
+}
+
+div#query span {
+  font-size: .9em;
+  padding: 4px;
+  margin-right: 8px;
+  box-shadow: 0px 0px 5px #aaa;
+  background-color: #fdf8db;
+  border-radius: 5px;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+div#query input[name="name"] {
+  width: 7em;
+  margin-left: .2em;
+  margin-right: .2em;
+}
+
+div#query input[name="filter"] {
+  width: 25em;
+}
+
+div#query input[name="order"] {
+  width: 10em;
+}

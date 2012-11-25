@@ -1,0 +1,8 @@
+RewriteEngine on
+
+# change to the value of your spit subdir,
+# or comment out if spit is in your root.
+RewriteBase /spit/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule (.*) index.php?path=$1 [QSA,L]
