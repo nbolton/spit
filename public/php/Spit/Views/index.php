@@ -23,7 +23,7 @@
 echo sprintf(
   T_("Welcome to %s, a free and open source issue tracker by %s."),
   "<a href=\"http://spit-foss.org\">SPIT</a> (Simple PHP Issue Tracker)",
-  "Nick Bolton"
+  "Bolton Software"
 );
 ?>
 </p>
