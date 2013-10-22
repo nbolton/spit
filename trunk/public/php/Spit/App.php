@@ -24,55 +24,22 @@ require_once "Locale.php";
 require_once "Plugins.php";
 require_once "Security.php";
 require_once "Path.php";
-require_once "IssueFields.php";
-require_once "EditorMode.php";
-require_once "TitleMode.php";
-require_once "UserType.php";
-require_once "HttpCode.php";
-require_once "Importer.php";
-require_once "ChangeResolver.php";
 require_once "LinkProvider.php";
 require_once "DateFormatter.php";
 require_once "SessionManager.php";
+require_once "UserType.php";
+require_once "TitleMode.php";
+require_once "HttpCode.php";
 
 require_once "Controllers/ControllerProvider.php";
 require_once "Controllers/ErrorController.php";
 require_once "Controllers/SetupController.php";
 
-require_once "DataStores/DataStore.php";
-require_once "DataStores/IssueDataStore.php";
 require_once "DataStores/ProjectDataStore.php";
-require_once "DataStores/ChangeDataStore.php";
-require_once "DataStores/StatusDataStore.php";
-require_once "DataStores/TrackerDataStore.php";
-require_once "DataStores/PriorityDataStore.php";
-require_once "DataStores/VersionDataStore.php";
-require_once "DataStores/UserDataStore.php";
-require_once "DataStores/RedmineDataStore.php";
-require_once "DataStores/AssigneeDataStore.php";
-require_once "DataStores/CategoryDataStore.php";
-require_once "DataStores/RelationDataStore.php";
-require_once "DataStores/AttachmentDataStore.php";
 require_once "DataStores/MemberDataStore.php";
-require_once "DataStores/QueryDataStore.php";
 
 require_once "Models/Link.php";
-require_once "Models/Issue.php";
 require_once "Models/Project.php";
-require_once "Models/Change.php";
-require_once "Models/User.php";
-require_once "Models/Status.php";
-require_once "Models/Priority.php";
-require_once "Models/Tracker.php";
-require_once "Models/Version.php";
-require_once "Models/Category.php";
-require_once "Models/Relation.php";
-require_once "Models/Query.php";
-
-require_once "Models/Fields/SelectField.php";
-require_once "Models/Fields/TableField.php";
-require_once "Models/Fields/TextField.php";
-require_once "Models/Fields/DisplayField.php";
 
 class App {
   

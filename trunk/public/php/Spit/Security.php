@@ -20,6 +20,7 @@
 namespace Spit;
 
 require_once "php/lightopenid/openid.php";
+require_once "php/Spit/DataStores/UserDataStore.php";
 
 use LightOpenID;
 

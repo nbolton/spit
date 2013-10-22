@@ -19,6 +19,9 @@
 
 namespace Spit\DataStores;
 
+require_once "php/Spit/DataStores/DataStore.php";
+require_once "php/Spit/Models/Query.php";
+
 use DateTime;
 
 class QueryDataStore extends DataStore {

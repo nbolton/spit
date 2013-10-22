@@ -19,6 +19,8 @@
 
 namespace Spit\DataStores;
 
+require_once "php/Spit/DataStores/DataStore.php";
+
 class StatusDataStore extends DataStore {
 
   const BULK_INSERT_MAX = 500;

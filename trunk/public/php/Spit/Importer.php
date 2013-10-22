@@ -19,6 +19,11 @@
 
 namespace Spit;
 
+require_once "php/Spit/DataStores/RedmineDataStore.php";
+require_once "php/Spit/Models/User.php";
+require_once "php/Spit/Models/Status.php";
+require_once "php/Spit/Models/Priority.php";
+
 use \Spit\Models\RelationType as RelationType;
 
 class Importer {
