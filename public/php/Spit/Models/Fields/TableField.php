@@ -19,7 +19,7 @@
 
 namespace Spit\Models\Fields;
 
-require_once "Field.class.php";
+require_once "Field.php";
 
 class TableField extends Field {
 

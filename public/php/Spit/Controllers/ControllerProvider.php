@@ -19,15 +19,15 @@
 
 namespace Spit\Controllers;
 
-require "Controller.class.php";
-require "IndexController.class.php";
-require "IssuesController.class.php";
-require "AdminController.class.php";
-require "UsersController.class.php";
-require "LoginController.class.php";
-require "LogoutController.class.php";
-require "SitemapController.class.php";
-require "RoadmapController.class.php";
+require "Controller.php";
+require "IndexController.php";
+require "IssuesController.php";
+require "AdminController.php";
+require "UsersController.php";
+require "LoginController.php";
+require "LogoutController.php";
+require "SitemapController.php";
+require "RoadmapController.php";
 
 use Exception;
 

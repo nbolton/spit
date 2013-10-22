@@ -19,8 +19,8 @@
 
 namespace Spit\Models\Fields;
 
-require_once "Field.class.php";
-require_once "SelectOption.class.php";
+require_once "Field.php";
+require_once "SelectOption.php";
 
 class SelectField extends Field {
   

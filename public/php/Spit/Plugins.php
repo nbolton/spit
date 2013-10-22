@@ -38,7 +38,7 @@ class Plugins {
       if ($file == ".." || $file == ".")
         continue;
       
-      require sprintf("%s/%s/%s.class.php", self::PLUGIN_DIR, $file, $file);
+      require sprintf("%s/%s/%s.php", self::PLUGIN_DIR, $file, $file);
       $plugin = new $file($this->app);
       $plugin->name = $file;
       array_push($this->plugins, $plugin);
