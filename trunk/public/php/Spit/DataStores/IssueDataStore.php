@@ -346,7 +346,7 @@ class IssueDataStore extends DataStore {
     $clauses = array();
     foreach ($keywords as $keyword) {
       array_push($clauses, "i.title like '%" . $this->sql->escape_string($keyword) . "%'");
-      array_push($clauses, "i.details like '%" . $this->sql->escape_string($keyword) . "%'");
+      //array_push($clauses, "i.details like '%" . $this->sql->escape_string($keyword) . "%'");
     }
     
     // TODO: order by keyword usage and relevance instead of votes
