@@ -42,16 +42,33 @@ class Version {
     // it would be nice to use T_ngettext here, but poedit doesn't
     // seem to support it even with the keyword "T_ngettext:1,2"
     if ($days == 0) {
-      $format = T_("Due on %s (today)");
+      if ($this->released) {
+        $format = T_("Released on %s (today)");
+      }
+      else {
+        $format = T_("Due on %s (today)");
+      }
     }
     else if ($diff->invert) {
-      $s = T_("Due on %s (in %d day)");
-      $p = T_("Due on %s (in %d days)");
+      if ($this->released) {
+        $s = T_("Released on %s (in %d day)");
+        $p = T_("Released on %s (in %d days)");
+      }
+      else {
+        $s = T_("Due on %s (in %d day)");
+        $p = T_("Due on %s (in %d days)");
+      }
       $format = $days == 1 ? $s : $p;
     }
     else {
-      $s = T_("Due on %s (%d day ago)");
-      $p = T_("Due on %s (%d days ago)");
+      if ($this->released) {
+        $s = T_("Released on %s (%d day ago)");
+        $p = T_("Released on %s (%d days ago)");
+      }
+      else {
+        $s = T_("Due on %s (%d day ago)");
+        $p = T_("Due on %s (%d days ago)");
+      }
       $format = $days == 1 ? $s : $p;
     }
     

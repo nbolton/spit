@@ -119,14 +119,15 @@ class IssueDataStore extends DataStore {
     $result = $this->query(
       "select i.id, i.title, i.closed, " .
       "v.id as versionId, v.name as version, " .
-      "v.releaseDate as versionDate, t.name as tracker " .
+      "v.releaseDate as versionDate, t.name as tracker, " .
+      "v.released as versionReleased " .
       "from issue as i " .
       "inner join version as v on v.id = i.targetId " .
       "inner join tracker as t on t.id = i.trackerId " .
       "inner join priority as p on p.id = i.priorityId " .
       "inner join status as s on s.id = i.statusId " .
-      "where v.released != 1 and i.projectId = %d " .
-      "order by isnull(v.releaseDate), v.name, t.order asc, " .
+      "where i.projectId = %d " .
+      "order by v.releaseDate desc, v.name, t.order asc, " .
       "p.order desc, s.order, i.created",
       (int)$projectId
     );

@@ -44,6 +44,7 @@ class RoadmapController extends Controller {
         $version->id = $issue->versionId;
         $version->name = $issue->version;
         $version->releaseDate = $issue->versionDate;
+        $version->released = $issue->versionReleased;
         $version->issues = array();
         $versions[$issue->versionId] = $version;
       }
@@ -51,9 +52,6 @@ class RoadmapController extends Controller {
       $version->complete += ($issue->closed ? 1 : 0);
       
       array_push($version->issues, $issue);
-    }
-    
-    foreach ($versions as $version) {
     }
     
     $data["versions"] = $versions;
