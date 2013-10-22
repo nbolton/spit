@@ -21,18 +21,6 @@
 
 <form method="post" id="editor">
   <div class="box">
-    <?php if ($self->userCanEditAdvanced()): ?>
-    <div class="column">
-      <div class="row">
-        <label for="trackerId"><?=T_("Tracker")?></label>
-        <select id="trackerId" name="trackerId">
-          <?php foreach($trackerSelect->options as $o): ?>
-          <option value="<?=$o->value?>"<?=$o->getSelectedAttr()?>><?=$o->text?></option>
-          <?php endforeach ?>
-        </select>
-      </div>
-    </div>
-    <?php endif ?>
     
     <div class="row">
       <label for="title"><?=T_("Title")?>*</label>
@@ -46,11 +34,21 @@
       </div>
     </div>
     
-    <div class="row">
-      <label for="wmd-input"><?=T_("Details")?>*</label>
-      <div id="wmd-button-bar" class="wmd-button-bar"></div>
-      <textarea id="wmd-input" name="details" type="details" class="wmd-input"><?=$issue->details?></textarea>
+    <?php if ($self->userCanEditAdvanced()): ?>
+    <div class="column">
+      <div class="row">
+        <label for="trackerId"><?=T_("Tracker")?></label>
+        <select id="trackerId" name="trackerId">
+          <?php foreach($trackerSelect->options as $o): ?>
+          <option value="<?=$o->value?>"<?=$o->getSelectedAttr()?>><?=$o->text?></option>
+          <?php endforeach ?>
+        </select>
+      </div>
     </div>
+    <?php endif ?>
+    
+    <div style="clear: both"></div>
+    
     <div id="dynamicFields">
       <div class="loading">
         <img src="<?=$app->getImage("loading.gif")?>" />
@@ -58,12 +56,26 @@
       <div class="column" id="column1"></div>
       <div class="column" id="column2"></div>
     </div>
+    
+    <div class="row">
+      <label for="wmd-input"><?=T_("Details")?>*</label>
+      <div id="wmd-button-bar" class="wmd-button-bar"></div>
+      <textarea id="wmd-input" name="details" type="details" class="wmd-input"><?=$issue->details?></textarea>
+    </div>
+    
+    <div class="row">
+      <label for="wmd-input"><?=T_("Preview")?></label>
+      <div id="wmd-preview" style="border: 1px solid #aaa; padding: .2em .5em"></div>
+    </div>
+    
   </div>
+  
+  
+  <div class="preview">
+  </div>
+  
   <div class="buttons">
     <input type="submit" value="<?=($mode == \Spit\EditorMode::Create) ? T_("Create") : T_("Update")?>" >
   </div>
+  
 </form>
-
-<div class="preview">
-  <div id="wmd-preview" class="box"></div>
-</div>
