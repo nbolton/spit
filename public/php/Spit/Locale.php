@@ -22,6 +22,8 @@
 
 namespace Spit;
 
+require_once "php/gettext/gettext.inc";
+
 class Language {
   function __construct($code, $name) {
     $this->code = $code;

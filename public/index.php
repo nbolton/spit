@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/libraries.php";
-require "php/Spit/App.class.php";
+require "php/Spit/App.php";
 
 $app = new Spit\App;
 $app->run();

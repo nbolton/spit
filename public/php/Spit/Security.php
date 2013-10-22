@@ -19,6 +19,8 @@
 
 namespace Spit;
 
+require_once "php/lightopenid/openid.php";
+
 use LightOpenID;
 
 class Security {

@@ -19,6 +19,8 @@
 
 namespace Spit\Controllers;
 
+require_once "php/markdown/markdown.php";
+
 use Exception;
 use DateTime;
 
