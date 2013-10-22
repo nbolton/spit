@@ -19,6 +19,10 @@
 
 namespace Spit\Controllers;
 
+require_once "php/Spit/Models/Priority.php";
+require_once "php/Spit/Models/Tracker.php";
+require_once "php/Spit/Models/Category.php";
+
 class SetupController extends Controller {
   
   public function __construct($app) {

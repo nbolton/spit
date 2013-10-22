@@ -19,6 +19,10 @@
 
 namespace Spit\DataStores;
 
+require_once "php/Spit/DataStores/DataStore.php";
+require_once "php/Spit/Models/Issue.php";
+require_once "php/Spit/Models/Fields/TableField.php";
+
 use DateTime;
 
 class IssueDataStore extends DataStore {

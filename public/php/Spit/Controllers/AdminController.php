@@ -19,6 +19,8 @@
 
 namespace Spit\Controllers;
 
+require_once "php/Spit/Importer.php";
+
 class AdminController extends Controller {
   
   public function __construct() {

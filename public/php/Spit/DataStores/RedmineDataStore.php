@@ -19,6 +19,8 @@
 
 namespace Spit\DataStores;
 
+require_once "php/Spit/DataStores/DataStore.php";
+
 use mysqli;
 
 class RedmineDataStore extends DataStore {

@@ -19,6 +19,8 @@
 
 namespace Spit;
 
+require_once "php/Spit/DataStores/AssigneeDataStore.php";
+
 class ChangeResolver {
   public $issueFields;
 

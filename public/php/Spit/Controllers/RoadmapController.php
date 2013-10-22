@@ -19,6 +19,8 @@
 
 namespace Spit\Controllers;
 
+require_once "php/Spit/Models/Version.php";
+
 class RoadmapController extends Controller {
   
   public function run() {

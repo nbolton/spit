@@ -21,6 +21,25 @@ namespace Spit\Controllers;
 
 require_once "php/markdown/markdown.php";
 
+require_once "php/Spit/EditorMode.php";
+require_once "php/Spit/IssueFields.php";
+require_once "php/Spit/ChangeResolver.php";
+
+require_once "php/Spit/DataStores/IssueDataStore.php";
+require_once "php/Spit/DataStores/QueryDataStore.php";
+require_once "php/Spit/DataStores/TrackerDataStore.php";
+require_once "php/Spit/DataStores/StatusDataStore.php";
+require_once "php/Spit/DataStores/PriorityDataStore.php";
+require_once "php/Spit/DataStores/VersionDataStore.php";
+require_once "php/Spit/DataStores/CategoryDataStore.php";
+require_once "php/Spit/DataStores/ChangeDataStore.php";
+require_once "php/Spit/DataStores/RelationDataStore.php";
+require_once "php/Spit/DataStores/AttachmentDataStore.php";
+
+require_once "php/Spit/Models/Fields/DisplayField.php";
+require_once "php/Spit/Models/Fields/TextField.php";
+require_once "php/Spit/Models/Fields/SelectField.php";
+
 use Exception;
 use DateTime;
 
