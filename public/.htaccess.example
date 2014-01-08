@@ -4,5 +4,7 @@ RewriteEngine on
 # or comment out if spit is in your root.
 RewriteBase /spit/
 
+RewriteRule settings\.ini - [R=404,L,NC]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule (.*) index.php?path=$1 [QSA,L]
