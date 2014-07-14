@@ -33,25 +33,22 @@ class LoginController extends Controller {
   }
   
   private function runIndex() {
-    $data["cancel"] = false;
     $data["failed"] = false;
     $data["fromArg"] = isset($_GET["from"]) ? "&from=" . $_GET["from"] : "";
     
-    $openId = $this->app->security->openId;
-    if (!$openId->mode) {
-      if (isset($_GET["start"])) {
-        $this->app->security->startLogin();
-        return;
-      }
-    } elseif ($openId->mode == "cancel") {
-      $data["cancel"] = true;
-    } else {
-      if ($this->app->security->finishLogin()) {
-        return;
-      }
-      $data["failed"] = true;
+    if (isset($_GET["start"])) {
+      $this->app->security->startLogin();
+      return;
     }
-    
+    elseif (isset($_GET["code"])) {
+      if ($this->app->security->finishLogin()) {
+        exit;
+      }
+      else {
+        $data["failed"] = true;
+      }
+    }
+
     $this->showView("login", T_("Login"), $data);
   }
 }

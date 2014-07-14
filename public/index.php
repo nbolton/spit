@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "php/Spit/App.php";
+set_include_path("php");
+require "Spit/App.php";
 
 $app = new Spit\App;
 $app->run();

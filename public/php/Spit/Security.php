@@ -19,7 +19,8 @@
 
 namespace Spit;
 
-require_once "php/lightopenid/openid.php";
+require_once "Google/Client.php";
+require_once "Google/Service/Plus.php";
 require_once "php/Spit/DataStores/UserDataStore.php";
 
 use LightOpenID;
@@ -32,8 +33,15 @@ class Security {
   
   public function __construct($app) {
     $this->app = $app;
-    $this->openId = new LightOpenID($_SERVER["HTTP_HOST"]);
     $this->userDataStore = new \Spit\DataStores\UserDataStore;
+
+    $url = sprintf("http://%s%s/login/", $_SERVER["SERVER_NAME"], $app->getRoot());
+
+    $this->google = new \Google_Client;
+    $this->google->setClientId($app->settings->google->clientId);
+    $this->google->setClientSecret($app->settings->google->clientSecret);
+    $this->google->setRedirectUri($url);
+    $this->google->setScopes(array("email", "profile"));
   }
   
   public function run() {
@@ -63,22 +71,21 @@ class Security {
     return true;
   }
   
-  public function startLogin() {  
-    $this->openId->identity = "https://www.google.com/accounts/o8/id";
-    $this->openId->required = array(
-      "contact/email",
-      "namePerson/first",
-      "namePerson/last",
-    );
-    header("Location: " . $this->openId->authUrl());
+  public function startLogin() {
+    $_SESSION["loginFrom"] = $_GET["from"];
+    header("Location: " . $this->google->createAuthUrl());
   }
   
   public function finishLogin() {
-    if ($this->openId->validate()) {
-      $attr = $this->openId->getAttributes();
-      $email = $attr["contact/email"];
-      $name = trim(sprintf("%s %s", $attr["namePerson/first"], $attr["namePerson/last"]));
-      
+    $this->google->authenticate($_GET["code"]);
+    $accessToken = $this->google->getAccessToken();
+
+    if (!empty($accessToken)) {
+      $plus = new \Google_Service_Plus($this->google);
+      $me = $plus->people->get("me");
+      $email = $me->emails[0]->value;
+      $name = $me->displayName;
+
       $user = $this->userDataStore->getByEmail($email);
       if ($user != null) {
         
@@ -113,7 +120,13 @@ class Security {
   }
   
   private function redirectFrom() {
-    header(sprintf("Location: %s", isset($_GET["from"]) ? urldecode($_GET["from"]) : ""));
+    if (isset($_SESSION["loginFrom"])) {
+      $from = urldecode($_SESSION["loginFrom"]);
+    }
+    else {
+      $from = $this->app->getRoot();
+    }
+    header("Location: " . $from);
   }
   
   public function redirectToLogin() {
