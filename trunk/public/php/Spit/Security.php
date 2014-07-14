@@ -35,7 +35,9 @@ class Security {
     $this->app = $app;
     $this->userDataStore = new \Spit\DataStores\UserDataStore;
 
-    $url = sprintf("http://%s%s/login/", $_SERVER["SERVER_NAME"], $app->getRoot());
+    $protocol = isset($_SERVER["HTTPS"]) ? "https" : "http";
+    $host = $_SERVER["SERVER_NAME"];
+    $url = sprintf("%s://%s%s/login/", $protocol, $host, $app->getRoot());
 
     $this->google = new \Google_Client;
     $this->google->setClientId($app->settings->google->clientId);
