@@ -19,9 +19,7 @@
 
 <h2><?=$title?></h2>
 
-<?php if ($cancel): ?>
-<p><?=T_("Login canceled.");?></p>
-<?php elseif ($failed): ?>
+<?php if ($failed): ?>
 <p><?=T_("Login failed.");?></p>
 <?php endif ?>
 
