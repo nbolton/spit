@@ -109,8 +109,8 @@
           <?php
             echo sprintf(
               T_("Powered by %s. Copyright &copy; %s 2012. Load time: %s ms. SQL queries: %s."),
-              "<a href=\"http://spit-foss.org\">SPIT</a>: Simple PHP Issue Tracker",
-              "<a href=\"http://boltonsoftware.com/\">Bolton Software</a>",
+              "<a href=\"http://spit-project.org\">SPIT: Simple PHP Issue Tracker</a>",
+              "<a href=\"http://nbolton.com/\">Nick Bolton</a>",
               sprintf("<span class=\"loadTime\">%.2f</span>", $app->getLoadTime()),
               sprintf("<span class=\"queries\">%d</span>", $app->queryCount)
             );
