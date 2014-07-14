@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require "DownloadController.class.php";
-require "ContactController.class.php";
+require "DownloadController.php";
+require "ContactController.php";
 
 class Pages {
   
