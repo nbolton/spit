@@ -85,17 +85,6 @@
               <p>Not logged in (<a href="<?=$app->linkProvider->forLogin()?>">login</a>).</p>
               <?php endif ?>
             </div>
-            <div class="language">
-              <button id="language">
-                <span class="text"><?=T_("Language:")?> <?=$app->locale->getCurrent()->name?></span>
-                <img src="<?=$app->getImage("pixel.gif")?>" class="arrow" />
-              </button>
-              <div class="menu">
-                <?php foreach ($app->locale->getLanguages() as $l): ?>
-                <div class="item"><a href="?lang=<?=$l->code?>"><?=$l->name?></a></div>
-                <?php endforeach ?>
-              </div>
-            </div>
           </div>
         </div>
       </div>
