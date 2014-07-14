@@ -126,7 +126,7 @@ class Security {
       $from = urldecode($_SESSION["loginFrom"]);
     }
     else {
-      $from = $this->app->getRoot();
+      $from = $this->app->getRoot() . "/";
     }
     header("Location: " . $from);
   }
