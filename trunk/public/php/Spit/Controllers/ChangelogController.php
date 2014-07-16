@@ -21,7 +21,7 @@ namespace Spit\Controllers;
 
 require_once "php/Spit/Models/Version.php";
 
-class RoadmapController extends Controller {
+class ChangelogController extends Controller {
   
   public function run() {
     switch ($this->getPathPart(1)) {
@@ -55,7 +55,7 @@ class RoadmapController extends Controller {
     }
     
     $data["versions"] = $versions;
-    $this->showView("roadmap", T_("Roadmap"), $data);
+    $this->showView("changelog", T_("Changelog"), $data);
   }
 }
 
