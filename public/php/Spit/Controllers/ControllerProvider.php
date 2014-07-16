@@ -27,7 +27,7 @@ require_once "UsersController.php";
 require_once "LoginController.php";
 require_once "LogoutController.php";
 require_once "SitemapController.php";
-require_once "RoadmapController.php";
+require_once "ChangelogController.php";
 
 use Exception;
 
@@ -42,7 +42,7 @@ class ControllerProvider {
     $this->map("login", new LoginController);
     $this->map("logout", new LogoutController);
     $this->map("Sitemap.xml", new SitemapController);
-    $this->map("roadmap", new RoadmapController);
+    $this->map("changelog", new ChangelogController);
   }
   
   public function map($name, $controller) {
